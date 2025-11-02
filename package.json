@@ -1,0 +1,9 @@
+{
+  "name": "portfoliosharp-projects",
+  "private": true,
+  "workspaces": ["packages/portfoliosharp", "packages/rovercoder"],
+  "scripts": {
+    "install-all": "(npm install) && (npm run install-all --prefix packages/portfoliosharp) && (npm run install-all --prefix packages/rovercoder)",
+    "dev": "(npm run dev --prefix packages/portfoliosharp) & (npm run dev --prefix packages/rovercoder)"
+  }
+}

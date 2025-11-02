@@ -1,0 +1,10 @@
+{
+  "name": "portfoliosharp",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["packages/shared"],
+  "scripts": {
+    "install-all": "(npm install) && (npm run install-all --prefix packages/shared)",
+    "dev": "npm run dev --prefix packages/shared"
+  }
+}

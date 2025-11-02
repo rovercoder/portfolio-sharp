@@ -1,0 +1,17 @@
+---
+import BackgroundImage from "../helpers/BackgroundImage.astro";
+import Text from "../atoms/Text.astro";
+
+const { imageSrc, imageIsIcon = false, title, description, hint } = Astro.props as { imageSrc?: string | string[], imageIsIcon?: boolean, title?: string, description?: string, hint?: string };
+var _imageIsIcon = imageIsIcon == null ? null : (typeof imageIsIcon === 'string' ? (`${imageIsIcon}`.toLowerCase() === 'true') : imageIsIcon);
+var _imageSrc = (imageSrc == null || imageSrc === '' || (Array.isArray(imageSrc) && imageSrc.filter(x => x != null && x != '').length === 0)) ? null : [Array.isArray(imageSrc) ? imageSrc.filter(x => x != null && x != '') : [imageSrc]];
+---
+
+<div class="card">
+    { _imageSrc != null && (_imageIsIcon == null || _imageIsIcon !== true 
+        ? <div class="image"><BackgroundImage backgroundUrl={_imageSrc[0]} type="absolute" /></div> 
+        : <div class="icon">{_imageSrc[0]}</div>) }
+    {title != null && <div class="title"><Text type="card-title" content={title} /></div>}
+    {hint != null && <div class="hint"><Text type="card-hint" content={hint} /></div>}
+    {description != null && <div class="description"><Text type="card-description" content={description} /></div>}
+</div>

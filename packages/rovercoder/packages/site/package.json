@@ -1,0 +1,19 @@
+{
+  "name": "@rovercoder/site",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install",
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.15.1"
+  },
+  "devDependencies": {
+    "sass": "^1.93.2"
+  }
+}

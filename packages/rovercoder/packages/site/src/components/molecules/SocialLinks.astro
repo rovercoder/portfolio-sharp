@@ -1,0 +1,19 @@
+---
+import SocialLink from "../atoms/SocialLink.astro";
+import type { SocialLinkEntry } from "../atoms/SocialLink.types";
+
+const { socialLinks } = Astro.props as { socialLinks: SocialLinkEntry[] };
+---
+
+<div class="social-links">
+    {socialLinks.map(x => <SocialLink profileUrl={x.profileUrl} platformName={x.platformName} username={x.username} />)}
+</div>
+
+<style>
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        align-items: start;
+        flex-wrap: wrap;
+    }
+</style>

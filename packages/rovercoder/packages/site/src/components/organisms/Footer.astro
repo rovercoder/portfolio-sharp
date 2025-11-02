@@ -1,0 +1,19 @@
+---
+import type { SocialLinkEntry } from "../atoms/SocialLink.types";
+import SocialLinks from "../molecules/SocialLinks.astro";
+const { socialLinks } = Astro.props as { socialLinks: SocialLinkEntry[] };
+---
+
+<style>
+    footer {
+        display: flex;
+        gap: 1rem;
+        /* margin-top: 2rem; */
+        padding: 1rem;
+        align-items: start;
+    }
+</style>
+
+<footer>
+    <SocialLinks socialLinks={socialLinks} />
+</footer>

@@ -1,0 +1,24 @@
+---
+import type { NavLinkEntry } from "../components/atoms/NavLink.types";
+import type { SiteLogoProperties } from "../components/atoms/SiteLogo.types";
+import type { SocialLinkEntry } from "../components/atoms/SocialLink.types";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const headerLogoImageRoverCoder: SiteLogoProperties = {
+	alt: "RoverCoder Logo",
+	source: "./assets/images/site/logos/rovercoder-alt-color.svg"
+};
+const navLinksRoverCoder: NavLinkEntry[] = [
+	{ link: "/", name: "Home" }
+];
+const socialLinksRoverCoder: SocialLinkEntry[] = [
+	{ platformName: "twitter", profileUrl: "https://www.twitter.com/astrodotbuild", username: "astrodotbuild" },
+	{ platformName: "github", profileUrl: "https://www.github.com/withastro", username: "withastro" },
+	{ platformName: "youtube", profileUrl: "https://www.youtube.com/astrodotbuild", username: "astrodotbuild" }
+];
+
+const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props as { pageTitle: string, headerLogoImage: SiteLogoProperties, navLinks: NavLinkEntry[], socialLinks: SocialLinkEntry[] };
+---
+<BaseLayout pageTitle={pageTitle} headerLogoImage={headerLogoImage ?? headerLogoImageRoverCoder} navLinks={navLinks ?? navLinksRoverCoder} socialLinks={socialLinks ?? socialLinksRoverCoder}>
+	<slot />
+</BaseLayout>

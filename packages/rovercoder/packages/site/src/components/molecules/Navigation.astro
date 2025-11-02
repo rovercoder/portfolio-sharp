@@ -1,0 +1,31 @@
+---
+import NavLink from "../atoms/NavLink.astro";
+import type { NavLinkEntry } from "../atoms/NavLink.types";
+const { navLinks } = Astro.props as { navLinks: NavLinkEntry[] }
+---
+<div class="nav-links">
+    {navLinks.map(x => <NavLink link={x.link} name={x.name} />)}
+</div>
+
+<style lang="scss">
+    @use '/src/styles/variables.scss' as *;
+
+    .nav-links {
+        width: 100%;
+        top: 5rem;
+        left: 48px;
+        display: none;
+        margin: 0;
+    }
+
+    @media screen and (min-width: $mobile-breakpoint) {
+        .nav-links {
+            margin-left: 5em;
+            display: flex;
+            justify-content: end;
+            position: static;
+            width: auto;
+            background: none;
+        }
+    }
+</style>

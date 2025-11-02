@@ -1,0 +1,13 @@
+{
+  "name": "rovercoder",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/data",
+    "packages/site"
+  ],
+  "scripts": {
+    "install-all": "(npm install) && (npm run install-all --prefix packages/data) && (npm run install-all --prefix packages/site)",
+    "dev": "(npm run dev --prefix packages/data) & (npm run dev --prefix packages/site)"
+  }
+}

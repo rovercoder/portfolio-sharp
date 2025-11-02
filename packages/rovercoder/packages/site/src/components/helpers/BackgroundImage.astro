@@ -1,0 +1,58 @@
+---
+var { backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize = 'cover', backgroundZIndex = '-1', type = 'fixedFullScreen' } = Astro.props as { backgroundUrl?: string, backgroundColor?: string, backgroundRepeat?: string, backgroundSize?: string, backgroundZIndex?: string, type?: string };
+backgroundUrl = `url(${backgroundUrl})`;
+var backgroundPosition;
+var backgroundHeight;
+var backgroundWidth;
+switch (type) {
+	case 'fixedFullScreen': 
+		backgroundPosition = 'fixed';
+		backgroundHeight = '100vh';
+		backgroundWidth = '100vw';
+		break;
+	case 'absolute':
+		backgroundPosition = 'absolute';
+		backgroundHeight = '100%';
+		backgroundWidth = '100%';
+		break;
+	default:
+		throw Error(`Not supported background type! Type: ${type}`);
+}
+---
+
+<div class="wrapper">
+	<div class={`background-image ${backgroundPosition === 'fixed' ? 'sticky-child' : ''}`} style={backgroundPosition === 'fixed' ? "opacity: 0; /* opacity: 0, because different fixed backgrounds of different sections will overlap at the start before script runs */ top: 0px; bottom: 0px; left: 0px; right: 0px" : "top: 0px; left: 0px;"}></div>
+	<div class="content">
+		<slot />
+	</div>
+</div>
+
+<script>
+    import '/src/scripts/scroll-fixed-element.ts';
+
+	document.querySelectorAll('.sticky-child').forEach(stickyChild => { (stickyChild as HTMLElement).style.opacity = '' });
+</script>
+
+<style define:vars={{ backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize, backgroundZIndex, backgroundPosition, backgroundHeight, backgroundWidth }}>
+	.wrapper {
+		position: relative;
+	}
+
+	.background-image {
+		position: var(--backgroundPosition);
+		height: var(--backgroundHeight);
+		width: var(--backgroundWidth);
+		overflow: hidden;
+        background-image: var(--backgroundUrl);
+        background-color: var(--backgroundColor);
+        background-repeat: var(--backgroundRepeat);
+		background-size: var(--backgroundSize);
+		background-position: center;
+		z-index: var(--backgroundZIndex);
+		transition: opacity 150ms ease-in-out;
+	}
+
+	.content {
+		position: relative;
+	}
+</style>

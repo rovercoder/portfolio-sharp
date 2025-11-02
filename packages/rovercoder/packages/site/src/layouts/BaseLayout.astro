@@ -1,0 +1,84 @@
+---
+import Header from '../components/organisms/Header.astro';
+import Footer from '../components/organisms/Footer.astro';
+import '../styles/global.scss';
+import type { SocialLinkEntry } from '../components/atoms/SocialLink.types';
+import type { NavLinkEntry } from '../components/atoms/NavLink.types';
+import type { SiteLogoProperties } from '../components/atoms/SiteLogo.types';
+const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props as { pageTitle: string, headerLogoImage: SiteLogoProperties, navLinks: NavLinkEntry[], socialLinks: SocialLinkEntry[] };
+---
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{pageTitle}</title>
+    </head>
+    <body>
+        <div id="sticky-header-container">
+            <Header logoImage={headerLogoImage} navLinks={navLinks} />
+        </div>
+        <div id="content-container">
+            <Header logoImage={headerLogoImage} navLinks={navLinks} />
+            <div id="content">
+                <slot />
+            </div>
+            <Footer socialLinks={socialLinks} />
+        </div>
+    </body>
+</html>
+
+<style is:global>
+    html {
+        display: flex;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #sticky-header-container {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 4;
+    }
+
+    header {
+        background-color: #F2F2F2;
+        width: 100%;
+    }
+
+    header .hamburger .line {
+        background-color: #000000;
+    }
+
+    header .nav-links {
+        background-color: #ff9776;
+    }
+
+    header .nav-links a:hover,
+    header .nav-links a:focus {
+        background-color: #ff9776;
+    }
+
+    footer {
+        background-color: #000000;
+    }
+</style>
+
+<style>
+    #content {
+        flex-grow: 1;
+        width: 100%;
+        /* max-width: 80ch; */
+    }
+</style>

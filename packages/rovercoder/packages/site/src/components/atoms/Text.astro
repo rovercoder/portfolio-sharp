@@ -1,0 +1,30 @@
+---
+var { content, type } = Astro.props as { content?: string | string[], type?: string };
+var fontFamily = 'Inter';
+var fontSize = '0.8125rem';
+var fontWeight = 400;
+var fontStyle = 'normal';
+var letterSpacing = 'normal';
+var textLines = content == null ? [] : (Array.isArray(content) ? content.map(x => x.toString()) : [content.toString()]);
+switch (type) {
+    case 'card-title':
+        fontSize = '0.9375rem';
+        fontWeight = 500;
+    case 'card-description': 
+    default: break;
+}
+---
+
+<div class="text">
+    {textLines.map(x => <p>{x}</p>)}
+</div>
+
+<style define:vars={{ fontFamily, fontSize, fontWeight, fontStyle, letterSpacing }}>
+    .text p {
+        font-family: var(--fontFamily);
+        font-size: var(--fontSize);
+        font-weight: var(--fontWeight);
+        font-style: var(--fontStyle);
+        letter-spacing: var(--letterSpacing);
+    }
+</style>

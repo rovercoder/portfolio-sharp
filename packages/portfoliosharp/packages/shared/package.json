@@ -1,0 +1,71 @@
+{
+  "name": "@portfoliosharp/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install",
+    "dev": "(tsc || true) && tsc --watch"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@types/jscodeshift": "^17.3.0",
+    "@types/node": "^24.9.2",
+    "@types/uglify-js": "^3.17.5",
+    "jscodeshift": "^17.3.0",
+    "rollup": "^4.52.5",
+    "typescript": "^5.9.3",
+    "uglify-js": "^3.19.3"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./code": {
+      "import": "./dist/abstractions/code/index.js",
+      "types": "./dist/abstractions/code/index.d.ts"
+    },
+    "./code/bundler": {
+      "import": "./dist/abstractions/code/bundler/site.abstractions.code.bundler.js",
+      "types": "./dist/abstractions/code/bundler/site.abstractions.code.bundler.d.ts"
+    },
+    "./code/minifier": {
+      "import": "./dist/abstractions/code/minifier/site.abstractions.code.minifier.js",
+      "types": "./dist/abstractions/code/minifier/site.abstractions.code.minifier.d.ts"
+    },
+    "./code/transformer": {
+      "import": "./dist/abstractions/code/transformer/site.abstractions.code.transformer.js",
+      "types": "./dist/abstractions/code/transformer/site.abstractions.code.transformer.d.ts"
+    },
+    "./data": {
+      "import": "./dist/data/index.js",
+      "types": "./dist/data/index.d.ts"
+    },
+    "./helpers": {
+      "import": "./dist/helpers/index.js",
+      "types": "./dist/helpers/index.d.ts"
+    },
+    "./helpers/environment": {
+      "import": "./dist/helpers/helpers.environment.js",
+      "types": "./dist/helpers/helpers.environment.d.ts"
+    },
+    "./helpers/files": {
+      "import": "./dist/helpers/helpers.files.js",
+      "types": "./dist/helpers/helpers.files.d.ts"
+    },
+    "./helpers/general": {
+      "import": "./dist/helpers/helpers.general.js",
+      "types": "./dist/helpers/helpers.general.d.ts"
+    },
+    "./helpers/modules": {
+      "import": "./dist/helpers/helpers.modules.js",
+      "types": "./dist/helpers/helpers.modules.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": ["dist"]
+}

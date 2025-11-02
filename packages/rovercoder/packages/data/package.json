@@ -1,0 +1,26 @@
+{
+  "name": "@rovercoder/data",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@date-fns/tz": "^1.4.1",
+    "@portfoliosharp/shared": "*",
+    "date-fns": "^4.1.0"
+  },
+  "scripts": {
+    "install-all": "npm install",
+    "dev": "(npm run dev:watch-assets) & (npm run dev:watch-build-assets-data)",
+    "dev:watch-build-assets-data": "((tsc || true) && npm run assets:build-data) & (npx tsc-watch --noClear --onSuccess \"npm run assets:build-data\")",
+    "dev:watch-assets": "npm run assets:watch-and-copy",
+    "assets:build-data": "node ./dist/runners/site.data.builder.js || true",
+    "assets:watch-and-copy": "npx chokidar './assets/**/*' -c \"npm run assets:copy\" --initial",
+    "assets:copy": "rm -rf ../site/public/assets && cp -r ./assets ../site/public/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.2",
+    "chokidar-cli": "^3.0.0",
+    "tsc-watch": "^7.2.0",
+    "typescript": "^5.9.3"
+  }
+}

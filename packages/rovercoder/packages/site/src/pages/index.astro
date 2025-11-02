@@ -1,0 +1,17 @@
+---
+import type { NavLinkEntry } from "../components/atoms/NavLink.types";
+import BackgroundImage from "../components/helpers/BackgroundImage.astro";
+import ProfileFrontPageSection from "../components/organisms/ProfileFrontPageSection.astro";
+import RoverCoderPageTemplate from "../templates/RoverCoderPageTemplate.astro";
+const pageTitle = "RoverCoder | Home Page";
+const navLinks: NavLinkEntry[] = [
+	{ link: "/", name: "Home" },
+	{ link: "/about/", name: "About" },
+	{ link: "/blog/", name: "Blog" },
+];
+---
+
+<RoverCoderPageTemplate pageTitle={pageTitle} navLinks={navLinks}>
+	<ProfileFrontPageSection />
+</RoverCoderPageTemplate>
+

@@ -1,0 +1,63 @@
+---
+import SiteLogo from "../atoms/SiteLogo.astro";
+import Hamburger from "../atoms/Hamburger.astro";
+import Navigation from "../molecules/Navigation.astro";
+import type { NavLinkEntry } from "../atoms/NavLink.types";
+import type { SiteLogoProperties } from "../atoms/SiteLogo.types";
+// import ThemeIcon from './ThemeIcon.astro';
+
+const { logoImage, navLinks } = Astro.props as { logoImage: SiteLogoProperties, navLinks: NavLinkEntry[] };
+---
+
+<header>
+    <nav>
+        <div class="logo-container-container"><SiteLogo imageAlt={logoImage.alt} imageSrc={logoImage.source} /></div>
+        <!-- <ThemeIcon /> -->
+        <div class="nav-links-container"><Navigation navLinks={navLinks} /></div>
+        <div class="hamburger-container"><Hamburger /></div>
+    </nav>
+</header>
+<script>
+    import "/src/scripts/menu.ts";
+</script>
+
+<style lang="scss">
+    @use '/src/styles/variables.scss' as *;
+
+    header nav {
+        display: inline-flex;
+        justify-content: space-between;
+        width: 100%;
+        height: inherit;
+    }
+
+    .nav-links-container {
+        flex-grow: 1;
+    }
+
+    .logo-container-container {
+        display: flex;
+        align-items: center;
+        align-self: center;
+        padding: 2vh;
+        height: inherit;
+    }
+
+    .nav-links-container {
+        padding: 2vh;
+    }
+
+    .hamburger-container {
+        display: flex;
+        align-items: center;
+        align-self: center;
+        padding: 2vh;
+        height: inherit;
+    }
+
+    @media screen and (min-width: $mobile-breakpoint) {
+        .hamburger-container {
+            display: none;
+        }
+    }
+</style>
