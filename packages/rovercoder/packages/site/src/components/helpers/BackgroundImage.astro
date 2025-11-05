@@ -5,28 +5,29 @@ interface Props {
 	backgroundRepeat?: string | undefined;
 	backgroundSize?: string | undefined;
 	backgroundBorderRadius?: string | undefined;
-	backgroundZIndex?: string | undefined;
 	type?: string | undefined;
 }
-var { backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize = 'cover', backgroundBorderRadius, backgroundZIndex, type = 'absolute' } = Astro.props;
+var { backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize = 'cover', backgroundBorderRadius, type = 'absolute' } = Astro.props;
 backgroundUrl = `url(${backgroundUrl})`;
 var backgroundPosition;
 var backgroundHeight;
 var backgroundWidth;
+var backgroundTop;
+var backgroundLeft;
 switch (type) {
 	case 'fixedFullScreen': 
 		backgroundPosition = 'fixed';
-		backgroundHeight = '100vh';
-		backgroundWidth = '100vw';
-		if (backgroundZIndex == null || backgroundZIndex.toString().trim().length === 0) 
-			backgroundZIndex = '-1';
+		backgroundHeight = '100%';
+		backgroundWidth = '100%';
+		backgroundTop = '0px';
+		backgroundLeft = '0px';
 		break;
 	case 'absolute':
 		backgroundPosition = 'absolute';
 		backgroundHeight = '100%';
 		backgroundWidth = '100%';
-		if (backgroundZIndex == null || backgroundZIndex.toString().trim().length === 0) 
-			backgroundZIndex = '0';
+		backgroundTop = '0px';
+		backgroundLeft = '0px';
 		break;
 	default:
 		throw Error(`Not supported background type! Type: ${type}`);
@@ -34,36 +35,42 @@ switch (type) {
 ---
 
 <div class="wrapper">
-	<div class={`background-image ${backgroundPosition === 'fixed' ? 'sticky-child' : ''}`} style={backgroundPosition === 'fixed' ? "opacity: 0; /* opacity: 0, because different fixed backgrounds of different sections will overlap at the start before script runs */ top: 0px; bottom: 0px; left: 0px; right: 0px" : "top: 0px; left: 0px;"}></div>
+	<div class="background-image-wrapper">
+		<div class='background-image' style={backgroundPosition === 'fixed' && "transform: translateZ(0); will-change: transform;" /** For iOS Safari browsers */}></div>
+	</div>
 	<div class="content">
 		<slot />
 	</div>
 </div>
 
-<script>
-    import '/src/scripts/scroll-fixed-element.ts';
-
-	document.querySelectorAll('.sticky-child').forEach(stickyChild => { (stickyChild as HTMLElement).style.opacity = '' });
-</script>
-
-<style define:vars={{ backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize, backgroundBorderRadius, backgroundZIndex, backgroundPosition, backgroundHeight, backgroundWidth }}>
+<style define:vars={{ backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize, backgroundBorderRadius, backgroundPosition, backgroundHeight, backgroundWidth, backgroundTop, backgroundLeft }}>
 	.wrapper {
 		position: relative;
 		border-radius: var(--backgroundBorderRadius);
 		overflow: hidden;
 	}
 
+	.background-image-wrapper {
+		clip-path: inset(0);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+
 	.background-image {
 		position: var(--backgroundPosition);
 		height: var(--backgroundHeight);
 		width: var(--backgroundWidth);
-		overflow: hidden;
+		top: var(--backgroundTop);
+		left: var(--backgroundLeft);
+		display: block;
         background-image: var(--backgroundUrl);
         background-color: var(--backgroundColor);
         background-repeat: var(--backgroundRepeat);
 		background-size: var(--backgroundSize);
-		background-position: center;
-		z-index: var(--backgroundZIndex);
+		background-position: center center;
 		transition: opacity 150ms ease-in-out;
 	}
 
