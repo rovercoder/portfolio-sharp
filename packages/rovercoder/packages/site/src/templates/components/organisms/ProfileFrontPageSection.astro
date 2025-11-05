@@ -1,28 +1,26 @@
 ---
-import BackgroundImage from "../../../components/helpers/BackgroundImage.astro";
-import RoverCoderCard from "../molecules/RoverCoderCard.astro";
+import Section from "../../../components/atoms/Section.astro";
+import type { FlexProperties } from "../../../components/atoms/Section.types";
+import type { BackgroundProperties } from "../../../components/helpers/Background.types";
 
-const title = "Nathan Zahra";
-const description = "I write software to the best of my ability and targeting all the edge cases I can see, making one feel at home with the end result.";
-const imageUrl = "/assets/images/site/profile/profile.jpg";
+const minHeight = '100vh';
+const padding = '1rem';
+const backgroundProperties: BackgroundProperties = {
+	backgroundImageUrl: '/assets/images/site/backgrounds/seamless-circuit-board-pattern.svg',
+	backgroundColor: '#321616',
+	backgroundImageRepeat: 'repeat',
+	backgroundType: 'fixedFullScreen'
+};
+const displayProperties: FlexProperties = {
+	display: 'flex',
+	flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    alignItems: 'flex-start',
+    alignContent: 'center'
+};
 ---
 
-<BackgroundImage backgroundUrl="/assets/images/site/backgrounds/seamless-circuit-board-pattern.svg" backgroundColor="#321616" backgroundRepeat="repeat" type="fixedFullScreen">
-    <div class="section">
-		<RoverCoderCard imageSrc={imageUrl} title={title} description={description} />
-	</div>
-</BackgroundImage>
-
-<style>
-	.section {
-		position: relative;
-		min-height: 100vh;
-		padding: 1rem;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: space-around;
-		align-items: flex-start;
-		align-content: center;
-	}
-</style>
+<Section minHeight={minHeight} padding={padding} background={backgroundProperties} displayProperties={displayProperties}>
+	<slot name="profileCard" />
+</Section>

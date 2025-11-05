@@ -1,0 +1,58 @@
+---
+import Background from "../helpers/Background.astro";
+import type { BackgroundProperties } from "../helpers/Background.types";
+import type { FlexProperties as FlexDisplayProperties } from "./Section.types";
+interface Props {
+    minHeight?: string;
+    padding?: string;
+    background: BackgroundProperties;
+    displayProperties: FlexDisplayProperties;
+}
+const { minHeight, padding, background, displayProperties } = Astro.props;
+
+var display;
+var flexDirection;
+var flexWrap;
+var justifyContent;
+var alignItems;
+var alignContent;
+
+switch (displayProperties.display) {
+    case 'flex': 
+        display = displayProperties.display;
+        flexDirection = displayProperties.flexDirection;
+        flexWrap = displayProperties.flexWrap;
+        justifyContent = displayProperties.justifyContent;
+        alignItems = displayProperties.alignItems;
+        alignContent = displayProperties.alignContent;
+        break;
+    default:
+        throw new Error(`Unsupported display properties for section! ${JSON.stringify(displayProperties)}`);
+}
+---
+
+<section>
+    <Background imageUrl={background.backgroundImageUrl} color={background.backgroundColor} imageRepeat={background.backgroundImageRepeat} imageSize={background.backgroundImageSize} borderRadius={background.backgroundBorderRadius} type={background.backgroundType}>
+        <div class="section-content">
+            <slot />
+        </div>
+    </Background>
+</section>
+
+<style define:vars={{ minHeight, padding, display, flexDirection, flexWrap, justifyContent, alignItems, alignContent }}>
+	section {
+        position: relative;
+	}
+
+    .section-content {
+        position: relative;
+		padding: var(--padding);
+		min-height: var(--minHeight);
+		display: var(--display);
+		flex-direction: var(--flexDirection);
+		flex-wrap: var(--flexWrap);
+		justify-content: var(--justifyContent);
+		align-items: var(--alignItems);
+		align-content: var(--alignContent);
+    }
+</style>

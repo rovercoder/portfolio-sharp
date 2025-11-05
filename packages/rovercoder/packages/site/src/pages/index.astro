@@ -1,5 +1,6 @@
 ---
 import type { NavLinkEntry } from "../components/atoms/NavLink.types";
+import RoverCoderCard from "../templates/components/molecules/RoverCoderCard.astro";
 import ProfileFrontPageSection from "../templates/components/organisms/ProfileFrontPageSection.astro";
 import RoverCoderPageTemplate from "../templates/RoverCoderPageTemplate.astro";
 const pageTitle = "RoverCoder | Home Page";
@@ -8,9 +9,13 @@ const navLinks: NavLinkEntry[] = [
 	{ link: "/about/", name: "About" },
 	{ link: "/blog/", name: "Blog" },
 ];
+const title = "Nathan Zahra";
+const description = "I write software to the best of my ability and targeting all the edge cases I can see, making one feel at home with the end result.";
+const imageUrl = "/assets/images/site/profile/profile.jpg";
 ---
 
 <RoverCoderPageTemplate pageTitle={pageTitle} navLinks={navLinks}>
-	<ProfileFrontPageSection />
+	<ProfileFrontPageSection>
+		<RoverCoderCard slot="profileCard" imageSrc={imageUrl} title={title} description={description} />
+	</ProfileFrontPageSection>
 </RoverCoderPageTemplate>
-
