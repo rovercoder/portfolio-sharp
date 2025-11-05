@@ -5,7 +5,13 @@ import '../styles/global.scss';
 import type { SocialLinkEntry } from '../components/atoms/SocialLink.types';
 import type { NavLinkEntry } from '../components/atoms/NavLink.types';
 import type { SiteLogoProperties } from '../components/atoms/SiteLogo.types';
-const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props as { pageTitle: string, headerLogoImage: SiteLogoProperties, navLinks: NavLinkEntry[], socialLinks: SocialLinkEntry[] };
+interface Props { 
+    pageTitle: string;
+    headerLogoImage: SiteLogoProperties;
+    navLinks: NavLinkEntry[];
+    socialLinks: SocialLinkEntry[];
+}
+const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props;
 ---
 <html lang="en">
     <head>

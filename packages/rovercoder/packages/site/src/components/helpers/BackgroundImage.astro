@@ -1,5 +1,14 @@
 ---
-var { backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize = 'cover', backgroundZIndex = '-1', type = 'fixedFullScreen' } = Astro.props as { backgroundUrl?: string, backgroundColor?: string, backgroundRepeat?: string, backgroundSize?: string, backgroundZIndex?: string, type?: string };
+interface Props { 
+	backgroundUrl: string;
+	backgroundColor?: string | undefined;
+	backgroundRepeat?: string | undefined;
+	backgroundSize?: string | undefined;
+	backgroundBorderRadius?: string | undefined;
+	backgroundZIndex?: string | undefined;
+	type?: string | undefined;
+}
+var { backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize = 'cover', backgroundBorderRadius, backgroundZIndex, type = 'absolute' } = Astro.props;
 backgroundUrl = `url(${backgroundUrl})`;
 var backgroundPosition;
 var backgroundHeight;
@@ -9,11 +18,15 @@ switch (type) {
 		backgroundPosition = 'fixed';
 		backgroundHeight = '100vh';
 		backgroundWidth = '100vw';
+		if (backgroundZIndex == null || backgroundZIndex.toString().trim().length === 0) 
+			backgroundZIndex = '-1';
 		break;
 	case 'absolute':
 		backgroundPosition = 'absolute';
 		backgroundHeight = '100%';
 		backgroundWidth = '100%';
+		if (backgroundZIndex == null || backgroundZIndex.toString().trim().length === 0) 
+			backgroundZIndex = '0';
 		break;
 	default:
 		throw Error(`Not supported background type! Type: ${type}`);
@@ -33,9 +46,11 @@ switch (type) {
 	document.querySelectorAll('.sticky-child').forEach(stickyChild => { (stickyChild as HTMLElement).style.opacity = '' });
 </script>
 
-<style define:vars={{ backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize, backgroundZIndex, backgroundPosition, backgroundHeight, backgroundWidth }}>
+<style define:vars={{ backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize, backgroundBorderRadius, backgroundZIndex, backgroundPosition, backgroundHeight, backgroundWidth }}>
 	.wrapper {
 		position: relative;
+		border-radius: var(--backgroundBorderRadius);
+		overflow: hidden;
 	}
 
 	.background-image {

@@ -1,7 +1,10 @@
 ---
 import NavLink from "../atoms/NavLink.astro";
 import type { NavLinkEntry } from "../atoms/NavLink.types";
-const { navLinks } = Astro.props as { navLinks: NavLinkEntry[] }
+interface Props {
+    navLinks: NavLinkEntry[];
+}
+const { navLinks } = Astro.props;
 ---
 <div class="nav-links">
     {navLinks.map(x => <NavLink link={x.link} name={x.name} />)}

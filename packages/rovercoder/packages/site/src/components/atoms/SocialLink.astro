@@ -1,4 +1,9 @@
 ---
+interface Props {
+  profileUrl: string;
+  platformName: string;
+  username: string;
+}
 const { profileUrl, platformName, username } = Astro.props;
 ---
 <a href={profileUrl}>{platformName} [{username}]</a>

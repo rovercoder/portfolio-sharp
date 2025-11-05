@@ -1,0 +1,49 @@
+---
+import { undefined } from 'astro:schema';
+import Card from '../../../components/molecules/Card.astro';
+
+interface Props { 
+    imageSrc?: string | string[];
+    imageIsIcon?: boolean;
+    title?: string
+    description?: string;
+    hint?: string;
+}
+const { imageSrc, imageIsIcon, title, description, hint } = Astro.props;
+
+const imageHeight = '15rem';
+var imageBorderRadius;
+const iconSize = '7rem';
+const iconMargin = '3rem';
+const textMargin = '0 .5rem 0 .5rem';
+const textPadding = '1rem';
+const textBackgroundColor = '#ffffffd3';
+const cardWidth = '15.2rem';
+const cardBackgroundColor = '#E5E5E5';
+const cardBorderRadius = '.5rem';
+const cardBorder = '2px #c70000 solid';
+const cardPadding = '0px 0px .5rem 0px';
+const cardTextAlign = 'center';
+const cardBoxShadow = '0px 0px 9px black';
+---
+<Card 
+    imageSrc={imageSrc} 
+    imageIsIcon={imageIsIcon} 
+    imageHeight={imageHeight}
+    imageBorderRadius={imageBorderRadius}
+    iconSize={iconSize}
+    iconMargin={iconMargin}
+    textMargin={textMargin}
+    textPadding={textPadding}
+    textBackgroundColor={textBackgroundColor}
+    cardWidth={cardWidth}
+    cardBackgroundColor={cardBackgroundColor}
+    cardBorderRadius={cardBorderRadius}
+    cardBorder={cardBorder}
+    cardPadding={cardPadding}
+    cardTextAlign={cardTextAlign}
+    cardBoxShadow={cardBoxShadow}
+    title={title} 
+    description={description} 
+    hint={hint}
+/>

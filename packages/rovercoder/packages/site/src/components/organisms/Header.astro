@@ -5,8 +5,11 @@ import Navigation from "../molecules/Navigation.astro";
 import type { NavLinkEntry } from "../atoms/NavLink.types";
 import type { SiteLogoProperties } from "../atoms/SiteLogo.types";
 // import ThemeIcon from './ThemeIcon.astro';
-
-const { logoImage, navLinks } = Astro.props as { logoImage: SiteLogoProperties, navLinks: NavLinkEntry[] };
+interface Props { 
+    logoImage: SiteLogoProperties;
+    navLinks: NavLinkEntry[]; 
+}
+const { logoImage, navLinks } = Astro.props;
 ---
 
 <header>

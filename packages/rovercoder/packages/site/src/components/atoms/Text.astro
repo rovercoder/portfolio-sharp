@@ -1,5 +1,9 @@
 ---
-var { content, type } = Astro.props as { content?: string | string[], type?: string };
+interface Props {
+    content?: string | string[] | undefined;
+    type?: string;
+}
+var { content, type } = Astro.props;
 var fontFamily = 'Inter';
 var fontSize = '0.8125rem';
 var fontWeight = 400;

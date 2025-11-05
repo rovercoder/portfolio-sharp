@@ -16,8 +16,13 @@ const socialLinksRoverCoder: SocialLinkEntry[] = [
 	{ platformName: "github", profileUrl: "https://www.github.com/withastro", username: "withastro" },
 	{ platformName: "youtube", profileUrl: "https://www.youtube.com/astrodotbuild", username: "astrodotbuild" }
 ];
-
-const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props as { pageTitle: string, headerLogoImage: SiteLogoProperties, navLinks: NavLinkEntry[], socialLinks: SocialLinkEntry[] };
+interface Props { 
+	pageTitle: string;
+	headerLogoImage?: SiteLogoProperties;
+	navLinks?: NavLinkEntry[];
+	socialLinks?: SocialLinkEntry[];
+}
+const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props;
 ---
 <BaseLayout pageTitle={pageTitle} headerLogoImage={headerLogoImage ?? headerLogoImageRoverCoder} navLinks={navLinks ?? navLinksRoverCoder} socialLinks={socialLinks ?? socialLinksRoverCoder}>
 	<slot />

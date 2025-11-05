@@ -2,16 +2,81 @@
 import BackgroundImage from "../helpers/BackgroundImage.astro";
 import Text from "../atoms/Text.astro";
 
-const { imageSrc, imageIsIcon = false, title, description, hint } = Astro.props as { imageSrc?: string | string[], imageIsIcon?: boolean, title?: string, description?: string, hint?: string };
+interface Props { 
+    imageSrc?: string | string[] | undefined;
+    imageIsIcon?: boolean | undefined;
+    imageHeight?: string | undefined;
+    imageBorderRadius?: string | undefined;
+    iconSize?: string | undefined;
+    iconMargin?: string | undefined;
+    textMargin?: string | undefined;
+    textPadding?: string | undefined;
+    textBackgroundColor?: string | undefined;
+    cardWidth?: string | undefined;
+    cardBackgroundColor?: string | undefined;
+    cardBorderRadius?: string | undefined;
+    cardBorder?: string | undefined;
+    cardPadding?: string | undefined;
+    cardTextAlign?: string | undefined;
+    cardBoxShadow?: string | undefined;
+    title?: string | undefined;
+    description?: string | undefined;
+    hint?: string | undefined;
+}
+const { imageSrc, imageIsIcon = false, imageHeight = '15rem', imageBorderRadius, iconSize = '7rem', iconMargin = '3rem', textMargin, textPadding = '1rem', textBackgroundColor, cardWidth = '15rem', cardBackgroundColor, cardBorderRadius, cardBorder, cardPadding, cardTextAlign = 'center', cardBoxShadow, title, description, hint } = Astro.props;
 var _imageIsIcon = imageIsIcon == null ? null : (typeof imageIsIcon === 'string' ? (`${imageIsIcon}`.toLowerCase() === 'true') : imageIsIcon);
-var _imageSrc = (imageSrc == null || imageSrc === '' || (Array.isArray(imageSrc) && imageSrc.filter(x => x != null && x != '').length === 0)) ? null : [Array.isArray(imageSrc) ? imageSrc.filter(x => x != null && x != '') : [imageSrc]];
+var _imageSrc = (imageSrc == null || imageSrc === '' || (Array.isArray(imageSrc) && imageSrc.filter(x => x != null && x != '').length === 0)) ? null : (Array.isArray(imageSrc) ? imageSrc.filter(x => x != null && x != '') : [imageSrc]);
 ---
 
 <div class="card">
     { _imageSrc != null && (_imageIsIcon == null || _imageIsIcon !== true 
-        ? <div class="image"><BackgroundImage backgroundUrl={_imageSrc[0]} type="absolute" /></div> 
-        : <div class="icon">{_imageSrc[0]}</div>) }
-    {title != null && <div class="title"><Text type="card-title" content={title} /></div>}
-    {hint != null && <div class="hint"><Text type="card-hint" content={hint} /></div>}
-    {description != null && <div class="description"><Text type="card-description" content={description} /></div>}
+        ? <div class="image-container"><BackgroundImage backgroundUrl={_imageSrc[0]} backgroundBorderRadius={imageBorderRadius} type="absolute"><div class="image"></div></BackgroundImage></div>
+        : <div class="icon-container"><BackgroundImage backgroundUrl={_imageSrc[0]} backgroundBorderRadius={imageBorderRadius} type="absolute"><div class="icon"></div></BackgroundImage></div>
+    )}
+    <div class="text">
+        {title != null && <div class="title"><Text type="card-title" content={title} /></div>}
+        {hint != null && <div class="hint"><Text type="card-hint" content={hint} /></div>}
+        {description != null && <div class="description"><Text type="card-description" content={description} /></div>}
+    </div>
 </div>
+
+<style define:vars={{ imageHeight, imageBorderRadius, iconSize, iconMargin, textMargin, textPadding, textBackgroundColor, cardWidth, cardBackgroundColor, cardBorderRadius, cardBorder, cardPadding, cardTextAlign, cardBoxShadow }}>
+    .card {
+        width: var(--cardWidth);
+        background-color: var(--cardBackgroundColor);
+        border-radius: var(--cardBorderRadius);
+        border: var(--cardBorder);
+        padding: var(--cardPadding);
+        text-align: var(--cardTextAlign);
+        box-shadow: var(--cardBoxShadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        align-content: flex-start;
+        overflow: hidden;
+    }
+
+    .card .text {
+        margin: var(--textMargin);
+        padding: var(--textPadding);
+        background-color: var(--textBackgroundColor);
+    }
+
+    .card .image-container {
+        width: 100%;
+    }
+
+    .card .image {
+        height: var(--imageHeight);
+    }
+
+    .card .icon-container {
+        margin: var(--iconMargin);
+    }
+
+    .card .icon {
+        height: var(--iconSize);
+        width: var(--iconSize);
+    }
+</style>

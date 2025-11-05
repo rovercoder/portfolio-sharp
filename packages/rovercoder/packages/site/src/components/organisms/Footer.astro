@@ -1,7 +1,10 @@
 ---
 import type { SocialLinkEntry } from "../atoms/SocialLink.types";
 import SocialLinks from "../molecules/SocialLinks.astro";
-const { socialLinks } = Astro.props as { socialLinks: SocialLinkEntry[] };
+interface Props {
+    socialLinks: SocialLinkEntry[];
+}
+const { socialLinks } = Astro.props;
 ---
 
 <style>
