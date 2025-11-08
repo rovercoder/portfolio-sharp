@@ -2,13 +2,14 @@
 interface Props {
     link: string;
     name: string;
+    hoverFocusBackgroundColor: string;
 }
-const { link, name } = Astro.props;
+const { link, name, hoverFocusBackgroundColor } = Astro.props;
 ---
 
 <a href={link}>{name}</a>
 
-<style lang="scss">
+<style lang="scss" define:vars={{ hoverFocusBackgroundColor }}>
     @use '/src/styles/variables.scss' as *;
 
     a {
@@ -21,10 +22,15 @@ const { link, name } = Astro.props;
         text-transform: uppercase;
     }
 
-    @media screen and (min-width: $mobile-breakpoint) {
+    @media screen and (min-width: $mobileBreakpoint) {
         a {
             display: inline-block;
             padding: 15px 20px;
         }
+    }
+
+    a:hover,
+    a:focus {
+        background-color: var(--hoverFocusBackgroundColor);
     }
 </style>

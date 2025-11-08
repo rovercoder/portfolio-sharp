@@ -74,7 +74,7 @@ if (importExpressions.length > 0) {
     console.warn(`Warning: Import expressions found after bundling:\r\n${importExpressions.map(x => `Function: ${x.getFunctionSignature() ?? 'N/A (Possibly in global scope)'} | Code: "${x.toSource()}"`).join('\r\n')}\r\n`);
 }
 
-var minifiedCodeResult = codeMinifier.minifyCode(code);
+var minifiedCodeResult = await codeMinifier.minifyCode(code);
 
 if (!minifiedCodeResult.success) {
     throw Error(JSON.stringify(minifiedCodeResult.error));
@@ -167,7 +167,7 @@ if (globalObjectDeclarator == null) {
     //parsedCode.removeGlobalVariableDeclaratorByName()
     // remove export statement
 
-    const finalCode = codeMinifier.minifyCode(parsedCode.toSource().trim());
+    const finalCode = await codeMinifier.minifyCode(parsedCode.toSource().trim());
     if (!finalCode.success) {
         throw Error('Unsuccessful minification after amends!');
     }

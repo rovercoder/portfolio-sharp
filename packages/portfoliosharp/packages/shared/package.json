@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "install-all": "npm install",
-    "dev": "(tsc || true) && tsc --watch"
+    "build": "tsc",
+    "dev": "((npm run build) || true) & (npm run watch)",
+    "watch": "tsc --watch"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
@@ -16,6 +18,7 @@
     "@types/uglify-js": "^3.17.5",
     "jscodeshift": "^17.3.0",
     "rollup": "^4.52.5",
+    "terser": "^5.44.1",
     "typescript": "^5.9.3",
     "uglify-js": "^3.19.3"
   },
@@ -67,5 +70,7 @@
   },
   "types": "./dist/index.d.ts",
   "sideEffects": false,
-  "files": ["dist"]
+  "files": [
+    "dist"
+  ]
 }

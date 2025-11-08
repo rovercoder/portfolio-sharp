@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "install-all": "(npm install) && (npm run install-all --prefix packages/data) && (npm run install-all --prefix packages/site)",
-    "dev": "(npm run dev --prefix packages/data) & (npm run dev --prefix packages/site)"
+    "dev": "(npm run dev --prefix packages/data) & (npm run dev --prefix packages/site)",
+    "build": "(npm run build --prefix packages/data) && (npm run build --prefix packages/site)"
   }
 }

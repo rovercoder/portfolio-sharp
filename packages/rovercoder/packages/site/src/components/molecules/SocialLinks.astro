@@ -1,14 +1,8 @@
 ---
-import SocialLink from "../atoms/SocialLink.astro";
-import type { SocialLinkEntry } from "../atoms/SocialLink.types";
-interface Props {
-    socialLinks: SocialLinkEntry[];
-}
-const { socialLinks } = Astro.props;
 ---
 
 <div class="social-links">
-    {socialLinks.map(x => <SocialLink profileUrl={x.profileUrl} platformName={x.platformName} username={x.username} />)}
+    <slot />
 </div>
 
 <style>

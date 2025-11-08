@@ -1,0 +1,35 @@
+---
+import Background from "../helpers/Background.astro";
+interface Props {
+    url?: string | undefined;
+	color?: string | undefined;
+	imageRepeat?: string | undefined;
+	imageSize?: string | undefined;
+	borderRadius?: string | undefined;
+    width?: string | undefined;
+    height?: string | undefined;
+    containerMargin?: string | undefined;
+}
+const { url, color, imageRepeat, imageSize, borderRadius, width = '100%', height = '100%', containerMargin } = Astro.props;
+---
+
+<div class="image-container">
+    <Background imageUrl={url} color={color} imageRepeat={imageRepeat} imageSize={imageSize} borderRadius={borderRadius} type="absolute">
+        <div class="image-content">
+            <slot />
+        </div>
+    </Background>
+</div>
+
+<style define:vars={{ width, height, containerMargin }}>
+    .image-container {
+        width: var(--width);
+        height: var(--height);
+        margin: var(--containerMargin);
+    }
+
+    .image-container .image-content {
+        width: var(--width);
+        height: var(--height);
+    }
+</style>

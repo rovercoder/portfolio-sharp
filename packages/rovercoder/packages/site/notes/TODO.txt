@@ -1,0 +1,17 @@
+Header
+> Mobile navigation menu should overlay and be closeable
+
+Card
+- Image Set selector on card + < popup browser >
+- Image description (i) button on card + pop up text
+- Hint text (*) formatting and pop up text
+
+Text
+- Convert Text to generic component and move defined types to RoverCoderText
+- Remove <p></p> and only add conditionally
+
+StatisticsFrontPageSection
+- Continue
+
+Data
+- Should be loaded from site.data.json

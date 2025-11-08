@@ -3,14 +3,10 @@ import Section from "../../../components/atoms/Section.astro";
 import type { FlexProperties } from "../../../components/atoms/Section.types";
 import type { BackgroundProperties } from "../../../components/helpers/Background.types";
 
-const minHeight = 'calc(100vh - var(--headerHeight))';
-const padding = '1rem';
 const backgroundProperties: BackgroundProperties = {
-	backgroundImageUrl: '/assets/images/site/backgrounds/seamless-circuit-board-pattern.svg',
-	backgroundColor: '#321616',
-	backgroundImageRepeat: 'repeat',
-	backgroundType: 'fixedFullScreen'
+    backgroundColor: '#0B0B0B'
 };
+
 const displayProperties: FlexProperties = {
 	display: 'flex',
 	flexDirection: 'row',
@@ -21,6 +17,6 @@ const displayProperties: FlexProperties = {
 };
 ---
 
-<Section minHeight={minHeight} padding={padding} backgroundProperties={backgroundProperties} displayProperties={displayProperties}>
-	<slot name="profileCard" />
+<Section backgroundProperties={backgroundProperties} displayProperties={displayProperties}>
+    <slot />
 </Section>

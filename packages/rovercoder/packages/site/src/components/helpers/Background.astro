@@ -19,7 +19,7 @@ const { imageUrl, color, imageRepeat, imageSize, borderRadius, type } = Astro.pr
                 <slot />
             </div>
         
-        :    <BackgroundImage backgroundUrl={imageUrl} backgroundColor={color} backgroundRepeat={imageRepeat} backgroundSize={imageSize} backgroundBorderRadius={borderRadius} type={type}>
+        :   <BackgroundImage backgroundUrl={imageUrl} backgroundColor={color} backgroundRepeat={imageRepeat} backgroundSize={imageSize} backgroundBorderRadius={borderRadius} type={type}>
                 <slot />
             </BackgroundImage>
 }

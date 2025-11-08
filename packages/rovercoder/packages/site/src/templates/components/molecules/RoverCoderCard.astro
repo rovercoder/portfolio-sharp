@@ -1,19 +1,24 @@
 ---
-import { undefined } from 'astro:schema';
 import Card from '../../../components/molecules/Card.astro';
+import Icon from '../../../components/atoms/Icon.astro';
+import Image from '../../../components/atoms/Image.astro';
+import Text from '../../../components/atoms/Text.astro';
+
+interface ImageProps { url?: string | undefined; color?: string | undefined; imageRepeat?: string | undefined; imageSize?: string | undefined; };
 
 interface Props { 
-    imageSrc?: string | string[];
+    image?: ImageProps | ImageProps[];
     imageIsIcon?: boolean;
     title?: string
     description?: string;
     hint?: string;
 }
-const { imageSrc, imageIsIcon, title, description, hint } = Astro.props;
+const { image, imageIsIcon, title, description, hint } = Astro.props;
+var _images = (image == null || (Array.isArray(image) && image.filter(x => x != null).length === 0)) ? null : (Array.isArray(image) ? image.filter(x => x != null) : [image]);
 
 const imageHeight = '15rem';
 var imageBorderRadius;
-const iconSize = '7rem';
+const iconSize = '6rem';
 const iconMargin = '3rem';
 const textMargin = '0 .5rem 0 .5rem';
 const textPadding = '1rem';
@@ -26,13 +31,7 @@ const cardPadding = '0px 0px .5rem 0px';
 const cardTextAlign = 'center';
 const cardBoxShadow = '0px 0px 9px black';
 ---
-<Card 
-    imageSrc={imageSrc} 
-    imageIsIcon={imageIsIcon} 
-    imageHeight={imageHeight}
-    imageBorderRadius={imageBorderRadius}
-    iconSize={iconSize}
-    iconMargin={iconMargin}
+<Card
     textMargin={textMargin}
     textPadding={textPadding}
     textBackgroundColor={textBackgroundColor}
@@ -43,7 +42,14 @@ const cardBoxShadow = '0px 0px 9px black';
     cardPadding={cardPadding}
     cardTextAlign={cardTextAlign}
     cardBoxShadow={cardBoxShadow}
-    title={title} 
-    description={description} 
-    hint={hint}
-/>
+>
+    { _images != null &&
+        (imageIsIcon 
+            ? <Icon slot="image" url={_images[0].url} color={_images[0].color} imageSize={_images[0].imageSize} borderRadius={imageBorderRadius} containerMargin={iconMargin} size={iconSize} />
+            : <Image slot="image" url={_images[0].url} color={_images[0].color} imageSize={_images[0].imageSize} imageRepeat={_images[0].imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
+        )
+    }
+    { title != null && <Text slot="title" type="card-title" content={title} /> }
+    { hint != null && <Text slot="hint" type="card-hint" content={hint} /> }
+    { description != null && <Text slot="description" type="card-description" content={description} /> }
+</Card>

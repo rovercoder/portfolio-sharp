@@ -1,17 +1,9 @@
 ---
-import Header from '../components/organisms/Header.astro';
-import Footer from '../components/organisms/Footer.astro';
 import '../styles/global.scss';
-import type { SocialLinkEntry } from '../components/atoms/SocialLink.types';
-import type { NavLinkEntry } from '../components/atoms/NavLink.types';
-import type { SiteLogoProperties } from '../components/atoms/SiteLogo.types';
 interface Props { 
     pageTitle: string;
-    headerLogoImage: SiteLogoProperties;
-    navLinks: NavLinkEntry[];
-    socialLinks: SocialLinkEntry[];
 }
-const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props;
+const { pageTitle } = Astro.props;
 ---
 <html lang="en">
     <head>
@@ -23,19 +15,19 @@ const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props;
     </head>
     <body>
         <div id="sticky-header-container">
-            <Header logoImage={headerLogoImage} navLinks={navLinks} />
+            <slot name="header" />
         </div>
         <div id="content-container">
-            <Header logoImage={headerLogoImage} navLinks={navLinks} />
+            <slot name="header" />
             <div id="content">
                 <slot />
             </div>
-            <Footer socialLinks={socialLinks} />
+            <slot name="footer">
         </div>
     </body>
 </html>
 
-<style is:global>
+<style>
     html {
         display: flex;
     }
@@ -58,30 +50,6 @@ const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props;
         z-index: 4;
     }
 
-    header {
-        background-color: #F2F2F2;
-        width: 100%;
-    }
-
-    header .hamburger .line {
-        background-color: #000000;
-    }
-
-    header .nav-links {
-        background-color: #ff9776;
-    }
-
-    header .nav-links a:hover,
-    header .nav-links a:focus {
-        background-color: #ff9776;
-    }
-
-    footer {
-        background-color: #000000;
-    }
-</style>
-
-<style>
     #content {
         flex-grow: 1;
         width: 100%;

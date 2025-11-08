@@ -94,7 +94,7 @@ export const getFunctionDetails = async function(func: Function | string): Promi
     const codeMinifier = await getCodeMinifier();
 
     var functionStringAlt = `function _noOneNamesAFunctionLikeThisFunctionName(${parameterMatch}) { ${functionBody} }`;
-    var minifiedFunctionResult = codeMinifier.minifyCode(functionStringAlt);
+    var minifiedFunctionResult = await codeMinifier.minifyCode(functionStringAlt);
     if (minifiedFunctionResult.success) {
         var minifiedFunctionBodyNeedsRegexMatching = minifiedFunctionResult.minifiedCode
             .replace(STRIP_COMMENTS, '')
@@ -164,7 +164,7 @@ export async function transformIntoSeparateFunctionsAndContext<ObjectWithFunctio
         console.warn(`Warning: Import expressions found after bundling:\r\n${importExpressions.map(x => `Function: ${x.getFunctionSignature() ?? 'N/A (Possibly in global scope)'} | Code: "${x.toSource()}"`).join('\r\n')}\r\n`);
     }
     
-    var minifiedCodeResult = codeMinifier.minifyCode(bundlingResult.bundledCode);
+    var minifiedCodeResult = await codeMinifier.minifyCode(bundlingResult.bundledCode);
     
     if (minifiedCodeResult == null || !minifiedCodeResult.success) {
         return { success: false, error: { type: minifiedCodeResult?.error?.type ?? 'general', message: minifiedCodeResult?.error?.message ?? 'Code not minified successfully!' } };
@@ -211,7 +211,7 @@ export async function transformIntoSeparateFunctionsAndContext<ObjectWithFunctio
     parsedCode.removeGlobalExportNamedDeclarationByExportedName(obj.exportedNameOfVariableFilePath);
     parsedCode.removeGlobalExportNamedDeclarationSpecifierByExportedName(obj.exportedNameOfVariableFilePath);
 
-    const finalCode = codeMinifier.minifyCode(parsedCode.toSource().trim());
+    const finalCode = await codeMinifier.minifyCode(parsedCode.toSource().trim());
     if (finalCode == null || !finalCode.success) {
         return { success: false, error: { type: finalCode?.error?.type ?? 'general', message: finalCode?.error?.message ?? 'Unsuccessful minification after amends!' } };
     }

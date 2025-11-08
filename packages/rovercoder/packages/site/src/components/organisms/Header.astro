@@ -1,31 +1,34 @@
 ---
-import SiteLogo from "../atoms/SiteLogo.astro";
-import Hamburger from "../atoms/Hamburger.astro";
-import Navigation from "../molecules/Navigation.astro";
-import type { NavLinkEntry } from "../atoms/NavLink.types";
-import type { SiteLogoProperties } from "../atoms/SiteLogo.types";
+import { prepareInlineScript } from '../../helpers/scripts';
+
+
 // import ThemeIcon from './ThemeIcon.astro';
-interface Props { 
-    logoImage: SiteLogoProperties;
-    navLinks: NavLinkEntry[]; 
+interface Props {
+    backgroundColor: string;
 }
-const { logoImage, navLinks } = Astro.props;
+const { backgroundColor } = Astro.props;
 ---
 
 <header>
     <nav>
-        <div class="logo-container-container"><SiteLogo imageAlt={logoImage.alt} imageSrc={logoImage.source} /></div>
+        <div class="logo-container-container"><slot name="logo" /></div>
         <!-- <ThemeIcon /> -->
-        <div class="nav-links-container"><Navigation navLinks={navLinks} /></div>
-        <div class="hamburger-container"><Hamburger /></div>
+        <div class="nav-links-container"><slot name="navigation" /></div>
+        <div class="hamburger-container"><slot name="hamburger" /></div>
     </nav>
 </header>
 <script>
     import "/src/scripts/menu.ts";
 </script>
+<script is:inline set:html={await prepareInlineScript("/src/scripts/.tsc-build/header.js")} />
 
-<style lang="scss">
+<style lang="scss" define:vars={{ backgroundColor }}>
     @use '/src/styles/variables.scss' as *;
+
+    header {
+        background-color: var(--backgroundColor);
+        width: 100%;
+    }
 
     header nav {
         display: inline-flex;
@@ -58,7 +61,7 @@ const { logoImage, navLinks } = Astro.props;
         height: inherit;
     }
 
-    @media screen and (min-width: $mobile-breakpoint) {
+    @media screen and (min-width: $mobileBreakpoint) {
         .hamburger-container {
             display: none;
         }

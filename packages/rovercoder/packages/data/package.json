@@ -10,8 +10,9 @@
   },
   "scripts": {
     "install-all": "npm install",
+    "build": "(tsc || true) && (npm run assets:build-data || true) && (npm run assets:copy || true)",
     "dev": "(npm run dev:watch-assets) & (npm run dev:watch-build-assets-data)",
-    "dev:watch-build-assets-data": "((tsc || true) && npm run assets:build-data) & (npx tsc-watch --noClear --onSuccess \"npm run assets:build-data\")",
+    "dev:watch-build-assets-data": "(npm run build) & (npx tsc-watch --noClear --onSuccess \"npm run assets:build-data\")",
     "dev:watch-assets": "npm run assets:watch-and-copy",
     "assets:build-data": "node ./dist/runners/site.data.builder.js || true",
     "assets:watch-and-copy": "npx chokidar './assets/**/*' -c \"npm run assets:copy\" --initial",

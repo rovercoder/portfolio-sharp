@@ -1,0 +1,27 @@
+---
+import Hamburger from '../../../components/atoms/Hamburger.astro';
+import NavLink from '../../../components/atoms/NavLink.astro';
+import type { NavLinkEntry } from '../../../components/atoms/NavLink.types';
+import SiteLogo from '../../../components/atoms/SiteLogo.astro';
+import type { SiteLogoProperties } from '../../../components/atoms/SiteLogo.types';
+import Navigation from '../../../components/molecules/Navigation.astro';
+import Header from '../../../components/organisms/Header.astro';
+
+interface Props {
+	logoImage: SiteLogoProperties;
+	navLinks: NavLinkEntry[];
+}
+const { logoImage, navLinks } = Astro.props;
+
+const headerBackgroundColor = "#F2F2F2";
+const hamburgerColor = "#000000";
+const navLinkHoverFocusBackgroundColor = "#ff9776";
+---
+
+<Header backgroundColor={headerBackgroundColor}>
+    <SiteLogo slot="logo" imageAlt={logoImage.alt} imageSrc={logoImage.source} />
+    <Navigation slot="navigation">
+        {navLinks.map(x => <NavLink link={x.link} name={x.name} hoverFocusBackgroundColor={navLinkHoverFocusBackgroundColor} />)}
+    </Navigation>
+    <Hamburger slot="hamburger" color={hamburgerColor} />
+</Header>

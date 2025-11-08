@@ -5,15 +5,19 @@
   "private": true,
   "scripts": {
     "install-all": "npm install",
-    "dev": "astro dev --host",
-    "build": "astro build",
+    "dev": "(npm run build:scripts) && (npm run watch:scripts & astro dev --host)",
+    "build": "(npm run build:scripts) && astro build",
+    "build:scripts": "tsc --project ./src/scripts",
+    "watch:scripts": "tsc --watch --project ./src/scripts",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@portfoliosharp/shared": "*",
     "astro": "^5.15.1"
   },
   "devDependencies": {
-    "sass": "^1.93.2"
+    "sass": "^1.93.2",
+    "uglify-js": "^3.19.3"
   }
 }

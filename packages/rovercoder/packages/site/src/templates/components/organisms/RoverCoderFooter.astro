@@ -1,0 +1,18 @@
+---
+import SocialLink from '../../../components/atoms/SocialLink.astro';
+import type { SocialLinkEntry } from '../../../components/atoms/SocialLink.types';
+import SocialLinks from '../../../components/molecules/SocialLinks.astro';
+import Footer from '../../../components/organisms/Footer.astro';
+
+interface Props { 
+	socialLinks: SocialLinkEntry[];
+}
+const footerBackgroundColor = "#000000";
+const { socialLinks } = Astro.props;
+---
+
+<Footer backgroundColor={footerBackgroundColor}>
+    <SocialLinks slot="socialLinks">
+        {socialLinks.map(x => <SocialLink profileUrl={x.profileUrl} platformName={x.platformName} username={x.username} />)}
+    </SocialLinks>
+</Footer>

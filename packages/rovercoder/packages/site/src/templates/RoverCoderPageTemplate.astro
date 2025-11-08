@@ -3,6 +3,8 @@ import type { NavLinkEntry } from "../components/atoms/NavLink.types";
 import type { SiteLogoProperties } from "../components/atoms/SiteLogo.types";
 import type { SocialLinkEntry } from "../components/atoms/SocialLink.types";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import RoverCoderFooter from "./components/organisms/RoverCoderFooter.astro";
+import RoverCoderHeader from "./components/organisms/RoverCoderHeader.astro";
 
 const headerLogoImageRoverCoder: SiteLogoProperties = {
 	alt: "RoverCoder Logo",
@@ -22,8 +24,10 @@ interface Props {
 	navLinks?: NavLinkEntry[];
 	socialLinks?: SocialLinkEntry[];
 }
-const { pageTitle, headerLogoImage, navLinks, socialLinks } = Astro.props;
+const { pageTitle, headerLogoImage = headerLogoImageRoverCoder, navLinks = navLinksRoverCoder, socialLinks = socialLinksRoverCoder } = Astro.props;
 ---
-<BaseLayout pageTitle={pageTitle} headerLogoImage={headerLogoImage ?? headerLogoImageRoverCoder} navLinks={navLinks ?? navLinksRoverCoder} socialLinks={socialLinks ?? socialLinksRoverCoder}>
+<BaseLayout pageTitle={pageTitle}>
+	<RoverCoderHeader slot="header" logoImage={headerLogoImage} navLinks={navLinks} />
 	<slot />
+	<RoverCoderFooter slot="footer" socialLinks={socialLinks} />
 </BaseLayout>
