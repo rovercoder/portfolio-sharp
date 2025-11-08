@@ -1,0 +1,19 @@
+- Copy dates into each other (with corresponding throws and overrides)
+	> Deduce proper start and end datetimes
+
+- Check if start and end date range is within (yearly, monthly, daily, hourly...) scope 
+
+- Loop for incomplete dates 
+	> Those with function calls
+		> Should return start and end date ranges
+	> Utilise a parseable property for loop conditions (applicableOnlyFor {months: string, or years: string})
+
+
+
+- Calculate school calendar holidays
+
+- Having a main schedule for projects wherein sub projects take a part of the time and duration via a time-based (range) ratio (against other sub-projects) that varies over time
+	> Schedule within a schedule might need to be tagged
+	
+PROBLEMS:
+	- Minified functions have modern JS syntax. Browser compatibility is a question.
