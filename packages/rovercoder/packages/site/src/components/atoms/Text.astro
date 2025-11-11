@@ -1,29 +1,32 @@
 ---
 interface Props {
-    content?: string | string[] | undefined;
-    type?: string;
+    content: string | string[];
+    fontFamily?: string | undefined;
+    fontSize?: string | undefined;
+    fontWeight?: number | string | undefined;
+    fontStyle?: string | undefined;
+    letterSpacing?: string | undefined;
+    isParagraph?: boolean | undefined;
 }
-var { content, type } = Astro.props;
-var fontFamily = 'Inter';
-var fontSize = '0.8125rem';
-var fontWeight = 400;
-var fontStyle = 'normal';
-var letterSpacing = 'normal';
-var textLines = content == null ? [] : (Array.isArray(content) ? content.map(x => x.toString()) : [content.toString()]);
-switch (type) {
-    case 'card-title':
-        fontSize = '0.9375rem';
-        fontWeight = 500;
-    case 'card-description': 
-    default: break;
-}
+var { content, fontFamily, fontSize, fontWeight, fontStyle, letterSpacing, isParagraph } = Astro.props;
+
+var textLines: string[] | null = content == null ? null : (Array.isArray(content) ? content.map(x => x.toString()) : [content.toString()]);
+var _paragraphMode = isParagraph?.toString().toLowerCase() === 'true';
 ---
 
 <div class="text">
-    {textLines.map(x => <p>{x}</p>)}
+    { textLines && (_paragraphMode ? textLines.map(x => <p>{x}</p>) : textLines.map(x => x).join('\r\n')) }
 </div>
 
 <style define:vars={{ fontFamily, fontSize, fontWeight, fontStyle, letterSpacing }}>
+    .text {
+        font-family: var(--fontFamily);
+        font-size: var(--fontSize);
+        font-weight: var(--fontWeight);
+        font-style: var(--fontStyle);
+        letter-spacing: var(--letterSpacing);
+    }
+    
     .text p {
         font-family: var(--fontFamily);
         font-size: var(--fontSize);

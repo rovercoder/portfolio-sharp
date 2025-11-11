@@ -1,21 +1,27 @@
 ---
 import type { NavLinkEntry } from "../components/atoms/NavLink.types";
 import RoverCoderCard from "../templates/components/molecules/RoverCoderCard.astro";
+import type { ImageProps } from "../templates/components/molecules/RoverCoderCard.types";
 import ProfileFrontPageSection from "../templates/components/organisms/ProfileFrontPageSection.astro";
 import RoverCoderPageTemplate from "../templates/RoverCoderPageTemplate.astro";
+import * as _siteData from '../../public/assets/data/site.data.json';
+import { type SiteData } from '@portfoliosharp/shared';
 const pageTitle = "RoverCoder | Home Page";
 const navLinks: NavLinkEntry[] = [
 	{ link: "/", name: "Home" },
 	{ link: "/about/", name: "About" },
 	{ link: "/blog/", name: "Blog" },
 ];
-const title = "Nathan Zahra";
-const description = "I write software to the best of my ability and targeting all the edge cases I can see, making one feel at home with the end result.";
-const imageUrl = "/assets/images/site/profile/profile.jpg";
+
+const siteData: SiteData = (_siteData as any) as SiteData;
 ---
 
 <RoverCoderPageTemplate pageTitle={pageTitle} navLinks={navLinks}>
 	<ProfileFrontPageSection>
-		<RoverCoderCard slot="profileCard" image={{url: imageUrl}} title={title} description={description} />
+		<RoverCoderCard slot="profileCard" 
+			image={siteData.content.profile.images.map(x => ({url: x.url, description: x.description, isMainImage: x.isMainImage} as ImageProps))} 
+			title={siteData.content.profile.fullName} 
+			description={siteData.content.profile.description} 
+		/>
 	</ProfileFrontPageSection>
 </RoverCoderPageTemplate>

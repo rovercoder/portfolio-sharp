@@ -1,0 +1,33 @@
+---
+import Text from '../../../components/atoms/Text.astro';
+
+interface Props {
+    content: string | string[];
+    type?: string | undefined;
+    isParagraph?: boolean | undefined;
+}
+const { content, type, isParagraph } = Astro.props;
+
+var fontFamily = 'Inter';
+var fontSize = '0.8125rem';
+var fontWeight = 400;
+var fontStyle = 'normal';
+var letterSpacing = 'normal';
+switch (type) {
+    case 'card-title':
+        fontSize = '0.9375rem';
+        fontWeight = 500;
+    case 'card-description': 
+    default: break;
+}
+---
+
+<Text 
+    content={content} 
+    fontFamily={fontFamily} 
+    fontSize={fontSize} 
+    fontWeight={fontWeight} 
+    fontStyle={fontStyle} 
+    letterSpacing={letterSpacing} 
+    isParagraph={isParagraph}
+/>

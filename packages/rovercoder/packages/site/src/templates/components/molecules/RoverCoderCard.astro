@@ -2,9 +2,8 @@
 import Card from '../../../components/molecules/Card.astro';
 import Icon from '../../../components/atoms/Icon.astro';
 import Image from '../../../components/atoms/Image.astro';
-import Text from '../../../components/atoms/Text.astro';
-
-interface ImageProps { url?: string | undefined; color?: string | undefined; imageRepeat?: string | undefined; imageSize?: string | undefined; };
+import RoverCoderText from '../atoms/RoverCoderText.astro';
+import type { ImageProps } from './RoverCoderCard.types';
 
 interface Props { 
     image?: ImageProps | ImageProps[];
@@ -15,13 +14,25 @@ interface Props {
 }
 const { image, imageIsIcon, title, description, hint } = Astro.props;
 var _images = (image == null || (Array.isArray(image) && image.filter(x => x != null).length === 0)) ? null : (Array.isArray(image) ? image.filter(x => x != null) : [image]);
+var mainImage;
+const otherImages: ImageProps[] = [];
+if (_images) {
+    for (var i = 0; i < (_images?.length ?? 0); i++) {
+        if (_images[i].isMainImage && mainImage == null) {
+            mainImage = _images[i];
+        } else {
+            otherImages.push(_images[i]);
+        }
+    }
+}
+var firstImage = mainImage ?? (_images == null ? null : (_images.length > 0 ? _images[0] : null));
 
 const imageHeight = '15rem';
 var imageBorderRadius;
 const iconSize = '6rem';
 const iconMargin = '3rem';
 const textMargin = '0 .5rem 0 .5rem';
-const textPadding = '1rem';
+const textPadding = '1.5rem 1rem 1rem 1rem';
 const textBackgroundColor = '#ffffffd3';
 const cardWidth = '15.2rem';
 const cardBackgroundColor = '#E5E5E5';
@@ -43,13 +54,13 @@ const cardBoxShadow = '0px 0px 9px black';
     cardTextAlign={cardTextAlign}
     cardBoxShadow={cardBoxShadow}
 >
-    { _images != null &&
+    { _images != null && firstImage != null &&
         (imageIsIcon 
-            ? <Icon slot="image" url={_images[0].url} color={_images[0].color} imageSize={_images[0].imageSize} borderRadius={imageBorderRadius} containerMargin={iconMargin} size={iconSize} />
-            : <Image slot="image" url={_images[0].url} color={_images[0].color} imageSize={_images[0].imageSize} imageRepeat={_images[0].imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
+            ? <Icon slot="image" url={firstImage.url} color={firstImage.color} imageSize={firstImage.imageSize} borderRadius={imageBorderRadius} containerMargin={iconMargin} size={iconSize} />
+            : <Image slot="image" url={firstImage.url} color={firstImage.color} imageSize={firstImage.imageSize} imageRepeat={firstImage.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
         )
     }
-    { title != null && <Text slot="title" type="card-title" content={title} /> }
-    { hint != null && <Text slot="hint" type="card-hint" content={hint} /> }
-    { description != null && <Text slot="description" type="card-description" content={description} /> }
+    { title != null && <RoverCoderText slot="title" type="card-title" content={title} /> }
+    { hint != null && <RoverCoderText slot="hint" type="card-hint" content={hint} isParagraph /> }
+    { description != null && <RoverCoderText slot="description" type="card-description" content={description} isParagraph /> }
 </Card>
