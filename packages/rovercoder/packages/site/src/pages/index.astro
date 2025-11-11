@@ -17,7 +17,7 @@ const siteData: SiteData = (_siteData as any) as SiteData;
 ---
 
 <RoverCoderPageTemplate pageTitle={pageTitle} navLinks={navLinks}>
-	<ProfileFrontPageSection>
+	<ProfileFrontPageSection isFirstSection>
 		<RoverCoderCard slot="profileCard" 
 			image={siteData.content.profile.images.map(x => ({url: x.url, description: x.description, isMainImage: x.isMainImage} as ImageProps))} 
 			title={siteData.content.profile.fullName} 

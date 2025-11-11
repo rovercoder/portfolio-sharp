@@ -1,14 +1,56 @@
 @use 'variables.scss' as *;
 
 :root {
+    --viewportHeight: 100vh;
+    --viewportHeightMinimum: 100vh;
+    --viewportHeightMaximum: 100vh;
+    --viewportWidth: 100vw;
+    --viewportWidthMinimum: 100vw;
+    --viewportWidthMaximum: 100vw;
     --headerHeight: 0px;
+}
+
+@supports (height: 100dvh) {
+    :root {
+        --viewportHeight: 100dvh;
+    }
+}
+
+@supports (height: 100svh) {
+    :root {
+        --viewportHeightMinimum: 100svh;
+    }
+}
+
+@supports (height: 100lvh) {
+    :root {
+        --viewportHeightMaximum: 100lvh;
+    }
+}
+
+@supports (width: 100dvw) {
+    :root {
+        --viewportWidth: 100dvw;
+    }
+}
+
+@supports (height: 100svw) {
+    :root {
+        --viewportWidthMinimum: 100svw;
+    }
+}
+
+@supports (height: 100lvw) {
+    :root {
+        --viewportWidthMaximum: 100lvw;
+    }
 }
 
 html {
     background-color: #f1f5f9;
     font-family: sans-serif;
     font-size: 16px;
-    min-height: 100vh;
+    min-height: 100%;
     min-width: 100%;
     max-width: 100%;
 }
@@ -16,7 +58,7 @@ html {
 body {
     margin: 0 auto;
     min-width: 100%;
-    min-height: 100vh;
+    min-height: 100%;
     width: 100%;
     padding: 0;
     line-height: 1.5;
