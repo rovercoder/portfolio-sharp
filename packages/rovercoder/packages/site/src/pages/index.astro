@@ -7,7 +7,7 @@ import RoverCoderPageTemplate from "../templates/RoverCoderPageTemplate.astro";
 import * as _siteData from '../../public/assets/data/site.data.json';
 import { type SiteData } from '@portfoliosharp/shared';
 import StatisticsFrontPageSection from "../templates/components/organisms/StatisticsFrontPageSection.astro";
-import StatisticText from "../templates/components/molecules/StatisticText.astro";
+import RoverCoderStatisticText from "../templates/components/molecules/RoverCoderStatisticText.astro";
 const pageTitle = "RoverCoder | Home Page";
 const navLinks: NavLinkEntry[] = [
 	{ link: "/", name: "Home" },
@@ -27,8 +27,8 @@ const siteData: SiteData = (_siteData as any) as SiteData;
 		/>
 	</ProfileFrontPageSection>
 	<StatisticsFrontPageSection>
-		<StatisticText content={`${siteData.content.experience.sectors.length}+ sectors`} />
-		<StatisticText content={`${siteData.content.experience.technologies.length}+ technologies`} />
-		<StatisticText content={`${siteData.content.experience.projects.length}+ projects`} />
+		<RoverCoderStatisticText content={`${siteData.content.experience.sectors.length}+ sectors`} />
+		<RoverCoderStatisticText content={`${siteData.content.experience.technologies.length}+ technologies`} />
+		<RoverCoderStatisticText content={`${siteData.content.experience.projects.length}+ projects`} />
 	</StatisticsFrontPageSection>
 </RoverCoderPageTemplate>
