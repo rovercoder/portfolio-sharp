@@ -16,6 +16,7 @@ var flexWrap;
 var justifyContent;
 var alignItems;
 var alignContent;
+var gap;
 
 switch (displayProperties.display) {
     case 'flex': 
@@ -25,6 +26,7 @@ switch (displayProperties.display) {
         justifyContent = displayProperties.justifyContent;
         alignItems = displayProperties.alignItems;
         alignContent = displayProperties.alignContent;
+        gap = displayProperties.gap;
         break;
     default:
         throw new Error(`Unsupported display properties for section! ${JSON.stringify(displayProperties)}`);
@@ -39,7 +41,7 @@ switch (displayProperties.display) {
     </Background>
 </section>
 
-<style lang="scss" define:vars={{ minHeight, padding, display, flexDirection, flexWrap, justifyContent, alignItems, alignContent }}>
+<style lang="scss" define:vars={{ minHeight, padding, display, flexDirection, flexWrap, justifyContent, alignItems, alignContent, gap }}>
     @use '/src/styles/variables.scss' as *;
 
 	section {
@@ -56,6 +58,7 @@ switch (displayProperties.display) {
 		justify-content: var(--justifyContent);
 		align-items: var(--alignItems);
 		align-content: var(--alignContent);
+        gap: var(--gap);
         transition: $sectionTransition;
     }
 </style>

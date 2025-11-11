@@ -4,9 +4,10 @@ import Text from '../../../components/atoms/Text.astro';
 interface Props {
     content: string | string[];
     type?: string | undefined;
+    color?: string | undefined;
     isParagraph?: boolean | undefined;
 }
-const { content, type, isParagraph } = Astro.props;
+const { content, type, color, isParagraph } = Astro.props;
 
 var fontFamily = 'Inter';
 var fontSize = '0.8125rem';
@@ -17,6 +18,11 @@ switch (type) {
     case 'card-title':
         fontSize = '0.9375rem';
         fontWeight = 500;
+        break;
+    case 'statistic':
+        fontSize = 'clamp(1rem, 7vw, 2rem)';
+        fontWeight = 400;
+        break;
     case 'card-description': 
     default: break;
 }
@@ -26,6 +32,7 @@ switch (type) {
     content={content} 
     fontFamily={fontFamily} 
     fontSize={fontSize} 
+    color={color}
     fontWeight={fontWeight} 
     fontStyle={fontStyle} 
     letterSpacing={letterSpacing} 

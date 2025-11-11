@@ -1,0 +1,39 @@
+---
+import RoverCoderText from "../atoms/RoverCoderText.astro";
+
+interface Props {
+    content: string;
+    color?: string | undefined;
+    background?: string | undefined;
+    textAlign?: string | undefined;
+}
+
+var { content, color, background, textAlign } = Astro.props;
+
+if (color == null || color?.toString().trim().length === 0) {
+    color = "#FFFFFF";
+}
+
+if (background == null || background?.toString().trim().length === 0) {
+    background = undefined;
+}
+
+if (textAlign == null || textAlign?.toString().trim().length === 0) {
+    textAlign = 'center';
+}
+
+const padding = "1rem clamp(1rem, 5vw, 2rem)";
+
+---
+
+<div class="statistic">
+    <RoverCoderText content={content} type="statistic" color={color} />
+</div>
+
+<style define:vars={{ padding, background, textAlign }}>
+    .statistic {
+        padding: var(--padding);
+        background: var(--background);
+        text-align: var(--textAlign);
+    }
+</style>

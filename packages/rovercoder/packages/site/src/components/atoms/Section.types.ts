@@ -5,6 +5,7 @@ export interface FlexProperties extends DisplayProperties {
     justifyContent?: string;
     alignItems?: string;
     alignContent?: string;
+    gap?: string;
 }
 
 export interface DisplayProperties {

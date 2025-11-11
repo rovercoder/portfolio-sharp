@@ -3,6 +3,8 @@ import Section from "../../../components/atoms/Section.astro";
 import type { FlexProperties } from "../../../components/atoms/Section.types";
 import type { BackgroundProperties } from "../../../components/helpers/Background.types";
 
+const padding = "clamp(1.5rem, 7vw, 2.1875rem)";
+
 const backgroundProperties: BackgroundProperties = {
     backgroundColor: '#0B0B0B'
 };
@@ -13,10 +15,11 @@ const displayProperties: FlexProperties = {
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'flex-start',
-    alignContent: 'center'
+    alignContent: 'center',
+    gap: '1.5rem 1rem'
 };
 ---
 
-<Section backgroundProperties={backgroundProperties} displayProperties={displayProperties}>
+<Section padding={padding} backgroundProperties={backgroundProperties} displayProperties={displayProperties}>
     <slot />
 </Section>
