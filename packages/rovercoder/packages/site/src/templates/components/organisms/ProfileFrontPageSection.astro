@@ -12,7 +12,7 @@ const { isFirstSection } = Astro.props;
 const _isFirstSection = isFirstSection?.toString().toLowerCase() === 'true';
 
 // isFirstSection to eliminate jump from svh to lvg when safe area changes on scroll on iOS
-const minHeight = `calc(var(${_isFirstSection ? '--viewportHeightMinimum' : '--viewportHeight'}) - var(--headerHeight))`;
+const minHeight = `calc(var(${_isFirstSection ? '--viewportHeightMinimum' : '--viewportHeightMaximum'}) - var(--headerHeight))`;
 const padding = '1rem';
 const backgroundProperties: BackgroundProperties = {
 	backgroundImageUrl: '/assets/images/site/backgrounds/seamless-circuit-board-pattern.svg',
