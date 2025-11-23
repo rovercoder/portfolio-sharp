@@ -1,10 +1,8 @@
 ---
-import Text from "../atoms/Text.astro";
-
 interface Props { 
-    textMargin?: string | undefined;
-    textPadding?: string | undefined;
-    textBackgroundColor?: string | undefined;
+    cardBodyMargin?: string | undefined;
+    cardBodyPadding?: string | undefined;
+    cardBodyBackgroundColor?: string | undefined;
     cardWidth?: string | undefined;
     cardBackgroundColor?: string | undefined;
     cardBorderRadius?: string | undefined;
@@ -13,20 +11,28 @@ interface Props {
     cardTextAlign?: string | undefined;
     cardBoxShadow?: string | undefined;
 }
-const { textMargin, textPadding = '1rem', textBackgroundColor, cardWidth = '15rem', cardBackgroundColor, cardBorderRadius, cardBorder, cardPadding, cardTextAlign = 'center', cardBoxShadow } = Astro.props;
+const { 
+    cardBodyMargin, 
+    cardBodyPadding = '1rem', 
+    cardBodyBackgroundColor, 
+    cardWidth = '15rem', 
+    cardBackgroundColor, 
+    cardBorderRadius, 
+    cardBorder, 
+    cardPadding, 
+    cardTextAlign = 'center', 
+    cardBoxShadow 
+} = Astro.props;
 
 ---
 
 <div class="card">
-    {Astro.slots.has('image') && <div class="image"><slot name="image" /></div>}
-    <div class="text">
-        {Astro.slots.has('title') && <div class="title"><slot name="title" /></div>}
-        {Astro.slots.has('hint') && <div class="hint"><slot name="hint" /></div>}
-        {Astro.slots.has('description') && <div class="description"><slot name="description" /></div>}
-    </div>
+    {Astro.slots.has('header') && <div class="card-header"><slot name="header" /></div>}
+    {Astro.slots.has('body') && <div class="card-body"><slot name="body" /></div>}
+    {Astro.slots.has('footer') && <div class="card-footer"><slot name="footer" /></div>}
 </div>
 
-<style define:vars={{ textMargin, textPadding, textBackgroundColor, cardWidth, cardBackgroundColor, cardBorderRadius, cardBorder, cardPadding, cardTextAlign, cardBoxShadow }}>
+<style define:vars={{ cardBodyMargin, cardBodyPadding, cardBodyBackgroundColor, cardWidth, cardBackgroundColor, cardBorderRadius, cardBorder, cardPadding, cardTextAlign, cardBoxShadow }}>
     .card {
         width: var(--cardWidth);
         background-color: var(--cardBackgroundColor);
@@ -43,7 +49,7 @@ const { textMargin, textPadding = '1rem', textBackgroundColor, cardWidth = '15re
         overflow: hidden;
     }
 
-    .card .image {
+    .card .card-header {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -51,9 +57,9 @@ const { textMargin, textPadding = '1rem', textBackgroundColor, cardWidth = '15re
         align-content: flex-start;
     }
 
-    .card .text {
-        margin: var(--textMargin);
-        padding: var(--textPadding);
-        background-color: var(--textBackgroundColor);
+    .card .card-body {
+        margin: var(--cardBodyMargin);
+        padding: var(--cardBodyPadding);
+        background-color: var(--cardBodyBackgroundColor);
     }
 </style>

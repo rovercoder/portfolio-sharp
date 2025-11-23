@@ -45,27 +45,27 @@ export const getSiteData = async function (options: SiteDataOptions): Promise<Si
             },
             statements: [
                 {
-                    imageUrl: "/assets/images/idea.webp",
+                    imageUrl: "/assets/images/site/icons/idea.svg",
                     title: "Making the most out of the Idea",
-                    titleInfo: null,
+                    hint: null,
                     textLines: [
                         "I value quality above speed of development and time to market and let the results speak for themselves.",
                         "Although I do not promise that there won't be issues to be fixed; broken, shoddy and lackluster products are not the aim."
                     ]
                 },
                 {
-                    imageUrl: "/assets/images/price-advancements-graph.webp",
+                    imageUrl: "/assets/images/site/icons/price-advancements-graph.svg",
                     title: "Pricing & Building for the Future",
-                    titleInfo: null,
+                    hint: null,
                     textLines: [
                         "Being the hardest part to predict; after gauging which features fit the bills, a price estimation can be derived.",
                         "The start takes longer; laying the groundwork for foreseen features to be added faster and preventing rewrites."
                     ]
                 },
                 {
-                    imageUrl: "/assets/images/rocket.webp",
+                    imageUrl: "/assets/images/site/icons/rocket.svg",
                     title: "Tech's vast, growing and changing",
-                    titleInfo: "An admittance to not knowing everything",
+                    hint: "An admittance to not knowing everything",
                     textLines: [
                         "In avoiding negative surprises, informed decisions are crucial, therefore will be up-skilling and researching as I go along.",
                         "Although external dependency is preferably avoided, using readily-made and trustworthy solutions wherever deemed necessary is paramount for success."
@@ -6001,27 +6001,27 @@ export const getSiteData = async function (options: SiteDataOptions): Promise<Si
             },
             projectManagement: [
                 {
-                    imageUrl: "/assets/images/cube-tweaking.webp",
+                    imageUrl: "/assets/images/site/icons/cube-tweaking.svg",
                     title: "Project Ownership & Support",
-                    titleInfo: null,
+                    hint: null,
                     textLines: [
                         "Tackled from all ends; ensuring that all required features are implemented and any reported bugs are fixed.",
                         "A timely description and explanation of what needs to be performed is provided, as well as a change-log with every release."
                     ]
                 },
                 {
-                    imageUrl: "/assets/images/people.webp",
+                    imageUrl: "/assets/images/site/icons/people.svg",
                     title: "Mentoring & Guidance",
-                    titleInfo: null,
+                    hint: null,
                     textLines: [
                         "Training is provided for usability and when on-boarding new technical members on the team.",
                         "Technical suggestions are advised and feedback welcomed."
                     ]
                 },
                 {
-                    imageUrl: "/assets/images/doc-time-tracking.webp",
+                    imageUrl: "/assets/images/site/icons/doc-time-tracking.svg",
                     title: "Documentation & Time Tracking",
-                    titleInfo: null,
+                    hint: null,
                     textLines: [
                         "In exploring the workings, in-depth documentation may be concocted covering the ins and outs of a system and user manuals may be drafted on request.",
                         "Development commits and time are tracked for every task."

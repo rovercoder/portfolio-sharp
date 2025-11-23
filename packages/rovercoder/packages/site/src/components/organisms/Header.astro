@@ -6,7 +6,9 @@ import { prepareInlineScript } from '../../helpers/scripts';
 interface Props {
     backgroundColor: string;
 }
-const { backgroundColor } = Astro.props;
+const { 
+    backgroundColor: headerBackgroundColor 
+} = Astro.props;
 ---
 
 <header>
@@ -16,17 +18,20 @@ const { backgroundColor } = Astro.props;
         <div class="nav-links-container"><slot name="navigation" /></div>
         <div class="hamburger-container"><slot name="hamburger" /></div>
     </nav>
+    <div class="overlay overlay-navigation-menu" aria-hidden="true">
+        <slot name="navigationMenu" />
+    </div>
 </header>
 <script>
     import "/src/scripts/menu.ts";
 </script>
 <script is:inline set:html={await prepareInlineScript("/src/scripts/.tsc-build/header.js")} />
 
-<style lang="scss" define:vars={{ backgroundColor }}>
+<style lang="scss" define:vars={{ headerBackgroundColor }}>
     @use '/src/styles/variables.scss' as *;
 
     header {
-        background-color: var(--backgroundColor);
+        background-color: var(--headerBackgroundColor);
         width: 100%;
     }
 
@@ -61,9 +66,31 @@ const { backgroundColor } = Astro.props;
         height: inherit;
     }
 
+    header .overlay:not(.shown) {
+        display: none;
+    }
+</style>
+
+<style lang="scss" is:global>
+    @use '/src/styles/variables.scss' as *;
+
     @media screen and (min-width: $mobileBreakpoint) {
-        .hamburger-container {
+        .overlay-navigation-menu {
+            display: none !important;
+        }
+        /** :not doesn't work alone. Needs html in front of it. */
+        html:not(.overlay-open) .hamburger-container {
             display: none;
         }
+    }
+
+    @media screen and (max-width: calc($mobileBreakpoint - 1px)) {
+        .nav-links-container {
+            display: none;
+        }
+    }
+
+    .overlay-open .nav-links-container {
+        display: none;
     }
 </style>

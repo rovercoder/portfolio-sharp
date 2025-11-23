@@ -2,20 +2,22 @@
 interface Props {
     backgroundColor: string;
 }
-const { backgroundColor } = Astro.props;
+const { 
+    backgroundColor: footerBackgroundColor 
+} = Astro.props;
 ---
 
 <footer>
     <slot name="socialLinks" />
 </footer>
 
-<style define:vars={{ backgroundColor }}>
+<style define:vars={{ footerBackgroundColor }}>
     footer {
         display: flex;
         gap: 1rem;
         /* margin-top: 2rem; */
         padding: 1rem;
         align-items: start;
-        background-color: var(--backgroundColor);
+        background-color: var(--footerBackgroundColor);
     }
 </style>

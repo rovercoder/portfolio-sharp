@@ -7,14 +7,14 @@
     "install-all": "npm install",
     "dev": "(npm run build:scripts) && (npm run watch:scripts & astro dev --host)",
     "build": "(npm run build:scripts) && astro build",
-    "build:scripts": "tsc --project ./src/scripts",
-    "watch:scripts": "tsc --watch --project ./src/scripts",
+    "build:scripts": "(tsc --project ./src/scripts) && (tsc --project ./src/templates/scripts)",
+    "watch:scripts": "(tsc --watch --project ./src/scripts) & (tsc --watch --project ./src/templates/scripts)",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@portfoliosharp/shared": "*",
-    "astro": "^5.15.1"
+    "astro": "^5.15.9"
   },
   "devDependencies": {
     "sass": "^1.93.2",

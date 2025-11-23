@@ -1,36 +1,53 @@
 ---
 interface Props {
     link: string;
-    name: string;
+    textColor: string;
+    hoverFocusTextColor: string;
     hoverFocusBackgroundColor: string;
+    textAlign?: string;
+    textMinimumWidth?: string;
+    padding?: string;
 }
-const { link, name, hoverFocusBackgroundColor } = Astro.props;
+const { 
+    link, 
+    textColor: navLinkTextColor, 
+    hoverFocusTextColor: navLinkHoverFocusTextColor, 
+    hoverFocusBackgroundColor: navLinkHoverFocusBackgroundColor, 
+    textAlign: navLinkTextAlign = 'center', 
+    textMinimumWidth: navLinkTextMinimumWidth, 
+    padding: navLinkPadding 
+} = Astro.props;
 ---
 
-<a href={link}>{name}</a>
+<a href={link}><div class="link-text"><slot /></div></a>
 
-<style lang="scss" define:vars={{ hoverFocusBackgroundColor }}>
+
+<style lang="scss" define:vars={{ navLinkTextColor, navLinkHoverFocusTextColor, navLinkHoverFocusBackgroundColor, navLinkTextAlign, navLinkTextMinimumWidth, navLinkPadding }}>
     @use '/src/styles/variables.scss' as *;
 
     a {
-        display: block;
-        text-align: center;
-        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
         text-decoration: none;
-        font-size: 1.2rem;
-        font-weight: bold;
-        text-transform: uppercase;
+        color: var(--navLinkTextColor);
+        padding: var(--navLinkPadding);
+    }
+
+    a .link-text {
+        text-align: var(--navLinkTextAlign);
+        min-width: var(--navLinkTextMinimumWidth);
     }
 
     @media screen and (min-width: $mobileBreakpoint) {
         a {
-            display: inline-block;
-            padding: 15px 20px;
+            display: inline-flex;
         }
     }
 
     a:hover,
     a:focus {
-        background-color: var(--hoverFocusBackgroundColor);
+        color: var(--navLinkHoverFocusTextColor);
+        background-color: var(--navLinkHoverFocusBackgroundColor);
     }
 </style>

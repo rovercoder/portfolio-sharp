@@ -2,46 +2,64 @@
 import Background from "../helpers/Background.astro";
 import type { BackgroundProperties } from "../helpers/Background.types";
 import type { FlexProperties as FlexDisplayProperties } from "./Section.types";
+import type { GridProperties as GridDisplayProperties } from "./Section.types";
 interface Props {
     minHeight?: string;
     padding?: string;
     backgroundProperties?: BackgroundProperties;
-    displayProperties: FlexDisplayProperties;
+    displayProperties: FlexDisplayProperties | GridDisplayProperties;
 }
-const { minHeight, padding, backgroundProperties, displayProperties } = Astro.props;
+const { 
+    minHeight: sectionMinHeight, 
+    padding: sectionPadding, 
+    backgroundProperties: sectionBackgroundProperties, 
+    displayProperties: sectionDisplayProperties 
+} = Astro.props;
 
-var display;
-var flexDirection;
-var flexWrap;
-var justifyContent;
-var alignItems;
-var alignContent;
-var gap;
+var sectionDisplay;
 
-switch (displayProperties.display) {
+var sectionFlexDirection;
+var sectionFlexWrap;
+var sectionJustifyContent;
+var sectionAlignItems;
+var sectionAlignContent;
+var sectionGap;
+
+var sectionGridTemplateColumns;
+var sectionGridTemplateRows;
+var sectionGridTemplateAreas;
+
+switch (sectionDisplayProperties.display) {
     case 'flex': 
-        display = displayProperties.display;
-        flexDirection = displayProperties.flexDirection;
-        flexWrap = displayProperties.flexWrap;
-        justifyContent = displayProperties.justifyContent;
-        alignItems = displayProperties.alignItems;
-        alignContent = displayProperties.alignContent;
-        gap = displayProperties.gap;
+        sectionDisplay = sectionDisplayProperties.display;
+        sectionFlexDirection = sectionDisplayProperties.flexDirection;
+        sectionFlexWrap = sectionDisplayProperties.flexWrap;
+        sectionJustifyContent = sectionDisplayProperties.justifyContent;
+        sectionAlignItems = sectionDisplayProperties.alignItems;
+        sectionAlignContent = sectionDisplayProperties.alignContent;
+        sectionGap = sectionDisplayProperties.gap;
+        break;
+    case 'grid':
+        sectionDisplay = sectionDisplayProperties.display;
+        sectionGridTemplateColumns = sectionDisplayProperties.gridTemplateColumns;
+        sectionGridTemplateRows = sectionDisplayProperties.gridTemplateRows;
+        sectionGridTemplateAreas = sectionDisplayProperties.gridTemplateAreas;
+        sectionGap = sectionDisplayProperties.gap;
         break;
     default:
-        throw new Error(`Unsupported display properties for section! ${JSON.stringify(displayProperties)}`);
+        throw new Error(`Unsupported display properties for section! ${JSON.stringify(sectionDisplayProperties)}`);
 }
 ---
 
 <section>
-    <Background imageUrl={backgroundProperties?.backgroundImageUrl} color={backgroundProperties?.backgroundColor} imageRepeat={backgroundProperties?.backgroundImageRepeat} imageSize={backgroundProperties?.backgroundImageSize} borderRadius={backgroundProperties?.backgroundBorderRadius} type={backgroundProperties?.backgroundType}>
+    <Background imageUrl={sectionBackgroundProperties?.backgroundImageUrl} color={sectionBackgroundProperties?.backgroundColor} imageRepeat={sectionBackgroundProperties?.backgroundImageRepeat} imageSize={sectionBackgroundProperties?.backgroundImageSize} borderRadius={sectionBackgroundProperties?.backgroundBorderRadius} type={sectionBackgroundProperties?.backgroundType}>
         <div class="section-content">
             <slot />
         </div>
     </Background>
 </section>
 
-<style lang="scss" define:vars={{ minHeight, padding, display, flexDirection, flexWrap, justifyContent, alignItems, alignContent, gap }}>
+<style lang="scss" define:vars={{ sectionMinHeight, sectionPadding, sectionDisplay, sectionFlexDirection, sectionFlexWrap, sectionJustifyContent, sectionAlignItems, sectionAlignContent, sectionGap, sectionGridTemplateColumns, sectionGridTemplateRows, sectionGridTemplateAreas }}>
     @use '/src/styles/variables.scss' as *;
 
 	section {
@@ -50,15 +68,18 @@ switch (displayProperties.display) {
 
     .section-content {
         position: relative;
-		padding: var(--padding);
-		min-height: var(--minHeight);
-		display: var(--display);
-		flex-direction: var(--flexDirection);
-		flex-wrap: var(--flexWrap);
-		justify-content: var(--justifyContent);
-		align-items: var(--alignItems);
-		align-content: var(--alignContent);
-        gap: var(--gap);
+		padding: var(--sectionPadding);
+		min-height: var(--sectionMinHeight);
+		display: var(--sectionDisplay);
+		flex-direction: var(--sectionFlexDirection);
+		flex-wrap: var(--sectionFlexWrap);
+		justify-content: var(--sectionJustifyContent);
+		align-items: var(--sectionAlignItems);
+		align-content: var(--sectionAlignContent);
+        gap: var(--sectionGap);
+        grid-template-columns: var(--sectionGridTemplateColumns);
+        grid-template-rows: var(--sectionGridTemplateRows);
+        grid-template-areas: var(--sectionGridTemplateAreas);
         transition: $sectionTransition;
     }
 </style>

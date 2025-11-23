@@ -5,40 +5,45 @@ interface Props {
     fontSize?: string | undefined;
     fontWeight?: number | string | undefined;
     fontStyle?: string | undefined;
-    color?: string | undefined;
+    color: string;
     letterSpacing?: string | undefined;
     isParagraph?: boolean | undefined;
 }
-var { content, fontFamily, fontSize, fontWeight, fontStyle, color, letterSpacing, isParagraph } = Astro.props;
+var { 
+    content: textContent, 
+    fontFamily: textFontFamily, 
+    fontSize: textFontSize, 
+    fontWeight: textFontWeight, 
+    fontStyle: textFontStyle, 
+    color: textColor, 
+    letterSpacing: textLetterSpacing, 
+    isParagraph: textIsParagraph 
+} = Astro.props;
 
-var textLines: string[] | null = content == null ? null : (Array.isArray(content) ? content.map(x => x.toString()) : [content.toString()]);
-var _paragraphMode = isParagraph?.toString().toLowerCase() === 'true';
-
-if (color == null || color?.toString().trim().length === 0) {
-    color = '#000000';
-}
+var textLines: string[] | null = textContent == null ? null : (Array.isArray(textContent) ? textContent.map(x => x.toString()) : [textContent.toString()]);
+var _paragraphMode = textIsParagraph?.toString().toLowerCase() === 'true';
 ---
 
 <div class="text">
     { textLines && (_paragraphMode ? textLines.map(x => <p>{x}</p>) : textLines.map(x => x).join('\r\n')) }
 </div>
 
-<style define:vars={{ fontFamily, fontSize, fontWeight, fontStyle, color, letterSpacing }}>
+<style define:vars={{ textFontFamily, textFontSize, textFontWeight, textFontStyle, textColor, textLetterSpacing }}>
     .text {
-        font-family: var(--fontFamily);
-        font-size: var(--fontSize);
-        font-weight: var(--fontWeight);
-        font-style: var(--fontStyle);
-        letter-spacing: var(--letterSpacing);
-        color: var(--color);
+        font-family: var(--textFontFamily);
+        font-size: var(--textFontSize);
+        font-weight: var(--textFontWeight);
+        font-style: var(--textFontStyle);
+        letter-spacing: var(--textLetterSpacing);
+        color: var(--textColor);
     }
     
     .text p {
-        font-family: var(--fontFamily);
-        font-size: var(--fontSize);
-        font-weight: var(--fontWeight);
-        font-style: var(--fontStyle);
-        letter-spacing: var(--letterSpacing);
-        color: var(--color);
+        font-family: var(--textFontFamily);
+        font-size: var(--textFontSize);
+        font-weight: var(--textFontWeight);
+        font-style: var(--textFontStyle);
+        letter-spacing: var(--textLetterSpacing);
+        color: var(--textColor);
     }
 </style>

@@ -41,27 +41,27 @@
         },
         "statements": [
             {
-                "imageUrl": "/assets/images/idea.webp",
+                "imageUrl": "/assets/images/site/icons/idea.svg",
                 "title": "Making the most out of the Idea",
-                "titleInfo": null,
+                "hint": null,
                 "textLines": [
                     "I value quality above speed of development and time to market and let the results speak for themselves.",
                     "Although I do not promise that there won't be issues to be fixed; broken, shoddy and lackluster products are not the aim."
                 ]
             },
             {
-                "imageUrl": "/assets/images/price-advancements-graph.webp",
+                "imageUrl": "/assets/images/site/icons/price-advancements-graph.svg",
                 "title": "Pricing & Building for the Future",
-                "titleInfo": null,
+                "hint": null,
                 "textLines": [
                     "Being the hardest part to predict; after gauging which features fit the bills, a price estimation can be derived.",
                     "The start takes longer; laying the groundwork for foreseen features to be added faster and preventing rewrites."
                 ]
             },
             {
-                "imageUrl": "/assets/images/rocket.webp",
+                "imageUrl": "/assets/images/site/icons/rocket.svg",
                 "title": "Tech's vast, growing and changing",
-                "titleInfo": "An admittance to not knowing everything",
+                "hint": "An admittance to not knowing everything",
                 "textLines": [
                     "In avoiding negative surprises, informed decisions are crucial, therefore will be up-skilling and researching as I go along.",
                     "Although external dependency is preferably avoided, using readily-made and trustworthy solutions wherever deemed necessary is paramount for success."
@@ -75,7 +75,7 @@
                     "name": "getStartDateAndEndDate",
                     "nameInternal": "getStartDateAndEndDate",
                     "arguments": "obj",
-                    "body": "var e,a,s,t,d,i,n,o,l,r,u,b,m,D;return isUndefinedOrNull(obj)?{valid:!1,error:{type:\"arguments\",message:\"Parameter `obj` is undefined!\"}}:isUndefinedOrNull(obj.dates)?{valid:!1,error:{type:\"arguments\",message:\"Parameter `obj.dates` is undefined!\"}}:isUndefinedOrNull(r=f([obj.dates.startDate?.year,obj.dates.baseDate?.year,obj.fillDateProps?.year]))?{valid:!1,error:{type:\"arguments\",message:\"Start date year is unspecified!\"}}:isUndefinedOrNull(u=f([obj.dates.startDate?.month,obj.dates.baseDate?.month,obj.fillDateProps?.month]))?{valid:!1,error:{type:\"arguments\",message:\"Start date month is unspecified!\"}}:isUndefinedOrNull(b=f([obj.dates.startDate?.day,obj.dates.baseDate?.day,obj.fillDateProps?.day]))?{valid:!1,error:{type:\"arguments\",message:\"Start date day is unspecified!\"}}:(m=f([obj.dates.startDate?.hours,obj.dates.baseDate?.hours,obj.fillDateProps?.hours]),D=f([obj.dates.startDate?.minutes,obj.dates.baseDate?.minutes,obj.fillDateProps?.minutes]),e=f([obj.dates.startDate?.seconds,obj.dates.baseDate?.seconds,obj.fillDateProps?.seconds]),a=f([obj.dates.startDate?.milliSeconds,obj.dates.baseDate?.milliSeconds,obj.fillDateProps?.milliSeconds]),isUndefinedOrNull(s=f([obj.dates.endDate?.year,obj.dates.baseDate?.year,obj.fillDateProps?.year]))?{valid:!1,error:{type:\"arguments\",message:\"End date year is unspecified!\"}}:isUndefinedOrNull(t=f([obj.dates.endDate?.month,obj.dates.baseDate?.month,obj.fillDateProps?.month]))?{valid:!1,error:{type:\"arguments\",message:\"End date month is unspecified!\"}}:isUndefinedOrNull(d=f([obj.dates.endDate?.day,obj.dates.baseDate?.day,obj.fillDateProps?.day]))?{valid:!1,error:{type:\"arguments\",message:\"End date day is unspecified!\"}}:(i=f([obj.dates.endDate?.hours,obj.dates.baseDate?.hours,obj.fillDateProps?.hours]),n=f([obj.dates.endDate?.minutes,obj.dates.baseDate?.minutes,obj.fillDateProps?.minutes]),o=f([obj.dates.endDate?.seconds,obj.dates.baseDate?.seconds,obj.fillDateProps?.seconds]),l=f([obj.dates.endDate?.milliSeconds,obj.dates.baseDate?.milliSeconds,obj.fillDateProps?.milliSeconds]),!isTrue((u=validateAndCleanDate({year:r,month:u,day:b,hours:m,minutes:D,seconds:e,milliSeconds:a,timeZone:r=obj.dates.timeZone})).valid)||isUndefinedOrNull(u.value)?{...u,value:void 0}:!isTrue((b=validateAndCleanDate({year:s,month:t,day:d,hours:i,minutes:n,seconds:o,milliSeconds:l,timeZone:r})).valid)||isUndefinedOrNull(b.value)?{...b,value:void 0}:!isTrue((m=buildDate({...u.value,startOfDateNotEndOfDate:!0})).valid)||isUndefinedOrNull(m.value)?{...m,value:void 0}:!isTrue((D=buildDate({...b.value,startOfDateNotEndOfDate:!(isUndefinedOrNull(obj.dates.endDate)&&isUndefinedOrNull(b.value.hours)&&isUndefinedOrNull(b.value.minutes)&&isUndefinedOrNull(b.value.seconds)&&isUndefinedOrNull(b.value.milliSeconds))})).valid)||isUndefinedOrNull(D.value)?{...D,value:void 0}:isAfter(m.value,D.value)?{valid:!1,error:{type:\"arguments\",message:\"Start date is after end date!\"}}:{value:{startDate:m.value,endDate:D.value},valid:!0}));function f(args){return args.find(x=>!isUndefinedOrNull(x))}",
+                    "body": "var e,d,s,a,n,t,i,l,r,o,u,f,D,b;return isUndefinedOrNull(obj)?{valid:!1,error:{type:\"arguments\",message:\"Parameter `obj` is undefined!\"}}:isUndefinedOrNull(obj.dates)?{valid:!1,error:{type:\"arguments\",message:\"Parameter `obj.dates` is undefined!\"}}:isUndefinedOrNull(o=_firstDefinedAndNonNullOrElseUndefined([obj.dates.startDate?.year,obj.dates.baseDate?.year,obj.fillDateProps?.year]))?{valid:!1,error:{type:\"arguments\",message:\"Start date year is unspecified!\"}}:isUndefinedOrNull(u=_firstDefinedAndNonNullOrElseUndefined([obj.dates.startDate?.month,obj.dates.baseDate?.month,obj.fillDateProps?.month]))?{valid:!1,error:{type:\"arguments\",message:\"Start date month is unspecified!\"}}:isUndefinedOrNull(f=_firstDefinedAndNonNullOrElseUndefined([obj.dates.startDate?.day,obj.dates.baseDate?.day,obj.fillDateProps?.day]))?{valid:!1,error:{type:\"arguments\",message:\"Start date day is unspecified!\"}}:(D=_firstDefinedAndNonNullOrElseUndefined([obj.dates.startDate?.hours,obj.dates.baseDate?.hours,obj.fillDateProps?.hours]),b=_firstDefinedAndNonNullOrElseUndefined([obj.dates.startDate?.minutes,obj.dates.baseDate?.minutes,obj.fillDateProps?.minutes]),e=_firstDefinedAndNonNullOrElseUndefined([obj.dates.startDate?.seconds,obj.dates.baseDate?.seconds,obj.fillDateProps?.seconds]),d=_firstDefinedAndNonNullOrElseUndefined([obj.dates.startDate?.milliSeconds,obj.dates.baseDate?.milliSeconds,obj.fillDateProps?.milliSeconds]),isUndefinedOrNull(s=_firstDefinedAndNonNullOrElseUndefined([obj.dates.endDate?.year,obj.dates.baseDate?.year,obj.fillDateProps?.year]))?{valid:!1,error:{type:\"arguments\",message:\"End date year is unspecified!\"}}:isUndefinedOrNull(a=_firstDefinedAndNonNullOrElseUndefined([obj.dates.endDate?.month,obj.dates.baseDate?.month,obj.fillDateProps?.month]))?{valid:!1,error:{type:\"arguments\",message:\"End date month is unspecified!\"}}:isUndefinedOrNull(n=_firstDefinedAndNonNullOrElseUndefined([obj.dates.endDate?.day,obj.dates.baseDate?.day,obj.fillDateProps?.day]))?{valid:!1,error:{type:\"arguments\",message:\"End date day is unspecified!\"}}:(t=_firstDefinedAndNonNullOrElseUndefined([obj.dates.endDate?.hours,obj.dates.baseDate?.hours,obj.fillDateProps?.hours]),i=_firstDefinedAndNonNullOrElseUndefined([obj.dates.endDate?.minutes,obj.dates.baseDate?.minutes,obj.fillDateProps?.minutes]),l=_firstDefinedAndNonNullOrElseUndefined([obj.dates.endDate?.seconds,obj.dates.baseDate?.seconds,obj.fillDateProps?.seconds]),r=_firstDefinedAndNonNullOrElseUndefined([obj.dates.endDate?.milliSeconds,obj.dates.baseDate?.milliSeconds,obj.fillDateProps?.milliSeconds]),!isTrue((u=validateAndCleanDate({year:o,month:u,day:f,hours:D,minutes:b,seconds:e,milliSeconds:d,timeZone:o=obj.dates.timeZone})).valid)||isUndefinedOrNull(u.value)?{...u,value:void 0}:!isTrue((f=validateAndCleanDate({year:s,month:a,day:n,hours:t,minutes:i,seconds:l,milliSeconds:r,timeZone:o})).valid)||isUndefinedOrNull(f.value)?{...f,value:void 0}:!isTrue((D=buildDate({...u.value,startOfDateNotEndOfDate:!0})).valid)||isUndefinedOrNull(D.value)?{...D,value:void 0}:!isTrue((b=buildDate({...f.value,startOfDateNotEndOfDate:!(isUndefinedOrNull(obj.dates.endDate)&&isUndefinedOrNull(f.value.hours)&&isUndefinedOrNull(f.value.minutes)&&isUndefinedOrNull(f.value.seconds)&&isUndefinedOrNull(f.value.milliSeconds))})).valid)||isUndefinedOrNull(b.value)?{...b,value:void 0}:isAfter(D.value,b.value)?{valid:!1,error:{type:\"arguments\",message:\"Start date is after end date!\"}}:{value:{startDate:D.value,endDate:b.value},valid:!0}));function _firstDefinedAndNonNullOrElseUndefined(args){return args.find(x=>!isUndefinedOrNull(x))}",
                     "canBeCalledFromOtherFunctions": true
                 },
                 {
@@ -194,7 +194,7 @@
                     "name": "getAvailableTimeUnitPoints",
                     "nameInternal": "getAvailableTimeUnitPoints",
                     "arguments": "timeUnit",
-                    "body": "function e(date){switch(timeUnit){case\"hours\":return date.getHours();case\"minutes\":return date.getMinutes();case\"seconds\":return date.getSeconds();case\"milliseconds\":return date.getMilliseconds();default:throw Error(\"Timeunit not supported!: \"+timeUnit)}}for(var t=new Date,n=[],r=0;r<2;r++){n[r]=[];var s=e(t);do{var a=e(t=((date,byPoints)=>{switch(timeUnit){case\"hours\":return addHours(date,1);case\"minutes\":return addMinutes(date,1);case\"seconds\":return addSeconds(date,1);case\"milliseconds\":return addMilliseconds(date,1);default:throw Error(\"Timeunit not supported!: \"+timeUnit)}})(t))}while(n[r]?.push(a),a!=s)}var d=n.flat();return(d=d.filter((x,i)=>d.indexOf(x)===i)).sort(),d",
+                    "body": "function getTimeUnitPoints(date){switch(timeUnit){case\"hours\":return date.getHours();case\"minutes\":return date.getMinutes();case\"seconds\":return date.getSeconds();case\"milliseconds\":return date.getMilliseconds();default:throw Error(\"Timeunit not supported!: \"+timeUnit)}}for(var t=new Date,e=[],n=0;n<2;n++){e[n]=[];var s=getTimeUnitPoints(t);do{var r=getTimeUnitPoints(t=function addTimeUnitPoints(date,byPoints){switch(timeUnit){case\"hours\":return addHours(date,byPoints);case\"minutes\":return addMinutes(date,byPoints);case\"seconds\":return addSeconds(date,byPoints);case\"milliseconds\":return addMilliseconds(date,byPoints);default:throw Error(\"Timeunit not supported!: \"+timeUnit)}}(t,1))}while(e[n]?.push(r),r!=s)}var o=e.flat();return(o=o.filter((x,i)=>o.indexOf(x)===i)).sort(),o",
                     "canBeCalledFromOtherFunctions": true
                 },
                 {
@@ -7450,27 +7450,27 @@
         },
         "projectManagement": [
             {
-                "imageUrl": "/assets/images/cube-tweaking.webp",
+                "imageUrl": "/assets/images/site/icons/cube-tweaking.svg",
                 "title": "Project Ownership & Support",
-                "titleInfo": null,
+                "hint": null,
                 "textLines": [
                     "Tackled from all ends; ensuring that all required features are implemented and any reported bugs are fixed.",
                     "A timely description and explanation of what needs to be performed is provided, as well as a change-log with every release."
                 ]
             },
             {
-                "imageUrl": "/assets/images/people.webp",
+                "imageUrl": "/assets/images/site/icons/people.svg",
                 "title": "Mentoring & Guidance",
-                "titleInfo": null,
+                "hint": null,
                 "textLines": [
                     "Training is provided for usability and when on-boarding new technical members on the team.",
                     "Technical suggestions are advised and feedback welcomed."
                 ]
             },
             {
-                "imageUrl": "/assets/images/doc-time-tracking.webp",
+                "imageUrl": "/assets/images/site/icons/doc-time-tracking.svg",
                 "title": "Documentation & Time Tracking",
-                "titleInfo": null,
+                "hint": null,
                 "textLines": [
                     "In exploring the workings, in-depth documentation may be concocted covering the ins and outs of a system and user manuals may be drafted on request.",
                     "Development commits and time are tracked for every task."
@@ -7478,5 +7478,5 @@
             }
         ]
     },
-    "lastUpdated": "2025-11-07T18:25:14.203Z"
+    "lastUpdated": "2025-11-21T16:01:33.494Z"
 }

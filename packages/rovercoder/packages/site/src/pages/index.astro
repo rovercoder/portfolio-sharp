@@ -1,18 +1,20 @@
 ---
 import type { NavLinkEntry } from "../components/atoms/NavLink.types";
 import RoverCoderCard from "../templates/components/molecules/RoverCoderCard.astro";
-import type { ImageProps } from "../templates/components/molecules/RoverCoderCard.types";
 import ProfileFrontPageSection from "../templates/components/organisms/ProfileFrontPageSection.astro";
 import RoverCoderPageTemplate from "../templates/RoverCoderPageTemplate.astro";
 import * as _siteData from '../../public/assets/data/site.data.json';
 import { type SiteData } from '@portfoliosharp/shared';
 import StatisticsFrontPageSection from "../templates/components/organisms/StatisticsFrontPageSection.astro";
 import RoverCoderStatisticText from "../templates/components/molecules/RoverCoderStatisticText.astro";
+import IntroductionCardsSection from "../templates/components/organisms/IntroductionCardsSection.astro";
+import type { ImageProps } from "../components/molecules/CardHeader.types";
 const pageTitle = "RoverCoder | Home Page";
 const navLinks: NavLinkEntry[] = [
-	{ link: "/", name: "Home" },
-	{ link: "/about/", name: "About" },
-	{ link: "/blog/", name: "Blog" },
+	{ link: '/#introduction', name: 'Introduction' },
+	{ link: '/#statements', name: 'Statements' },
+	{ link: '/#experience', name: 'Experience' },
+	{ link: '/#contact', name: 'Contact' },
 ];
 
 const siteData: SiteData = (_siteData as any) as SiteData;
@@ -21,6 +23,7 @@ const siteData: SiteData = (_siteData as any) as SiteData;
 <RoverCoderPageTemplate pageTitle={pageTitle} navLinks={navLinks}>
 	<ProfileFrontPageSection isFirstSection>
 		<RoverCoderCard slot="profileCard" 
+			type="profile"
 			image={siteData.content.profile.images.map(x => ({url: x.url, description: x.description, isMainImage: x.isMainImage} as ImageProps))} 
 			title={siteData.content.profile.fullName} 
 			description={siteData.content.profile.description} 
@@ -31,4 +34,11 @@ const siteData: SiteData = (_siteData as any) as SiteData;
 		<RoverCoderStatisticText slot="statistic" content={`${siteData.content.experience.technologies.length}+ technologies`} />
 		<RoverCoderStatisticText slot="statistic" content={`${siteData.content.experience.projects.length}+ projects`} />
 	</StatisticsFrontPageSection>
+	<IntroductionCardsSection>
+		{ 
+			siteData.content.statements.map(x => 
+				<RoverCoderCard slot="introCards" image={{ url: x.imageUrl } as ImageProps} imageIsIcon title={x.title} description={x.textLines} hint={x.hint ?? undefined} />
+			) 
+		}
+	</IntroductionCardsSection>
 </RoverCoderPageTemplate>

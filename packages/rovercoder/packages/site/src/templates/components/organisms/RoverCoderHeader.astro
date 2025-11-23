@@ -5,7 +5,9 @@ import type { NavLinkEntry } from '../../../components/atoms/NavLink.types';
 import SiteLogo from '../../../components/atoms/SiteLogo.astro';
 import type { SiteLogoProperties } from '../../../components/atoms/SiteLogo.types';
 import Navigation from '../../../components/molecules/Navigation.astro';
+import NavigationMenuOverlay from '../../../components/molecules/NavigationMenuOverlay.astro';
 import Header from '../../../components/organisms/Header.astro';
+import RoverCoderText from '../atoms/RoverCoderText.astro';
 
 interface Props {
 	logoImage: SiteLogoProperties;
@@ -14,14 +16,46 @@ interface Props {
 const { logoImage, navLinks } = Astro.props;
 
 const headerBackgroundColor = "#F2F2F2";
+
 const hamburgerColor = "#000000";
-const navLinkHoverFocusBackgroundColor = "#ff9776";
+const hamburgerMarginTopBottom = '0.3125rem';
+const hamburgerLineHeight = '0.3125rem';
+
+const navLinkTextColor = "#321616";
+const navLinkHoverFocusTextColor = "#320000";
+const navLinkHoverFocusBackgroundColor = "#FDF9F9";
+const navLinkPadding = "1rem 1.125rem";
+const navLinkTextAlign = 'left';
+const navLinkTextMinWidth = '7.25rem';
+
+const navLinkMenuTextColor = "#FFFFFF";
+const navLinkMenuHoverFocusTextColor = "#000000";
+const navLinkMenuHoverFocusBackgroundColor = "#FFD0D0";
+const navLinkMenuPadding = "1rem";
+const navLinkMenuTextAlign = 'left';
+const navLinkMenuTextMinWidth = '7.25rem';
+const navLinksItemsGap = '0'; //'1.5rem';
 ---
 
 <Header backgroundColor={headerBackgroundColor}>
     <SiteLogo slot="logo" imageAlt={logoImage.alt} imageSrc={logoImage.source} />
     <Navigation slot="navigation">
-        {navLinks.map(x => <NavLink link={x.link} name={x.name} hoverFocusBackgroundColor={navLinkHoverFocusBackgroundColor} />)}
+        {
+            navLinks.map(x => 
+                <NavLink link={x.link} textColor={navLinkTextColor} hoverFocusTextColor={navLinkHoverFocusTextColor} hoverFocusBackgroundColor={navLinkHoverFocusBackgroundColor} padding={navLinkPadding} textAlign={navLinkTextAlign} textMinimumWidth={navLinkTextMinWidth}>
+                    <RoverCoderText content={x.name} type="navigation-link" color="inherit" />
+                </NavLink>
+            )
+        }
     </Navigation>
-    <Hamburger slot="hamburger" color={hamburgerColor} />
+    <Hamburger slot="hamburger" lineMarginTopBottom={hamburgerMarginTopBottom} lineHeight={hamburgerLineHeight} color={hamburgerColor} />
+    <NavigationMenuOverlay slot="navigationMenu" navLinksItemsGap={navLinksItemsGap}>
+        {
+            navLinks.map(x => 
+                <NavLink link={x.link} textColor={navLinkMenuTextColor} hoverFocusTextColor={navLinkMenuHoverFocusTextColor} hoverFocusBackgroundColor={navLinkMenuHoverFocusBackgroundColor} padding={navLinkMenuPadding} textAlign={navLinkMenuTextAlign} textMinimumWidth={navLinkMenuTextMinWidth}>
+                    <RoverCoderText content={x.name} type="navigation-link" color="inherit" />
+                </NavLink>
+            )
+        }
+    </NavigationMenuOverlay>
 </Header>

@@ -8,28 +8,43 @@ interface Props {
 	borderRadius?: string | undefined;
     width?: string | undefined;
     height?: string | undefined;
+    containerPadding?: string | undefined;
     containerMargin?: string | undefined;
 }
-const { url, color, imageRepeat, imageSize, borderRadius, width = '100%', height = '100%', containerMargin } = Astro.props;
+const { 
+    url, 
+    color: imageBackgroundColor = 'transparent', 
+    imageRepeat, 
+    imageSize, 
+    borderRadius: imageBorderRadius = '0', 
+    width: imageWidth = '100%', 
+    height: imageHeight = '100%', 
+    containerPadding: imageContainerPadding = "0", 
+    containerMargin: imageContainerMargin = "0" 
+} = Astro.props;
 ---
 
 <div class="image-container">
-    <Background imageUrl={url} color={color} imageRepeat={imageRepeat} imageSize={imageSize} borderRadius={borderRadius} type="absolute">
+    <Background imageUrl={url} color="transparent" imageRepeat={imageRepeat} imageSize={imageSize} borderRadius="0" type="absolute">
         <div class="image-content">
             <slot />
         </div>
     </Background>
 </div>
 
-<style define:vars={{ width, height, containerMargin }}>
+<style define:vars={{ imageWidth, imageHeight, imageContainerMargin, imageContainerPadding, imageBackgroundColor, imageBorderRadius }}>
     .image-container {
-        width: var(--width);
-        height: var(--height);
-        margin: var(--containerMargin);
+        width: var(--imageWidth);
+        height: var(--imageHeight);
+        margin: var(--imageContainerMargin);
+        padding: var(--imageContainerPadding);
+        background-color: var(--imageBackgroundColor);
+        border-radius: var(--imageBorderRadius);
+        overflow: hidden;
     }
 
     .image-container .image-content {
-        width: var(--width);
-        height: var(--height);
+        width: 100%;
+        height: 100%;
     }
 </style>

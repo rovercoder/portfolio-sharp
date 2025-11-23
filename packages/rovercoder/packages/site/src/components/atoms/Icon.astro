@@ -6,9 +6,10 @@ interface Props {
 	size?: string | undefined;
     imageSize?: string | undefined;
 	borderRadius?: string | undefined;
+    containerPadding?: string | undefined;
     containerMargin?: string | undefined;
 }
-const { url, color, size, imageSize, borderRadius, containerMargin } = Astro.props;
+const { url, color, size, imageSize, borderRadius, containerPadding, containerMargin } = Astro.props;
 ---
 
-<Image url={url} color={color} width={size} height={size} imageSize={imageSize} borderRadius={borderRadius} containerMargin={containerMargin} />
+<Image url={url} color={color} width={size} height={size} imageSize={imageSize} borderRadius={borderRadius} containerPadding={containerPadding} containerMargin={containerMargin} />

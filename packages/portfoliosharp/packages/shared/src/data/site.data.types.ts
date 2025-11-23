@@ -454,7 +454,7 @@ export interface Image {
 export interface InfoCard {
     imageUrl: string;
     title: string;
-    titleInfo: null | string;
+    hint: null | string;
     textLines: string[];
 }
 

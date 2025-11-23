@@ -1,51 +1,51 @@
 ---
 import Card from '../../../components/molecules/Card.astro';
-import Icon from '../../../components/atoms/Icon.astro';
-import Image from '../../../components/atoms/Image.astro';
+import type { ImageProps } from '../../../components/molecules/CardHeader.types';
 import RoverCoderText from '../atoms/RoverCoderText.astro';
-import type { ImageProps } from './RoverCoderCard.types';
+import RoverCoderCardHeader from './RoverCoderCardHeader.astro';
 
-interface Props { 
+interface Props {
     image?: ImageProps | ImageProps[];
     imageIsIcon?: boolean;
     title?: string
-    description?: string;
+    description?: string | string[];
     hint?: string;
+    type?: string;
 }
-const { image, imageIsIcon, title, description, hint } = Astro.props;
-var _images = (image == null || (Array.isArray(image) && image.filter(x => x != null).length === 0)) ? null : (Array.isArray(image) ? image.filter(x => x != null) : [image]);
-var mainImage;
-const otherImages: ImageProps[] = [];
-if (_images) {
-    for (var i = 0; i < (_images?.length ?? 0); i++) {
-        if (_images[i].isMainImage && mainImage == null) {
-            mainImage = _images[i];
-        } else {
-            otherImages.push(_images[i]);
-        }
-    }
-}
-var firstImage = mainImage ?? (_images == null ? null : (_images.length > 0 ? _images[0] : null));
+const { image, imageIsIcon, title, description, hint, type } = Astro.props;
 
-const imageHeight = '15rem';
-var imageBorderRadius;
-const iconSize = '6rem';
-const iconMargin = '3rem';
-const textMargin = '0 .5rem 0 .5rem';
-const textPadding = '1.5rem 1rem 1rem 1rem';
-const textBackgroundColor = '#ffffffd3';
-const cardWidth = '15.2rem';
-const cardBackgroundColor = '#E5E5E5';
+var cardBodyMargin;
+var cardBodyPadding = '0.5rem 3.25rem 1.75rem 3.25rem';
+var cardBodyBackgroundColor;
+var cardWidth = '22.6rem';
+var cardBackgroundColor = '#ffffffd3';
+var cardTextAlign = 'left';
+
+var textColor = '#000000';
+
+switch (type) {
+    case "profile":
+        cardBodyMargin = '0 .5rem 0 .5rem';
+        cardBodyPadding = '1.5rem 1rem 1rem 1rem';
+        cardBodyBackgroundColor = '#ffffffd3';
+        cardWidth = '15.2rem';
+        cardBackgroundColor = '#E5E5E5';
+        cardTextAlign = 'center';
+        break;
+    default:
+        break;
+}
+
 const cardBorderRadius = '.5rem';
 const cardBorder = '2px #c70000 solid';
 const cardPadding = '0px 0px .5rem 0px';
-const cardTextAlign = 'center';
 const cardBoxShadow = '0px 0px 9px black';
+
 ---
 <Card
-    textMargin={textMargin}
-    textPadding={textPadding}
-    textBackgroundColor={textBackgroundColor}
+    cardBodyMargin={cardBodyMargin}
+    cardBodyPadding={cardBodyPadding}
+    cardBodyBackgroundColor={cardBodyBackgroundColor}
     cardWidth={cardWidth}
     cardBackgroundColor={cardBackgroundColor}
     cardBorderRadius={cardBorderRadius}
@@ -54,13 +54,9 @@ const cardBoxShadow = '0px 0px 9px black';
     cardTextAlign={cardTextAlign}
     cardBoxShadow={cardBoxShadow}
 >
-    { _images != null && firstImage != null &&
-        (imageIsIcon 
-            ? <Icon slot="image" url={firstImage.url} color={firstImage.color} imageSize={firstImage.imageSize} borderRadius={imageBorderRadius} containerMargin={iconMargin} size={iconSize} />
-            : <Image slot="image" url={firstImage.url} color={firstImage.color} imageSize={firstImage.imageSize} imageRepeat={firstImage.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
-        )
-    }
-    { title != null && <RoverCoderText slot="title" type="card-title" content={title} /> }
-    { hint != null && <RoverCoderText slot="hint" type="card-hint" content={hint} isParagraph /> }
-    { description != null && <RoverCoderText slot="description" type="card-description" content={description} isParagraph /> }
+    <RoverCoderCardHeader slot="header" image={image} imageIsIcon={imageIsIcon} info={hint} type={type} />
+    <Fragment slot="body">
+        { title != null && <div class="title"><RoverCoderText slot="title" type="card-title" content={title} color={textColor} /></div> }
+        { description != null && <div class="description"><RoverCoderText slot="description" type="card-description" content={description} color={textColor} isParagraph /></div> }
+    </Fragment>
 </Card>

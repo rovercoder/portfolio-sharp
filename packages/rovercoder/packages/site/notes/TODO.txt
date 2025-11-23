@@ -1,13 +1,6 @@
-Header
-> Mobile navigation menu should overlay and be closeable
-
 Card
-- Image Set selector on card + < popup browser >
-- Image description (i) button on card + pop up text
+- Image Set < popup browser > + Image description on card image hover/click
 - Hint text (*) formatting and pop up text
-
-StatisticsFrontPageSection
-- Continue
 
 Data
 - Should be loaded from site.data.json

@@ -7,46 +7,55 @@ interface Props {
 	backgroundBorderRadius?: string | undefined;
 	type?: string | undefined;
 }
-var { backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize = 'cover', backgroundBorderRadius, type = 'absolute' } = Astro.props;
-backgroundUrl = `url(${backgroundUrl})`;
-var backgroundPosition;
-var backgroundHeight;
-var backgroundWidth;
-var backgroundTop;
-var backgroundLeft;
-switch (type) {
+var { 
+	backgroundUrl: backgroundImageBackgroundUrl, 
+	backgroundColor: backgroundImageBackgroundColor, 
+	backgroundRepeat: backgroundImageBackgroundRepeat, 
+	backgroundSize: backgroundImageBackgroundSize = 'cover', 
+	backgroundBorderRadius: backgroundImageBackgroundBorderRadius, 
+	type: backgroundImageType = 'absolute' 
+} = Astro.props;
+backgroundImageBackgroundUrl = `url(${backgroundImageBackgroundUrl})`;
+var backgroundImageBackgroundPosition;
+var backgroundImageBackgroundHeight;
+var backgroundImageBackgroundWidth;
+var backgroundImageBackgroundTop;
+var backgroundImageBackgroundLeft;
+switch (backgroundImageType) {
 	case 'fixedFullScreen': 
-		backgroundPosition = 'fixed';
-		backgroundHeight = '100%';
-		backgroundWidth = '100%';
-		backgroundTop = '0px';
-		backgroundLeft = '0px';
+		backgroundImageBackgroundPosition = 'fixed';
+		backgroundImageBackgroundHeight = '100%';
+		backgroundImageBackgroundWidth = '100%';
+		backgroundImageBackgroundTop = '0px';
+		backgroundImageBackgroundLeft = '0px';
 		break;
 	case 'absolute':
-		backgroundPosition = 'absolute';
-		backgroundHeight = '100%';
-		backgroundWidth = '100%';
-		backgroundTop = '0px';
-		backgroundLeft = '0px';
+		backgroundImageBackgroundPosition = 'absolute';
+		backgroundImageBackgroundHeight = '100%';
+		backgroundImageBackgroundWidth = '100%';
+		backgroundImageBackgroundTop = '0px';
+		backgroundImageBackgroundLeft = '0px';
 		break;
 	default:
-		throw Error(`Not supported background type! Type: ${type}`);
+		throw Error(`Not supported background type! Type: ${backgroundImageType}`);
 }
 ---
 
 <div class="wrapper">
 	<div class="background-image-wrapper">
-		<div class="background-image" style={backgroundPosition === 'fixed' && "transform: translateZ(0); will-change: transform;" /** For iOS Safari browsers */}></div>
+		<div class="background-image" style={backgroundImageBackgroundPosition === 'fixed' && "transform: translateZ(0); will-change: transform;" /** For iOS Safari browsers */}></div>
 	</div>
 	<div class="content">
 		<slot />
 	</div>
 </div>
 
-<style define:vars={{ backgroundUrl, backgroundColor, backgroundRepeat, backgroundSize, backgroundBorderRadius, backgroundPosition, backgroundHeight, backgroundWidth, backgroundTop, backgroundLeft }}>
+<style define:vars={{ backgroundImageBackgroundUrl, backgroundImageBackgroundColor, backgroundImageBackgroundRepeat, backgroundImageBackgroundSize, backgroundImageBackgroundBorderRadius, backgroundImageBackgroundPosition, backgroundImageBackgroundHeight, backgroundImageBackgroundWidth, backgroundImageBackgroundTop, backgroundImageBackgroundLeft }}>
 	.wrapper {
 		position: relative;
-		border-radius: var(--backgroundBorderRadius);
+		border-radius: var(--backgroundImageBackgroundBorderRadius);
+		width: 100%;
+		height: 100%;
 		overflow: hidden;
 	}
 
@@ -60,21 +69,23 @@ switch (type) {
 	}
 
 	.background-image {
-		position: var(--backgroundPosition);
-		height: var(--backgroundHeight);
-		width: var(--backgroundWidth);
-		top: var(--backgroundTop);
-		left: var(--backgroundLeft);
+		position: var(--backgroundImageBackgroundPosition);
+		height: var(--backgroundImageBackgroundHeight);
+		width: var(--backgroundImageBackgroundWidth);
+		top: var(--backgroundImageBackgroundTop);
+		left: var(--backgroundImageBackgroundLeft);
 		display: block;
-        background-image: var(--backgroundUrl);
-        background-color: var(--backgroundColor);
-        background-repeat: var(--backgroundRepeat);
-		background-size: var(--backgroundSize);
+        background-image: var(--backgroundImageBackgroundUrl);
+        background-color: var(--backgroundImageBackgroundColor);
+        background-repeat: var(--backgroundImageBackgroundRepeat);
+		background-size: var(--backgroundImageBackgroundSize);
 		background-position: center center;
 		transition: opacity 150ms ease-in-out;
 	}
 
 	.content {
 		position: relative;
+		width: 100%;
+		height: 100%;
 	}
 </style>

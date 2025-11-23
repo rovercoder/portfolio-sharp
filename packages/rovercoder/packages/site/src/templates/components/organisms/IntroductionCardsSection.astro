@@ -1,0 +1,25 @@
+---
+import Section from "../../../components/atoms/Section.astro";
+import type { FlexProperties } from "../../../components/atoms/Section.types";
+import type { BackgroundProperties } from "../../../components/helpers/Background.types";
+
+const padding = "3.6875rem clamp(1.5rem, 7vw, 2.1875rem)";
+
+const backgroundProperties: BackgroundProperties = {
+    backgroundColor: '#DADADA'
+};
+
+const displayProperties: FlexProperties = {
+	display: 'flex',
+	flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    alignItems: 'stretch',
+    alignContent: 'center',
+    gap: '2.5rem 2rem'
+};
+---
+
+<Section padding={padding} backgroundProperties={backgroundProperties} displayProperties={displayProperties}>
+    <slot name="introCards" />
+</Section>

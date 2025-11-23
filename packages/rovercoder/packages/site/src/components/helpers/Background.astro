@@ -9,24 +9,31 @@ interface Props {
 	borderRadius?: string | undefined;
     type?: string | undefined;
 }
-const { imageUrl, color, imageRepeat, imageSize, borderRadius, type } = Astro.props;
+const { 
+    imageUrl: backgroundImageUrl, 
+    color: backgroundColor, 
+    imageRepeat: backgroundImageRepeat, 
+    imageSize: backgroundImageSize, 
+    borderRadius: backgroundBorderRadius, 
+    type: backgroundType 
+} = Astro.props;
 ---
 
 {
-    imageUrl == null || imageUrl.toString().trim().length == 0
+    backgroundImageUrl == null || backgroundImageUrl.toString().trim().length == 0
         
         ?   <div class="background">
                 <slot />
             </div>
         
-        :   <BackgroundImage backgroundUrl={imageUrl} backgroundColor={color} backgroundRepeat={imageRepeat} backgroundSize={imageSize} backgroundBorderRadius={borderRadius} type={type}>
+        :   <BackgroundImage backgroundUrl={backgroundImageUrl} backgroundColor={backgroundColor} backgroundRepeat={backgroundImageRepeat} backgroundSize={backgroundImageSize} backgroundBorderRadius={backgroundBorderRadius} type={backgroundType}>
                 <slot />
             </BackgroundImage>
 }
 
-<style define:vars={{ color, borderRadius }}>
+<style define:vars={{ backgroundColor, backgroundBorderRadius }}>
     .background {
-        background-color: var(--color);
-        border-radius: var(--borderRadius);
+        background-color: var(--backgroundColor);
+        border-radius: var(--backgroundBorderRadius);
     }
 </style>
