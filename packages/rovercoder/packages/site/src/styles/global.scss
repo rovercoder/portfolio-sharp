@@ -66,11 +66,8 @@ body {
 }
 
 html.overlay-open {
-    max-height: 100%;
-
-    body {
-        overflow: hidden;
-    }
+    overflow-y: hidden;
+    scrollbar-gutter: stable;
 }
 
 * {

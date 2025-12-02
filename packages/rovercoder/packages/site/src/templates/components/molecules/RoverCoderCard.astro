@@ -14,23 +14,27 @@ interface Props {
 }
 const { image, imageIsIcon, title, description, hint, type } = Astro.props;
 
-var cardBodyMargin;
-var cardBodyPadding = '0.5rem 3.25rem 1.75rem 3.25rem';
-var cardBodyBackgroundColor;
-var cardWidth = '22.6rem';
-var cardBackgroundColor = '#ffffffd3';
-var cardTextAlign = 'left';
+let cardBodyMargin;
+let cardBodyPadding = '.75rem 3.25rem 1.75rem 3.25rem';
+let cardBodyElementsGap = '1.25rem';
+let cardBodyElementsTextGap = '0.875rem';
+let cardBodyBackgroundColor;
+let cardWidth = '22.6rem';
+let cardBackgroundColor = '#ffffffd3';
+let cardTextAlign = 'left';
 
-var textColor = '#000000';
+let textColor = '#000000';
 
 switch (type) {
     case "profile":
         cardBodyMargin = '0 .5rem 0 .5rem';
-        cardBodyPadding = '1.5rem 1rem 1rem 1rem';
+        cardBodyPadding = '2.25rem 1rem 1rem 1rem';
         cardBodyBackgroundColor = '#ffffffd3';
         cardWidth = '15.2rem';
         cardBackgroundColor = '#E5E5E5';
         cardTextAlign = 'center';
+        cardBodyElementsGap = '1.125rem';
+        cardBodyElementsTextGap = '1rem';
         break;
     default:
         break;
@@ -40,7 +44,6 @@ const cardBorderRadius = '.5rem';
 const cardBorder = '2px #c70000 solid';
 const cardPadding = '0px 0px .5rem 0px';
 const cardBoxShadow = '0px 0px 9px black';
-
 ---
 <Card
     cardBodyMargin={cardBodyMargin}
@@ -55,8 +58,16 @@ const cardBoxShadow = '0px 0px 9px black';
     cardBoxShadow={cardBoxShadow}
 >
     <RoverCoderCardHeader slot="header" image={image} imageIsIcon={imageIsIcon} info={hint} type={type} />
-    <Fragment slot="body">
-        { title != null && <div class="title"><RoverCoderText slot="title" type="card-title" content={title} color={textColor} /></div> }
-        { description != null && <div class="description"><RoverCoderText slot="description" type="card-description" content={description} color={textColor} isParagraph /></div> }
-    </Fragment>
+    <div class="card-body-inner" slot="body">
+        { title != null && <div class="title"><RoverCoderText slot="title" type="card-title" content={title} color={textColor} gap={cardBodyElementsTextGap} /></div> }
+        { description != null && <div class="description"><RoverCoderText slot="description" type="card-description" content={description} color={textColor} isParagraph gap={cardBodyElementsTextGap} /></div> }
+    </div>
 </Card>
+
+<style define:vars={{ cardBodyElementsGap }}>
+    .card-body-inner {
+        display: flex;
+        flex-direction: column;
+        gap: var(--cardBodyElementsGap);
+    }
+</style>

@@ -7,19 +7,19 @@ const outputJsonFilePath: string = './assets/data/site.data.json';
 
 try {
 
-    var data: SiteData = JSON.parse(JSON.stringify(await getSiteData(siteDataOptions)))
+    const data: SiteData = JSON.parse(JSON.stringify(await getSiteData(siteDataOptions)))
 
     delete data.lastUpdated;
 
-    var newFileString = JSON.stringify(data, null, 4);
+    const newFileString = JSON.stringify(data, null, 4);
 
-    var continueWrite = false;
+    let continueWrite = false;
 
     if (existsSync(outputJsonFilePath)) {
         try {
-            var oldFileString = readFileSync(outputJsonFilePath, { encoding: 'utf8' });
+            let oldFileString = readFileSync(outputJsonFilePath, { encoding: 'utf8' });
             if (oldFileString !== undefined && oldFileString !== null) {
-                var oldFileJson: SiteData = JSON.parse(oldFileString);
+                const oldFileJson: SiteData = JSON.parse(oldFileString);
                 delete oldFileJson.lastUpdated;
                 oldFileString = JSON.stringify(oldFileJson, null, 4);
                 continueWrite = newFileString.trim() !== oldFileString.trim();

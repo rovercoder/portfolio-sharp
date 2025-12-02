@@ -1,8 +1,11 @@
-var cardHeaderInnerElements = document.querySelectorAll('.card-header-inner');
+import { CardHeadersObject, WindowCustom } from "./global.types.js";
+import { openOverlay } from "./overlay.js";
+
+let cardHeaderInnerElements = document.querySelectorAll('.card-header-inner');
 const imageIndexCssVariableName = '--imageIndex';
 
-window.savedCardHeaderObjects?.forEach((x) => {
-    var obj = (x as CardHeadersObject);
+(window as WindowCustom).savedCardHeaderObjects?.forEach((x) => {
+    let obj = (x as CardHeadersObject);
     obj.imageBrowserOpenButtonTapHandleRemover?.();
     obj.imageNextButtonTapHandleRemover?.();
     obj.imagePreviousButtonTapHandleRemover?.();
@@ -10,31 +13,33 @@ window.savedCardHeaderObjects?.forEach((x) => {
     obj.infoButtonTapHandleRemover?.();
 });
 
-var savedCardHeaderObjects: CardHeadersObject[] = [];
-window.savedCardHeaderObjects = savedCardHeaderObjects;
+let savedCardHeaderObjects: CardHeadersObject[] = [];
+(window as WindowCustom).savedCardHeaderObjects = savedCardHeaderObjects;
 
 cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
+    let imageBrowserOverlay: HTMLElement | undefined;
     const getImageIndex = (): number | undefined => {
-        var value = (cardHeaderInnerElement as HTMLElement).style.getPropertyValue(imageIndexCssVariableName);
-        var valueParsed = parseInt(value);
+        const value = (cardHeaderInnerElement as HTMLElement).style.getPropertyValue(imageIndexCssVariableName);
+        const valueParsed = parseInt(value);
         return isNaN(valueParsed) ? undefined : valueParsed;
     };
     const setImageIndex = (imageIndex: number): void => { 
         (cardHeaderInnerElement as HTMLElement).style.setProperty(imageIndexCssVariableName, imageIndex.toString());
+        imageBrowserOverlay?.style.setProperty(imageIndexCssVariableName, imageIndex.toString());
     };
     const getImagesTotal = (): number | undefined => cardHeaderInnerElement.querySelector('.image-preview .images-container')?.children.length;
 
-    var controlsTop = cardHeaderInnerElement.querySelector('.controls-top');
-    var infoButton = controlsTop?.querySelector('.info[role="button"]');
-    var imageBrowserOpenButton = controlsTop?.querySelector('.image-browser-open[role="button"]');
+    const controlsTop = cardHeaderInnerElement.querySelector('.controls-top');
+    const infoButton = controlsTop?.querySelector('.info[role="button"]');
+    const imageBrowserOpenButton = controlsTop?.querySelector('.image-browser-open[role="button"]');
 
-    var controlsMiddle = cardHeaderInnerElement.querySelector('.controls-middle');
-    var imagePreviousButton = controlsMiddle?.querySelector('.image-previous[role="button"]');
-    var imageNextButton = controlsMiddle?.querySelector('.image-next[role="button"]');
+    const controlsMiddle = cardHeaderInnerElement.querySelector('.controls-middle');
+    const imagePreviousButton = controlsMiddle?.querySelector('.image-previous[role="button"]');
+    const imageNextButton = controlsMiddle?.querySelector('.image-next[role="button"]');
 
     const decreaseImageIndex = () => {
-        var imageIndex = getImageIndex() ?? 0;
-        var imagesTotal = getImagesTotal();
+        const imageIndex = getImageIndex() ?? 0;
+        const imagesTotal = getImagesTotal();
         if (imageIndex > 0) {
             if (imagesTotal != null && imageIndex > (imagesTotal - 1)) {
                 setImageIndex(imagesTotal - 1);
@@ -49,8 +54,8 @@ cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
     };
 
     const increaseImageIndex = () => {
-        var imageIndex = getImageIndex() ?? 0;
-        var imagesTotal = getImagesTotal();
+        const imageIndex = getImageIndex() ?? 0;
+        const imagesTotal = getImagesTotal();
         if (imageIndex >= 0) {
             if (imagesTotal != null && imageIndex >= (imagesTotal - 1)) {
                 if (imageIndex > (imagesTotal - 1)) {
@@ -67,13 +72,13 @@ cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
     };
 
     const resetImageNavigatorsVisibility = () => {
-        var imageIndex = getImageIndex() ?? 0;
-        var imagesTotal = getImagesTotal();
+        const imageIndex = getImageIndex() ?? 0;
+        const imagesTotal = getImagesTotal();
 
-        var visuallyHiddenClass = 'visually-hidden';
+        const visuallyHiddenClass = 'visually-hidden';
 
-        var imagePreviousButtonShown = false;
-        var imageNextButtonShown = false;
+        let imagePreviousButtonShown = false;
+        let imageNextButtonShown = false;
 
         if (imagesTotal != null) {
             if (imageIndex > 0 && imagesTotal > 1) {
@@ -102,26 +107,31 @@ cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
         }
     }
 
+    const openImageBrowser = () => {
+        const _imageBrowserOverlay = cardHeaderInnerElement.querySelector('.overlay-image-browser');
+        if (_imageBrowserOverlay != null) {
+            const imageBrowserOverlayClone = _imageBrowserOverlay.cloneNode(true) as HTMLElement;
+            imageBrowserOverlayClone.removeAttribute('aria-hidden');
+            imageBrowserOverlay = openOverlay(imageBrowserOverlayClone) as HTMLElement | undefined;
+            setImageIndex(getImageIndex() ?? 0);
+        }
+    }
+
     imagePreviousButton?.addEventListener('click', decreaseImageIndex);
     imageNextButton?.addEventListener('click', increaseImageIndex);
+    imageBrowserOpenButton?.addEventListener('click', openImageBrowser);
 
-    var savedCardHeaderObject: CardHeadersObject = {
+    const savedCardHeaderObject: CardHeadersObject = {
         innerElement: cardHeaderInnerElement as HTMLElement,
         imagePreviousButtonTapHandleRemover: () => { 
             imagePreviousButton?.removeEventListener('click', decreaseImageIndex);
         },
         imageNextButtonTapHandleRemover: () => {
             imageNextButton?.removeEventListener('click', increaseImageIndex);
+        },
+        imageBrowserOpenButtonTapHandleRemover: () => {
+            imageBrowserOpenButton?.removeEventListener('click', openImageBrowser);
         }
     };
     savedCardHeaderObjects.push(savedCardHeaderObject);
 });
-
-interface CardHeadersObject {
-    innerElement: HTMLElement;
-    imagePreviousButtonTapHandleRemover?: Function;
-    imageNextButtonTapHandleRemover?: Function;
-    imageBrowserOpenButtonTapHandleRemover?: Function;
-    infoButtonTapHandleRemover?: Function;
-    infoButtonHoverHandleRemover?: Function;
-}

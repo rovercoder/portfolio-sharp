@@ -53,7 +53,7 @@ function astroRemoveDuplicateScriptsAfterBuild() {
         name: "astro:dedupe-script-tags",
         hooks: {
             "astro:build:done": async ({ dir }) => {
-                var dirPath = dir.protocol === 'file:' ? fileURLToPath(dir.href) : dir.href;
+                const dirPath = dir.protocol === 'file:' ? fileURLToPath(dir.href) : dir.href;
                 const htmlFiles = getHtmlFiles(dirPath);
 
                 for (const file of htmlFiles) {

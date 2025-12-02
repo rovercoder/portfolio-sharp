@@ -1,8 +1,10 @@
 ---
 import Icon from "../../../components/atoms/Icon.astro";
+import Image from "../../../components/atoms/Image.astro";
 import CardHeader from "../../../components/molecules/CardHeader.astro";
-import type { ImageProps } from "../../../components/molecules/CardHeader.types";
+import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "../../../components/molecules/CardHeader.types";
 import RoverCoderText from "../atoms/RoverCoderText.astro";
+import RoverCoderImageBrowserOverlay from "./RoverCoderImageBrowserOverlay.astro";
 
 interface Props {
     image?: ImageProps | ImageProps[];
@@ -12,10 +14,10 @@ interface Props {
 }
 const { image, imageIsIcon, info, type } = Astro.props;
 
-var images: ImageProps[] | undefined = (image == null || (Array.isArray(image) && image.filter(x => x != null).length === 0)) ? undefined : (Array.isArray(image) ? image.filter(x => x != null) : [image]);
+const images: ImageProps[] | undefined = (image == null || (Array.isArray(image) && image.filter(x => x != null).length === 0)) ? undefined : (Array.isArray(image) ? image.filter(x => x != null) : [image]);
 
 const imageHeight = '15rem';
-var imageBorderRadius: string | undefined;
+let imageBorderRadius: string | undefined;
 const iconSize = '3rem';
 const iconMargin = '1rem';
 
@@ -45,7 +47,7 @@ const photoNavigationButtonPadding = '0.125rem';
 ---
 
 <CardHeader 
-        image={images} 
+        images={images} 
         imageIsIcon={imageIsIcon} 
         imageHeight={imageHeight} 
         imageBorderRadius={imageBorderRadius} 
@@ -53,9 +55,16 @@ const photoNavigationButtonPadding = '0.125rem';
         iconMargin={iconMargin} 
         info={info} 
         type={type}>
+    <div slot="icon">
+        {((args) => <Icon url={args.icon.url} color={args.icon.color} imageSize={args.icon.imageSize} borderRadius={args.iconBorderRadius} containerMargin={args.iconMargin} size={args.iconSize} />) satisfies CardHeaderIconFnType}
+    </div>
+    <div slot="image">
+        {((args) => <Image url={args.image.url} color={args.image.color} imageSize={args.image.imageSize} imageRepeat={args.image.imageRepeat} borderRadius={args.imageBorderRadius} height={args.imageHeight} />) satisfies CardHeaderImageFnType}
+    </div>
     <Icon slot="infoButton" url={infoIconButtonUrl} color={infoIconButtonColor} borderRadius={infoIconButtonBorderRadius} containerMargin={infoIconButtonMargin} containerPadding={infoIconButtonPadding} size={infoIconButtonSize} />
     <RoverCoderText slot="infoText" type="card-hint" content={info ?? ''} color={textColor} isParagraph />
     <Icon slot="imageBrowserOpenButton" url={imageBrowserButtonIconUrl} color={imageBrowserButtonColor} borderRadius={imageBrowserButtonBorderRadius} containerMargin={imageBrowserButtonMargin} containerPadding={imageBrowserButtonPadding} size={imageBrowserButtonSize} />
+    <RoverCoderImageBrowserOverlay slot="imageBrowser" images={images} />
     <Icon slot="imagePreviousNavigatorButton" url={previousPhotoNavigationButtonIconUrl} color={photoNavigationButtonColor} borderRadius={photoNavigationButtonBorderRadius} containerMargin={photoNavigationButtonMargin} containerPadding={photoNavigationButtonPadding} size={photoNavigationButtonSize} />
     <Icon slot="imageNextNavigatorButton" url={nextPhotoNavigationButtonIconUrl} color={photoNavigationButtonColor} borderRadius={photoNavigationButtonBorderRadius} containerMargin={photoNavigationButtonMargin} containerPadding={photoNavigationButtonPadding} size={photoNavigationButtonSize} />
 </CardHeader>

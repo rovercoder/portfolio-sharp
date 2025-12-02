@@ -1,7 +1,7 @@
 import * as parse5 from 'parse5';
 
 export function sanitizeRenderedGeneratedHTMLFragment(htmlString: string) {
-    var htmlParsed = parse5.parseFragment(htmlString);
+    const htmlParsed = parse5.parseFragment(htmlString);
 
     function traverseAndRemoveAttributes(parent: parse5.DefaultTreeAdapterTypes.Document | parse5.DefaultTreeAdapterTypes.DocumentFragment | parse5.DefaultTreeAdapterTypes.ChildNode, removeAttributeNameRegexes: RegExp[]): void {
         if ('attrs' in parent) {
@@ -11,7 +11,7 @@ export function sanitizeRenderedGeneratedHTMLFragment(htmlString: string) {
         if (!('childNodes' in parent) || !parent.childNodes) return;
 
         for (let i = 0; i < parent.childNodes.length; i++) {
-            var childNode = parent.childNodes[i];
+            const childNode = parent.childNodes[i];
             traverseAndRemoveAttributes(childNode, removeAttributeNameRegexes);
         }
     }

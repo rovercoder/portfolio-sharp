@@ -16,18 +16,18 @@ const {
     displayProperties: sectionDisplayProperties 
 } = Astro.props;
 
-var sectionDisplay;
+let sectionDisplay;
 
-var sectionFlexDirection;
-var sectionFlexWrap;
-var sectionJustifyContent;
-var sectionAlignItems;
-var sectionAlignContent;
-var sectionGap;
+let sectionFlexDirection;
+let sectionFlexWrap;
+let sectionJustifyContent;
+let sectionAlignItems;
+let sectionAlignContent;
+let sectionGap;
 
-var sectionGridTemplateColumns;
-var sectionGridTemplateRows;
-var sectionGridTemplateAreas;
+let sectionGridTemplateColumns;
+let sectionGridTemplateRows;
+let sectionGridTemplateAreas;
 
 switch (sectionDisplayProperties.display) {
     case 'flex': 

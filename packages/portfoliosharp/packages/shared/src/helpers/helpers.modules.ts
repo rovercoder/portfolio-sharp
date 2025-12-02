@@ -22,7 +22,7 @@ export async function createModule(code: string): Promise<any | undefined> {
 }
 
 async function createDynamicModuleWithImports(code: string): Promise<any | undefined> {
-    var fileName;
+    let fileName;
     try {
         do {
             const id = Date.now() + Math.random().toString(36);

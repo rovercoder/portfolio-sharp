@@ -35,6 +35,9 @@ const navLinkMenuPadding = "1rem";
 const navLinkMenuTextAlign = 'left';
 const navLinkMenuTextMinWidth = '7.25rem';
 const navLinksItemsGap = '0'; //'1.5rem';
+
+const navigationMenuOverlayContainerPadding = '2rem clamp(1rem, 5vw, 2rem)';
+const navigationMenuOverlayBackgroundColor = '#000000'; 
 ---
 
 <Header backgroundColor={headerBackgroundColor}>
@@ -49,7 +52,7 @@ const navLinksItemsGap = '0'; //'1.5rem';
         }
     </Navigation>
     <Hamburger slot="hamburger" lineMarginTopBottom={hamburgerMarginTopBottom} lineHeight={hamburgerLineHeight} color={hamburgerColor} />
-    <NavigationMenuOverlay slot="navigationMenu" navLinksItemsGap={navLinksItemsGap}>
+    <NavigationMenuOverlay slot="navigationMenu" navLinksItemsGap={navLinksItemsGap} containerPadding={navigationMenuOverlayContainerPadding} backgroundColor={navigationMenuOverlayBackgroundColor}>
         {
             navLinks.map(x => 
                 <NavLink link={x.link} textColor={navLinkMenuTextColor} hoverFocusTextColor={navLinkMenuHoverFocusTextColor} hoverFocusBackgroundColor={navLinkMenuHoverFocusBackgroundColor} padding={navLinkMenuPadding} textAlign={navLinkMenuTextAlign} textMinimumWidth={navLinkMenuTextMinWidth}>

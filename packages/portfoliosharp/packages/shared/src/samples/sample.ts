@@ -8,15 +8,15 @@
 // import { fields } from "../helpers/helpers.general.js";
 // import { addHours } from "date-fns";
 
-// var moduleData = `
+// const moduleData = `
 //     function hello() { alert('hello'); }
 //     export function callMe() { hello(); }
 // `;
 
-// var blob = new Blob([moduleData], { type: 'application/javascript' });
-// var url = URL.createObjectURL(blob);
+// const blob = new Blob([moduleData], { type: 'application/javascript' });
+// const url = URL.createObjectURL(blob);
 
-// var g = await import(url);
+// const g = await import(url);
 // g.callMe();
 
 // URL.revokeObjectURL(url);
@@ -27,8 +27,8 @@
 // < Testing creating module >
 
 // import { createModule } from "../helpers/helpers.modules.js";
-// var moduleData = "import {join} from 'path'; import { tmpdir } from 'os'; function hello() { console.log(join(tmpdir(), '12345.txt')); }; export function callMe() { hello(); }";
-// var r = await createModule(moduleData);
+// const moduleData = "import {join} from 'path'; import { tmpdir } from 'os'; function hello() { console.log(join(tmpdir(), '12345.txt')); }; export function callMe() { hello(); }";
+// const r = await createModule(moduleData);
 // r?.callMe();
 
 // </ Testing creating module >
@@ -37,23 +37,23 @@
 // < Run javascript functions in browser >
 
 
-// var declaredFunctions = {}; 
-// for (var i = 0; i < functions.length; i++) { 
+// const declaredFunctions = {}; 
+// for (const i = 0; i < functions.length; i++) { 
 //      declaredFunctions[functions[i].name] = {
 //          fn: new Function(functions[i].arguments, functions[i].body), 
 //          args: functions[i].arguments.split(",").map(x => x.trim()) 
 //      }    
 // } 
-// for (var i = 0; i < 10; i++) { 
-//      var funcWithArgs = declaredFunctions["getCatholicEasterByYear"]; 
-//      var args = []; 
-//      for (var j = 0; j < funcWithArgs.args.length; j++) { 
+// for (const i = 0; i < 10; i++) { 
+//      const funcWithArgs = declaredFunctions["getCatholicEasterByYear"]; 
+//      const args = []; 
+//      for (const j = 0; j < funcWithArgs.args.length; j++) { 
 //          switch(funcWithArgs.args[j]) { 
 //              case 'year': args.push(2016+i); break; 
 //              default: args.push(undefined); break; 
 //          } 
 //      } 
-//      var date = funcWithArgs.fn.call(this, ...args); 
+//      const date = funcWithArgs.fn.call(this, ...args); 
 //      console.log(date); 
 // }    
 
@@ -115,16 +115,16 @@
 //     return `The number is: ${this.a}`;
 // }
 
-// var test = new TestB();
+// const test = new TestB();
 // console.log(""+test);
 
 // </ Testing overriding toString on a parent class >
 
 // < Testing variables which have a function assigned to see if name of variable is returned (Result: NOT) >
 
-// var func = () => { return !true || false || !!1 || 0; }
+// const func = () => { return !true || false || !!1 || 0; }
 
-// var x = func;
+// const x = func;
 
 // console.log(JSON.stringify(await getFunctionDetails(x)));
 
@@ -132,10 +132,10 @@
 
 // < Testing daylight savings time shift >
 
-// var date = new TZDate(2025, 9, 26, 2, 0, 0, "Europe/Madrid");
+// const date = new TZDate(2025, 9, 26, 2, 0, 0, "Europe/Madrid");
 
-// var date1 = addHours(date, 1);
-// var date2 = addHours(date1, 1);
+// const date1 = addHours(date, 1);
+// const date2 = addHours(date1, 1);
 
 // console.log(date);
 // console.log(date1);

@@ -3,4 +3,7 @@ Card
 - Hint text (*) formatting and pop up text
 
 Data
-- Should be loaded from site.data.json
+- Should be loaded from site.data.json dynamically and website is to be built on the fly
+
+Images Optimizations
+- Set up a server-side service and publishing step that converts images to have hash in filename and to particular resolutions (and add media queries with the URL being e.g. `?w=400&h=400` or `-400x400-contain(-stretch)?` or `-400x400-cover(-stretch)?` in CSS)

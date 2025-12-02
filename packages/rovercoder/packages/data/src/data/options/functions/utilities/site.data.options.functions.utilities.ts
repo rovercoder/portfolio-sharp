@@ -11,7 +11,7 @@ export const handleSiteDataOptionsFunctionsUtilities = async function (data: Sit
         throw Error('Undefined data content!');
     }
 
-    var siteDataOptionsFunctionsUtilitiesTransformation = await transformIntoSeparateFunctionsAndContext<typeof siteDataOptionsFunctionsUtilities>({ 
+    const siteDataOptionsFunctionsUtilitiesTransformation = await transformIntoSeparateFunctionsAndContext<typeof siteDataOptionsFunctionsUtilities>({ 
         filePath: __siteDataOptionsFunctionsUtilitiesFilePath, 
         exportedNameOfVariableObjectWithFunctions: nameOf(() => siteDataOptionsFunctionsUtilities),
         exportedNameOfVariableFilePath: nameOf(() => __siteDataOptionsFunctionsUtilitiesFilePath)
@@ -23,9 +23,9 @@ export const handleSiteDataOptionsFunctionsUtilities = async function (data: Sit
 
     const siteDataOptionsFunctionsUtilitiesTransformationResult = siteDataOptionsFunctionsUtilitiesTransformation.result;
 
-    var preexistentFunctions = (data.content.utilityFunctions?.functions ?? []);
+    const preexistentFunctions = (data.content.utilityFunctions?.functions ?? []);
 
-    var utilityFunctions: CustomFunctionsWithContext = { 
+    const utilityFunctions: CustomFunctionsWithContext = { 
         context: ((data.content.utilityFunctions?.context ?? '') + '\r\n' + siteDataOptionsFunctionsUtilitiesTransformationResult.context).trim(), 
         functions: [
             ...preexistentFunctions,
@@ -41,7 +41,7 @@ export const handleSiteDataOptionsFunctionsUtilities = async function (data: Sit
         ].filter(x => !!x) 
     };
 
-    var _data = structuredClone(data);
+    const _data = structuredClone(data);
     _data.content.utilityFunctions = { 
         context: utilityFunctions.context, 
         functions: utilityFunctions.functions

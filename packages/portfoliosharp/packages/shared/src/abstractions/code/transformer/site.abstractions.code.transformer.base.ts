@@ -50,14 +50,14 @@ export abstract class CodeTransformer {
             return false;
         }
 
-        var codePartTypeNativeTypes = this.codePartTypeToNativeTypes[codePartType];
+        const codePartTypeNativeTypes = this.codePartTypeToNativeTypes[codePartType];
         if (codePartTypeNativeTypes == null) {
             return false;
         }
 
-        var typesToCompareWithArray = (Array.isArray(typesToCompareWith) ? typesToCompareWith : [typesToCompareWith]).filter(x => x != null);
+        const typesToCompareWithArray = (Array.isArray(typesToCompareWith) ? typesToCompareWith : [typesToCompareWith]).filter(x => x != null);
 
-        var typesToCompareWithNativeTypes = 
+        const typesToCompareWithNativeTypes = 
             typesToCompareWithArray
                 .flatMap(x => this.codePartTypeToNativeTypes[x] ?? [])
                 .filter(x => x != null);

@@ -12,7 +12,7 @@ export class JsCodeShiftSiteCodeTransformer extends SiteCodeTransformer {
     protected onDestroy() {};
     parseCode(code: string): { instance: CodeTransformer; success: true; } | { success: false; error: { type: string; message: string; }; } {
         try {
-            var instance = new JsCodeShiftCodeTransformer(code);
+            const instance = new JsCodeShiftCodeTransformer(code);
             return { instance, success: true };
         } catch (e) {
             return { success: false, error: { type: 'exception', message: e != null ? JSON.stringify(e) : '' } }
@@ -30,9 +30,9 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findAllImportDeclarations(): CodeTransformerImportDeclaration[] {
-        var results = _findImportDeclarations(this.parsedCode);
+        const results = _findImportDeclarations(this.parsedCode);
         
-        var allResults = _getResultsFromCollection(results);
+        const allResults = _getResultsFromCollection(results);
 
         if (!allResults) {
             return [];
@@ -47,9 +47,9 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findAllImportExpressions(): CodeTransformerImportExpression[] {
-        var results = _findImportExpressions(this.parsedCode);
+        const results = _findImportExpressions(this.parsedCode);
         
-        var allResults = _getResultsFromCollection(results);
+        const allResults = _getResultsFromCollection(results);
 
         if (!allResults) {
             return [];
@@ -64,11 +64,11 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findFirstGlobalVariableDeclaratorByName(name: string): CodeTransformerVariableDeclarator | undefined {
-        var results = _filterGlobalVariableDeclarators(
+        const results = _filterGlobalVariableDeclarators(
             _findVariableDeclarators(this.parsedCode, name)
         );
 
-        var firstResult = _getFirstResultFromCollection(results);
+        const firstResult = _getFirstResultFromCollection(results);
 
         if (!firstResult) {
             return;
@@ -83,13 +83,13 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findFirstGlobalObjectVariableDeclaratorByName(name: string): CodeTransformerVariableDeclarator | undefined {
-        var results = _filterGlobalVariableDeclarators(
+        const results = _filterGlobalVariableDeclarators(
             _filterObjectVariableDeclarators(
                 _findVariableDeclarators(this.parsedCode, name)
             )
         );
 
-        var firstResult = _getFirstResultFromCollection(results);
+        const firstResult = _getFirstResultFromCollection(results);
 
         if (!firstResult) {
             return;
@@ -104,11 +104,11 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findFirstGlobalFunctionDeclarationByName(name: string): CodeTransformerFunctionDeclaration | undefined {
-        var results = _filterGlobalFunctionDeclarations(
+        const results = _filterGlobalFunctionDeclarations(
             _findFunctionDeclarations(this.parsedCode, name)
         );
 
-        var firstResult = _getFirstResultFromCollection(results);
+        const firstResult = _getFirstResultFromCollection(results);
 
         if (!firstResult) {
             return;
@@ -123,13 +123,13 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findFirstGlobalFunctionVariableDeclaratorByName(name: string): CodeTransformerVariableDeclarator | undefined {
-        var results = _filterGlobalVariableDeclarators(
+        const results = _filterGlobalVariableDeclarators(
             _filterFunctionVariableDeclarators(
                 _findVariableDeclarators(this.parsedCode, name)
             )
         );
 
-        var firstResult = _getFirstResultFromCollection(results);
+        const firstResult = _getFirstResultFromCollection(results);
 
         if (!firstResult) {
             return;
@@ -144,11 +144,11 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findFirstGlobalExportNamedDeclarationByExportedName(exportedName: string): CodeTransformerExportNamedDeclaration | undefined {
-        var results = _filterGlobalExportNamedDeclaration(
+        const results = _filterGlobalExportNamedDeclaration(
             _findNamedExportDeclarationByExportedName(this.parsedCode, exportedName)
         );
 
-        var firstResult = _getFirstResultFromCollection(results);
+        const firstResult = _getFirstResultFromCollection(results);
 
         if (!firstResult) {
             return;
@@ -163,11 +163,11 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     findFirstGlobalExportNamedDeclarationSpecifierByExportedName(exportedName: string): CodeTransformerExportNamedDeclarationSpecifier | undefined {
-        var results = _filterGlobalExportNamedDeclarationSpecifiers(
+        const results = _filterGlobalExportNamedDeclarationSpecifiers(
             _findNamedExportDeclarationSpecifierByExportedName(this.parsedCode, exportedName)
         );
 
-        var firstResult = _getFirstResultFromCollection(results);
+        const firstResult = _getFirstResultFromCollection(results);
 
         if (!firstResult) {
             return;
@@ -182,7 +182,7 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     removeGlobalObjectVariableDeclaratorByName(name: string): void {
-        var results = _filterGlobalVariableDeclarators(
+        const results = _filterGlobalVariableDeclarators(
             _filterObjectVariableDeclarators(
                 _findVariableDeclarators(this.parsedCode, name)
             )
@@ -192,7 +192,7 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     removeGlobalVariableDeclaratorByName(name: string): void {
-        var results = _filterGlobalVariableDeclarators(
+        const results = _filterGlobalVariableDeclarators(
             _findVariableDeclarators(this.parsedCode, name)
         );
 
@@ -200,7 +200,7 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     removeGlobalFunctionDeclarationByName(name: string): void {
-        var results = _filterGlobalFunctionDeclarations(
+        const results = _filterGlobalFunctionDeclarations(
             _findFunctionDeclarations(this.parsedCode, name)
         );
 
@@ -208,7 +208,7 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     removeGlobalFunctionVariableDeclaratorByName(name: string): void {
-        var results = _filterGlobalVariableDeclarators(
+        const results = _filterGlobalVariableDeclarators(
             _filterFunctionVariableDeclarators(
                 _findVariableDeclarators(this.parsedCode, name)
             )
@@ -218,7 +218,7 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     removeGlobalExportNamedDeclarationByExportedName(exportedName: string): void {
-        var results = _filterGlobalExportNamedDeclaration(
+        const results = _filterGlobalExportNamedDeclaration(
             _findNamedExportDeclarationByExportedName(this.parsedCode, exportedName)
         );
 
@@ -269,7 +269,7 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     removeGlobalExportNamedDeclarationSpecifierByLocalName(localName: string): void {
-        var results = _filterGlobalExportNamedDeclarationSpecifiers(
+        const results = _filterGlobalExportNamedDeclarationSpecifiers(
             _findNamedExportDeclarationSpecifierByLocalName(this.parsedCode, localName)
         );
 
@@ -291,7 +291,7 @@ class JsCodeShiftCodeTransformer extends CodeTransformer {
     }
 
     removeGlobalExportNamedDeclarationSpecifierByExportedName(exportedName: string): void {
-        var results = _filterGlobalExportNamedDeclarationSpecifiers(
+        const results = _filterGlobalExportNamedDeclarationSpecifiers(
             _findNamedExportDeclarationSpecifierByExportedName(this.parsedCode, exportedName)
         );
 
@@ -321,7 +321,7 @@ function _compareNativeType(nativeType: astTypes.Type<any> | string | null | und
     if (nativeType == null) {
         return false;
     }
-    var _typesToCompareWith = Array.isArray(typesToCompareWith) ? typesToCompareWith : [typesToCompareWith];
+    const _typesToCompareWith = Array.isArray(typesToCompareWith) ? typesToCompareWith : [typesToCompareWith];
     return _typesToCompareWith.map(x => x.toString().toLowerCase()).includes(nativeType.toString().toLowerCase());
 }
 
@@ -330,7 +330,7 @@ function _getFirstResultFromCollection(collection: jscodeshift.Collection<any>):
         return;
     }
 
-    var results = _getResultsFromCollection(collection.at(0));
+    const results = _getResultsFromCollection(collection.at(0));
 
     if (!results || results.length === 0) {
         return;
@@ -344,15 +344,15 @@ function _getResultsFromCollection(collection: jscodeshift.Collection<any>): { n
         return;
     }
 
-    var results: { node: any, path: ASTPath<any>, collectionWithSingleElement: jscodeshift.Collection<any> }[] = [];
-    for (var i = 0; i < collection.length; i++) {
-        var collectionWithSingleElement = collection.at(i);
+    const results: { node: any, path: ASTPath<any>, collectionWithSingleElement: jscodeshift.Collection<any> }[] = [];
+    for (let i = 0; i < collection.length; i++) {
+        const collectionWithSingleElement = collection.at(i);
 
-        var nodes = collectionWithSingleElement.nodes();
-        var paths = collectionWithSingleElement.paths();
+        const nodes = collectionWithSingleElement.nodes();
+        const paths = collectionWithSingleElement.paths();
 
-        var firstNode = nodes.length > 0 ? nodes[0] : undefined;
-        var firstPath = paths.length > 0 ? paths[0] : undefined;
+        const firstNode = nodes.length > 0 ? nodes[0] : undefined;
+        const firstPath = paths.length > 0 ? paths[0] : undefined;
 
         if (firstNode == null || firstPath == null) {
             throw Error('Invalid node and/or path results!');
@@ -441,7 +441,7 @@ function _getInternalDeclaratorDeclarationOrSpecifier(params: GetInternalElement
         throw Error('Element parameters are not specified!');
     }
 
-    var node = ('value' in path) ? path.value : (path as any)?.node;
+    const node = ('value' in path) ? path.value : (path as any)?.node;
 
     function _getUsualElementParamsForInstanciation(params: GetInternalElementDeclaratorDeclarationOrSpecifierParams) {
         const { path, elementParams } = params;
@@ -476,7 +476,7 @@ function _getInternalElement(params: GetInternalElementParams) {
         throw Error('Element parameters are not specified!');
     }
 
-    var valueNode = ('value' in valuePath) ? valuePath.value : (valuePath as any)?.node;
+    const valueNode = ('value' in valuePath) ? valuePath.value : (valuePath as any)?.node;
 
     function _getUsualElementParamsForInstanciation(params: GetInternalElementParams) {
         const { valuePath, elementParams } = params;
@@ -673,40 +673,40 @@ function _resolveBindingInNearestScope(identifierPath: ASTPath<any>, elementPara
 
     const name = identifierPath.node.name;
 
-    var currentPath = identifierPath.parentPath;
+    let currentPath = identifierPath.parentPath;
 
     if (currentPath == null) {
         return;
     }
 
     do {
-        var binding = _findBindingInScope(currentPath, name, jscodeshift(currentPath));
+        const binding = _findBindingInScope(currentPath, name, jscodeshift(currentPath));
         if (binding != null) {
             return _getInternalDeclaratorDeclarationOrSpecifier({ path: binding, elementParams });
         }
 
-        var variableDeclaratorResults = _findVariableDeclarators(jscodeshift(currentPath), name).filter(x => (_compareNativeType(x.get().parent?.node?.type, jscodeshift.VariableDeclaration) ? x.get().parent?.parent : x.get().parent)?.node === currentPath.node);
+        const variableDeclaratorResults = _findVariableDeclarators(jscodeshift(currentPath), name).filter(x => (_compareNativeType(x.get().parent?.node?.type, jscodeshift.VariableDeclaration) ? x.get().parent?.parent : x.get().parent)?.node === currentPath.node);
         if (variableDeclaratorResults.length > 0) {
-            var variableDeclaratorResult = variableDeclaratorResults.at(0);
-            var variableDeclaratorPath = variableDeclaratorResult.paths()[0]!;
+            const variableDeclaratorResult = variableDeclaratorResults.at(0);
+            const variableDeclaratorPath = variableDeclaratorResult.paths()[0]!;
             return _getInternalDeclaratorDeclarationOrSpecifier({ path: variableDeclaratorPath, elementParams });
         }
-        var functionDeclarationResults = _findFunctionDeclarations(jscodeshift(currentPath), name).filter(x => x.get().parent.node === currentPath.node);
+        const functionDeclarationResults = _findFunctionDeclarations(jscodeshift(currentPath), name).filter(x => x.get().parent.node === currentPath.node);
         if (functionDeclarationResults.length > 0) {
-            var functionDeclarationResult = functionDeclarationResults.at(0);
-            var functionDeclarationPath = functionDeclarationResult.paths()[0]!;
+            const functionDeclarationResult = functionDeclarationResults.at(0);
+            const functionDeclarationPath = functionDeclarationResult.paths()[0]!;
             return _getInternalDeclaratorDeclarationOrSpecifier({ path: functionDeclarationPath, elementParams });
         }
-        var namedImportResults = _findNamedImportByLocalName(jscodeshift(currentPath), name).filter(x => x.get().parent?.node != null && _compareNativeType(x.get().parent.node.type, jscodeshift.ImportDeclaration) && x.get().parent.parent?.node === currentPath.node);
+        const namedImportResults = _findNamedImportByLocalName(jscodeshift(currentPath), name).filter(x => x.get().parent?.node != null && _compareNativeType(x.get().parent.node.type, jscodeshift.ImportDeclaration) && x.get().parent.parent?.node === currentPath.node);
         if (namedImportResults.length > 0) {
-            var namedImportResult = namedImportResults.at(0);
-            var namedImportPath = namedImportResult.paths()[0]!;
+            const namedImportResult = namedImportResults.at(0);
+            const namedImportPath = namedImportResult.paths()[0]!;
             return _getInternalDeclaratorDeclarationOrSpecifier({ path: namedImportPath, elementParams });
         }
-        var namespaceImportResults = _findNamespaceImportByLocalName(jscodeshift(currentPath), name).filter(x => x.get().parent?.node != null && _compareNativeType(x.get().parent.node.type, jscodeshift.ImportDeclaration) && x.get().parent.parent?.node === currentPath.node);
+        const namespaceImportResults = _findNamespaceImportByLocalName(jscodeshift(currentPath), name).filter(x => x.get().parent?.node != null && _compareNativeType(x.get().parent.node.type, jscodeshift.ImportDeclaration) && x.get().parent.parent?.node === currentPath.node);
         if (namespaceImportResults.length > 0) {
-            var namespaceImportResult = namespaceImportResults.at(0);
-            var namespaceImportPath = namespaceImportResult.paths()[0]!;
+            const namespaceImportResult = namespaceImportResults.at(0);
+            const namespaceImportPath = namespaceImportResult.paths()[0]!;
             return _getInternalDeclaratorDeclarationOrSpecifier({ path: namespaceImportPath, elementParams });
         }
         
@@ -768,7 +768,7 @@ class JsCodeShiftCodeTransformerVariableDeclaration extends CodeTransformerVaria
         if (typeof elementParams.path !== 'object' || elementParams.path.__childCache == null || typeof elementParams.path.__childCache !== 'object' || !('declarations' in elementParams.path.__childCache) || elementParams.path.__childCache.declarations == null || typeof elementParams.path.__childCache.declarations !== 'object' || !('__childCache' in elementParams.path.__childCache.declarations) || elementParams.path.__childCache.declarations.__childCache == null || typeof elementParams.path.__childCache.declarations.__childCache !== 'object') {
             throw Error('Invalid Variable Declaration declarators!')
         }
-        var declarators = Object.keys(elementParams.path.__childCache.declarations.__childCache).map(key => (elementParams.path.__childCache as any).declarations.__childCache[key]).map(d => new JsCodeShiftCodeTransformerVariableDeclarator({ node: d.node, path: jscodeshift(d).paths()[0]!, instance: elementParams.instance, collectionWithSingleElement: jscodeshift(d) }));
+        const declarators = Object.keys(elementParams.path.__childCache.declarations.__childCache).map(key => (elementParams.path.__childCache as any).declarations.__childCache[key]).map(d => new JsCodeShiftCodeTransformerVariableDeclarator({ node: d.node, path: jscodeshift(d).paths()[0]!, instance: elementParams.instance, collectionWithSingleElement: jscodeshift(d) }));
         super(elementParams, declarators);
     }
 
@@ -789,11 +789,11 @@ class JsCodeShiftCodeTransformerVariableDeclarator extends CodeTransformerVariab
         if (elementParams == null) {
             throw Error('Invalid code transformer element parameters!');
         }
-        var statement = elementParams.path?.parent;
+        const statement = elementParams.path?.parent;
         if (statement == null || !_compareNativeType(statement.node?.type, jscodeshift.VariableDeclaration)) {
             throw Error('Invalid Variable Declarator!');
         }
-        var initValue;
+        let initValue;
         if (elementParams.path != null) {
             if (elementParams.path.value.init != null) {
                 initValue = _getInternalElement({ valuePath: (elementParams.path.__childCache as any)?.init, elementParams: elementParams });
@@ -904,15 +904,15 @@ class JsCodeShiftCodeTransformerObjectExpression extends CodeTransformerObjectEx
         const { node, path } = elementParams;
 
         const elements: JsCodeShiftCodeTransformerObjectKeyValuePair[] = [];
-        var childPaths: ASTPath<any>[] = (path.__childCache as any)?.properties.__childCache;
+        const childPaths: ASTPath<any>[] = (path.__childCache as any)?.properties.__childCache;
         if (childPaths == null || typeof childPaths !== 'object' || Object.keys(childPaths).length !== node.properties.length || Object.keys(childPaths).some(key => childPaths[key as any] == null)) {
             throw Error('Invalid child paths!');
         }
-        for (var key in childPaths) {
+        for (const key in childPaths) {
             childPaths[key] = jscodeshift(childPaths[key as any] as any).at(0).paths()[0]!;
         }
-        for (var index = 0; index < node.properties.length; index++) {
-            var prop = node.properties[index];
+        for (let index = 0; index < node.properties.length; index++) {
+            const prop = node.properties[index];
             elements[index] = new JsCodeShiftCodeTransformerObjectKeyValuePair({ node: prop, path: childPaths[index]!, collectionWithSingleElement: jscodeshift(childPaths[index]!), instance: elementParams.instance });
         }
 
@@ -921,8 +921,8 @@ class JsCodeShiftCodeTransformerObjectExpression extends CodeTransformerObjectEx
 
     toValue() {
         const obj: { [key: string | number | symbol]: any } = {};
-        for (var i in this.elements) {
-            var kvp = this.elements[i]?.toValue();
+        for (const i in this.elements) {
+            const kvp = this.elements[i]?.toValue();
             if (kvp == null) {
                 throw Error('Key value pair cannot be undefined!');
             }
@@ -995,7 +995,7 @@ class JsCodeShiftCodeTransformerObjectKey extends CodeTransformerObjectKey<JsCod
             throw Error('Invalid node!');
         }
 
-        var propKey = this.elementParams.node;
+        const propKey = this.elementParams.node;
 
         return _compareNativeType(propKey.type, jscodeshift.Literal)
                 ? propKey.value
@@ -1025,14 +1025,14 @@ class JsCodeShiftCodeTransformerArrayExpression extends CodeTransformerArrayExpr
         
         const { node, path } = elementParams;
 
-        var childPaths: ASTPath<any>[] = (path.__childCache as any)?.elements.__childCache;
+        const childPaths: ASTPath<any>[] = (path.__childCache as any)?.elements.__childCache;
         if (childPaths == null || typeof childPaths !== 'object' || Object.keys(childPaths).length !== node.elements.length || Object.keys(childPaths).some(key => childPaths[key as any] == null)) {
             throw Error('Invalid child paths!');
         }
-        for (var key in childPaths) {
+        for (const key in childPaths) {
             childPaths[key] = jscodeshift(childPaths[key as any] as any).at(0).paths()[0]!;
         }
-        for (var index = 0; index < node.elements.length; index++) {
+        for (let index = 0; index < node.elements.length; index++) {
             elements[index] = _getInternalElement({ valuePath: childPaths[index]!, elementParams: elementParams });
         }
 
@@ -1040,8 +1040,8 @@ class JsCodeShiftCodeTransformerArrayExpression extends CodeTransformerArrayExpr
     }
 
     toValue() {
-        var arr: any[] = [];
-        for (var i in this.elements) {
+        const arr: any[] = [];
+        for (const i in this.elements) {
             arr[i] = this.elements[i]?.toValue();
         }
         return arr;
@@ -1064,8 +1064,8 @@ class JsCodeShiftCodeTransformerIdentifier extends CodeTransformerIdentifier<JsC
             throw Error('Invalid Identifier!');
         }
 
-        var bindingInScope = _resolveBindingInNearestScope(elementParams.path, elementParams);
-        var innerElement: CodeTransformerVariableDeclarator | CodeTransformerFunctionDeclaration | CodeTransformerImportSpecifier | CodeTransformerImportNamespaceSpecifier | undefined = bindingInScope;
+        const bindingInScope = _resolveBindingInNearestScope(elementParams.path, elementParams);
+        const innerElement: CodeTransformerVariableDeclarator | CodeTransformerFunctionDeclaration | CodeTransformerImportSpecifier | CodeTransformerImportNamespaceSpecifier | undefined = bindingInScope;
         if (innerElement == null) {
             throw Error('Variable or function by identifier not found (maybe not handled - not scope aware)!')
         }
@@ -1184,12 +1184,12 @@ class JsCodeShiftCodeTransformerImportExpression extends CodeTransformerImportEx
         if (this.elementParams.path == null) {
             throw Error('Invalid path!');
         }
-        var scope = jscodeshift(this.elementParams.path).closestScope();
-        var scopeNodes = scope.nodes();
+        const scope = jscodeshift(this.elementParams.path).closestScope();
+        const scopeNodes = scope.nodes();
         if (scope.length === 0 || scopeNodes.length === 0) {
             return;
         }
-        var node: any = scopeNodes[0]!;
+        const node: any = scopeNodes[0]!;
         if (!_compareNativeType(node.type, [jscodeshift.FunctionDeclaration, ..._functionExpressionNativeTypes])) {
             return;
         }
@@ -1268,7 +1268,7 @@ class JsCodeShiftCodeTransformerExportNamedDeclaration extends CodeTransformerEx
             throw Error('Invalid __childCache!');
         }
 
-        var innerValue = _getInternalDeclaratorDeclarationOrSpecifier({ path: jscodeshift((elementParams.path.__childCache as any).declaration).paths()[0]!, elementParams });
+        const innerValue = _getInternalDeclaratorDeclarationOrSpecifier({ path: jscodeshift((elementParams.path.__childCache as any).declaration).paths()[0]!, elementParams });
 
         super(elementParams, innerValue);
     }
@@ -1302,7 +1302,7 @@ class JsCodeShiftCodeTransformerExportNamedDeclarationSpecifier extends CodeTran
             throw Error('Invalid __childCache!');
         }
 
-        var innerValue = _getInternalElement({ valuePath: jscodeshift(elementParams.path.__childCache?.local as ASTPath<any>).paths()[0] as ASTPath<any>, elementParams });
+        const innerValue = _getInternalElement({ valuePath: jscodeshift(elementParams.path.__childCache?.local as ASTPath<any>).paths()[0] as ASTPath<any>, elementParams });
 
         super(elementParams, innerValue);
     }

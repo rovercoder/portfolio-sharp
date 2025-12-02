@@ -11,8 +11,8 @@ export const handleSiteDataOptionsFunctions = async function (data: SiteData, op
         throw Error('Undefined data content!');
     }
 
-    var dataWithUtilities = await handleSiteDataOptionsFunctionsUtilities(data, options);
-    var dataWithUtilitiesAndByKeyFunctions = await handleSiteDataOptionsFunctionsByKey(dataWithUtilities, options);
+    const dataWithUtilities = await handleSiteDataOptionsFunctionsUtilities(data, options);
+    const dataWithUtilitiesAndByKeyFunctions = await handleSiteDataOptionsFunctionsByKey(dataWithUtilities, options);
 
     return dataWithUtilitiesAndByKeyFunctions;
 }
@@ -36,8 +36,8 @@ export const getFunctionDetails = async function(func: Function | string): Promi
     const ARGUMENT_SPLIT = /[ ,\n\r\t]+/;
     const FUNCTION_BODY = /^\s*(?:\{\s*(.*)\s*\})|(?:(.*))\s*$/s;
 
-    var functionString = func.toString();
-    var body = null;
+    const functionString = func.toString();
+    let body = null;
 
     const fnStr = functionString.toString()
         .replace(STRIP_COMMENTS, '')
@@ -45,9 +45,9 @@ export const getFunctionDetails = async function(func: Function | string): Promi
         .trim();
 
     const functionNameMatches = FUNCTION_NAME.exec(fnStr);
-    var functionNameMatch;
+    let functionNameMatch;
     if (functionNameMatches) {
-        for (var i = 1; i < functionNameMatches.length; i++) {
+        for (let i = 1; i < functionNameMatches.length; i++) {
             if (functionNameMatches[i]) {
                 functionNameMatch = functionNameMatches[i];
                 break;
@@ -57,9 +57,9 @@ export const getFunctionDetails = async function(func: Function | string): Promi
     const functionName = functionNameMatch == null || functionNameMatch == '' ? null : functionNameMatch;
 
     const parameterMatches = ARGUMENT_NAMES.exec(fnStr);
-    var parameterMatch;
+    let parameterMatch;
     if (parameterMatches) {
-        for (var i = 1; i < parameterMatches.length; i++) {
+        for (let i = 1; i < parameterMatches.length; i++) {
             if (parameterMatches[i]) {
                 parameterMatch = parameterMatches[i];
                 break;
@@ -68,43 +68,43 @@ export const getFunctionDetails = async function(func: Function | string): Promi
     }
     const parameterNames = parameterMatch === undefined ? [] : parameterMatch.split(ARGUMENT_SPLIT).filter(part => part !== "");
 
-    var isArrowFunctionWithoutCurlyBraces = ARROW_FUNCTION_WITHOUT_CURLY_BRACES.matches.exec(fnStr) != null;
+    const isArrowFunctionWithoutCurlyBraces = ARROW_FUNCTION_WITHOUT_CURLY_BRACES.matches.exec(fnStr) != null;
     
-    var fnStrForBody = fnStr.replace(ARGUMENT_NAMES, '');
+    const fnStrForBody = fnStr.replace(ARGUMENT_NAMES, '');
 
     const bodyMatches = FUNCTION_BODY.exec(fnStrForBody);
-    var bodyMatch;
+    let bodyMatch;
     if (bodyMatches) {
-        for (var i = 1; i < bodyMatches.length; i++) {
+        for (let i = 1; i < bodyMatches.length; i++) {
             if (bodyMatches[i]) {
                 bodyMatch = bodyMatches[i];
                 break;
             } 
         }
     }
-    var functionBody = bodyMatch !== undefined && bodyMatch !== null ? bodyMatch.trim() : '';
+    let functionBody = bodyMatch !== undefined && bodyMatch !== null ? bodyMatch.trim() : '';
 
     if (isArrowFunctionWithoutCurlyBraces) {
         // add return statement and brackets
         functionBody = functionBody.replace(ARROW_FUNCTION_WITHOUT_CURLY_BRACES.returnStatementAddition.searchValue, ARROW_FUNCTION_WITHOUT_CURLY_BRACES.returnStatementAddition.replacementValue);
     }
 
-    var minifiedFunctionBody = functionBody.toString();
+    let minifiedFunctionBody = functionBody.toString();
 
     const codeMinifier = await getCodeMinifier();
 
-    var functionStringAlt = `function _noOneNamesAFunctionLikeThisFunctionName(${parameterMatch}) { ${functionBody} }`;
-    var minifiedFunctionResult = await codeMinifier.minifyCode(functionStringAlt);
+    const functionStringAlt = `function _noOneNamesAFunctionLikeThisFunctionName(${parameterMatch}) { ${functionBody} }`;
+    const minifiedFunctionResult = await codeMinifier.minifyCode(functionStringAlt);
     if (minifiedFunctionResult.success) {
-        var minifiedFunctionBodyNeedsRegexMatching = minifiedFunctionResult.minifiedCode
+        const minifiedFunctionBodyNeedsRegexMatching = minifiedFunctionResult.minifiedCode
             .replace(STRIP_COMMENTS, '')
             .replace(STRIP_KEYWORDS, '')
             .replace(ARGUMENT_NAMES, '');
 
         const minifiedBodyMatches = FUNCTION_BODY.exec(minifiedFunctionBodyNeedsRegexMatching);
-        var minifiedBodyMatch;
+        let minifiedBodyMatch;
         if (minifiedBodyMatches) {
-            for (var i = 1; i < minifiedBodyMatches.length; i++) {
+            for (let i = 1; i < minifiedBodyMatches.length; i++) {
                 if (minifiedBodyMatches[i] != null) {
                     minifiedBodyMatch = minifiedBodyMatches[i];
                     break;
@@ -141,61 +141,61 @@ export async function transformIntoSeparateFunctionsAndContext<ObjectWithFunctio
     const codeMinifier = await getCodeMinifier();
     const codeTransformer = await getCodeTransformer();
     
-    var bundlingResult = await codeBundler.bundleCodeFile(obj.filePath);
+    const bundlingResult = await codeBundler.bundleCodeFile(obj.filePath);
     if (bundlingResult == null || !bundlingResult.success) {
         return { success: false, error: { type: bundlingResult?.error?.type ?? 'general', message: bundlingResult?.error?.message ?? 'Error occurred during bundling!' } };
     }
 
-    var originallyParsedCodeResult = codeTransformer.parseCode(bundlingResult.bundledCode);
+    const originallyParsedCodeResult = codeTransformer.parseCode(bundlingResult.bundledCode);
     
     if (originallyParsedCodeResult == null || !originallyParsedCodeResult.success) {
         return { success: false, error: { type: originallyParsedCodeResult?.error?.type ?? 'general', message: originallyParsedCodeResult?.error?.message ?? 'Bundled code not parsed successfully!' } };
     }
     
-    var originallyParsedCode = originallyParsedCodeResult.instance;
+    const originallyParsedCode = originallyParsedCodeResult.instance;
     
-    var importDeclarations = originallyParsedCode.findAllImportDeclarations();
+    const importDeclarations = originallyParsedCode.findAllImportDeclarations();
     if (importDeclarations.length > 0) {
         console.warn(`Warning: Import declarations found after bundling:\r\n${importDeclarations.map(x => x.toSource()).join('\r\n')}\r\n`);
     }
     
-    var importExpressions = originallyParsedCode.findAllImportExpressions();
+    const importExpressions = originallyParsedCode.findAllImportExpressions();
     if (importExpressions.length > 0) {
         console.warn(`Warning: Import expressions found after bundling:\r\n${importExpressions.map(x => `Function: ${x.getFunctionSignature() ?? 'N/A (Possibly in global scope)'} | Code: "${x.toSource()}"`).join('\r\n')}\r\n`);
     }
     
-    var minifiedCodeResult = await codeMinifier.minifyCode(bundlingResult.bundledCode);
+    const minifiedCodeResult = await codeMinifier.minifyCode(bundlingResult.bundledCode);
     
     if (minifiedCodeResult == null || !minifiedCodeResult.success) {
         return { success: false, error: { type: minifiedCodeResult?.error?.type ?? 'general', message: minifiedCodeResult?.error?.message ?? 'Code not minified successfully!' } };
     }
 
-    var code = minifiedCodeResult.minifiedCode;
+    const code = minifiedCodeResult.minifiedCode;
     
-    var codeModule = await createModule(code);
+    const codeModule = await createModule(code);
 
-    var objectWithFunctions = codeModule[obj.exportedNameOfVariableObjectWithFunctions];
+    const objectWithFunctions = codeModule[obj.exportedNameOfVariableObjectWithFunctions];
 
     if (objectWithFunctions == null || typeof objectWithFunctions !== 'object') {
         return { success: false, error: { type: 'general', message: 'Object with functions not found to be exported from instanciated code!' } }
     }
 
-    var parsedCodeResult = codeTransformer.parseCode(code);
+    const parsedCodeResult = codeTransformer.parseCode(code);
     
     if (parsedCodeResult == null || !parsedCodeResult.success) {
         return { success: false, error: { type: parsedCodeResult?.error?.type ?? 'general', message: parsedCodeResult?.error?.message ?? 'Bundled and minified code not parsed successfully!' } };
     }
     
-    var parsedCode = parsedCodeResult.instance;
+    const parsedCode = parsedCodeResult.instance;
 
     // recurse transforming objectWithFunctions to objectWithFunctionsTransformed
     const objectWithFunctionsTransformedResult = await _transformObjectWithFunctions(objectWithFunctions);
-    var objectWithFunctionsTransformed: Replace<ObjectWithFunctionsType, SiteDataOptionsFunctionsDeclarations, CustomFunction[]> = objectWithFunctionsTransformedResult.objResult;
-    var functionsNamesToRemove: string[] = objectWithFunctionsTransformedResult.functionsNamesToRemove;
+    const objectWithFunctionsTransformed: Replace<ObjectWithFunctionsType, SiteDataOptionsFunctionsDeclarations, CustomFunction[]> = objectWithFunctionsTransformedResult.objResult;
+    const functionsNamesToRemove: string[] = objectWithFunctionsTransformedResult.functionsNamesToRemove;
     
     // remove functions from javascript code to get global scope
-    for (var i = 0; i < functionsNamesToRemove.length; i++) {
-        var funcNameInternal = functionsNamesToRemove[i];
+    for (let i = 0; i < functionsNamesToRemove.length; i++) {
+        const funcNameInternal = functionsNamesToRemove[i];
         // NOTE: functions directly assigned to variables (without former declaration with a name) don't have a function name here (after getFunctionDetails call), and therefore are not removed
         if (funcNameInternal != null) {
             parsedCode.removeGlobalExportNamedDeclarationByExportedName(funcNameInternal);
@@ -224,14 +224,14 @@ async function _transformObjectWithFunctions(obj: any): Promise<{ objResult: any
         return { objResult: obj, functionsNamesToRemove: [] };
     }
 
-    var transformedObj: { [key: string | number | symbol]: any } | any[] = Array.isArray(obj) ? [] : {};
+    const transformedObj: { [key: string | number | symbol]: any } | any[] = Array.isArray(obj) ? [] : {};
 
-    var objKeys = Object.keys(obj);
+    const objKeys = Object.keys(obj);
 
     if (objKeys.every(x => typeof x === 'string') && objKeys.every(x => _checkObjectMatchesSiteDataOptionsFunction(obj[x]))) {
-        var customFunctions = await Promise.all(objKeys.map(async functionName => { 
-            var entryValue = obj[functionName] as SiteDataOptionsFunction;
-            var functionDetails = await getFunctionDetails(entryValue.function);
+        const customFunctions = await Promise.all(objKeys.map(async functionName => { 
+            const entryValue = obj[functionName] as SiteDataOptionsFunction;
+            const functionDetails = await getFunctionDetails(entryValue.function);
             // NOTE: functions directly assigned to variables (without former declaration with a name) don't have a function name here (after getFunctionDetails call)
             return { 
                 name: functionName, 
@@ -247,13 +247,13 @@ async function _transformObjectWithFunctions(obj: any): Promise<{ objResult: any
         };
     }
 
-    var functionsNamesToRemove: string[] = [];
+    const functionsNamesToRemove: string[] = [];
 
-    for (var key in obj) {
-        var entryValue = obj[key];
+    for (const key in obj) {
+        const entryValue = obj[key];
 
         if (typeof entryValue === 'object') {
-            var result = await _transformObjectWithFunctions(obj[key]);
+            const result = await _transformObjectWithFunctions(obj[key]);
             transformedObj[key as any] = result.objResult;
             functionsNamesToRemove.push(...result.functionsNamesToRemove);
         } else {
@@ -269,7 +269,7 @@ function _checkObjectMatchesSiteDataOptionsFunction(functionObject: any): boolea
         return false;
     }
 
-    var optionsFunctionDeclarations: { [P in keyof Required<SiteDataOptionsFunction>]: { sampleValue: SiteDataOptionsFunction[P], checkFunction: (value: any) => boolean } } = {
+    const optionsFunctionDeclarations: { [P in keyof Required<SiteDataOptionsFunction>]: { sampleValue: SiteDataOptionsFunction[P], checkFunction: (value: any) => boolean } } = {
         function: { 
             sampleValue: () => {}, 
             checkFunction: x => typeof x === 'function' 
@@ -280,20 +280,20 @@ function _checkObjectMatchesSiteDataOptionsFunction(functionObject: any): boolea
         }
     };
 
-    var optionsFunctionNonOptionalProperties = fieldsNonOptional<SiteDataOptionsFunction>({ 
+    const optionsFunctionNonOptionalProperties = fieldsNonOptional<SiteDataOptionsFunction>({ 
         function: optionsFunctionDeclarations.function.sampleValue, 
         canBeAccessedFromOtherFunctions: optionsFunctionDeclarations.canBeAccessedFromOtherFunctions.sampleValue 
     });
-    var optionsFunctionNonOptionalPropertiesKeys = Object.keys(optionsFunctionNonOptionalProperties);
-    var optionsFunctionAllProperties = fields<SiteDataOptionsFunction>({ 
+    const optionsFunctionNonOptionalPropertiesKeys = Object.keys(optionsFunctionNonOptionalProperties);
+    const optionsFunctionAllProperties = fields<SiteDataOptionsFunction>({ 
         function: optionsFunctionDeclarations.function.sampleValue, 
         canBeAccessedFromOtherFunctions: optionsFunctionDeclarations.canBeAccessedFromOtherFunctions.sampleValue 
     });
-    var optionsFunctionAllPropertiesKeys = Object.keys(optionsFunctionAllProperties);
+    const optionsFunctionAllPropertiesKeys = Object.keys(optionsFunctionAllProperties);
 
-    var objectWithFunctionsKeys = Object.keys(functionObject);
-    var objectWithFunctionsKeysNonOptionalRemoved = objectWithFunctionsKeys.filter(x => !optionsFunctionNonOptionalPropertiesKeys.some(y => y === x && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations] != null && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations].checkFunction(functionObject[x])));
-    var objectWithFunctionsKeysAllPropertiesRemoved = objectWithFunctionsKeys.filter(x => !optionsFunctionAllPropertiesKeys.some(y => y === x && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations] != null && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations].checkFunction(functionObject[x])));
+    const objectWithFunctionsKeys = Object.keys(functionObject);
+    const objectWithFunctionsKeysNonOptionalRemoved = objectWithFunctionsKeys.filter(x => !optionsFunctionNonOptionalPropertiesKeys.some(y => y === x && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations] != null && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations].checkFunction(functionObject[x])));
+    const objectWithFunctionsKeysAllPropertiesRemoved = objectWithFunctionsKeys.filter(x => !optionsFunctionAllPropertiesKeys.some(y => y === x && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations] != null && optionsFunctionDeclarations[x as keyof typeof optionsFunctionDeclarations].checkFunction(functionObject[x])));
     
     return objectWithFunctionsKeys.length - objectWithFunctionsKeysNonOptionalRemoved.length === optionsFunctionNonOptionalPropertiesKeys.length && objectWithFunctionsKeysAllPropertiesRemoved.length === 0;
 }

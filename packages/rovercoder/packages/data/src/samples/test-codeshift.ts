@@ -2,7 +2,7 @@
 import { getCodeBundler, getCodeMinifier, getCodeTransformer, CodePartType, CodeTransformerObjectExpression, CodeTransformerVariableDeclaration, CodeTransformerVariableDeclarator, nameOf } from '@portfoliosharp/shared';
 import { getFunctionDetails } from '../data/options/functions/site.data.options.functions.js';
 
-var code = `
+const code = `
 import { fileURLToPath } from "url";
 import * as d from "test";
 
@@ -48,50 +48,50 @@ const a = {
     'ed': { function: function() { console.log('wow'); }, isCallableFromOtherFunctions: true },
 }
 
-var constructedObject = a;
+const constructedObject = a;
 
 const codeBundler = await getCodeBundler();
 const codeMinifier = await getCodeMinifier();
 const codeTransformer = await getCodeTransformer();
 
-// var result = await codeBundler.bundleCodeFile(code);
+// const result = await codeBundler.bundleCodeFile(code);
 
-var originallyParsedCodeResult = codeTransformer.parseCode(code);
+const originallyParsedCodeResult = codeTransformer.parseCode(code);
 
 if (!originallyParsedCodeResult.success) {
     throw Error(`Bundled code not parsed successfully!\r\n${JSON.stringify(originallyParsedCodeResult.error)}`);
 }
 
-var originallyParsedCode = originallyParsedCodeResult.instance;
+const originallyParsedCode = originallyParsedCodeResult.instance;
 
-var importDeclarations = originallyParsedCode.findAllImportDeclarations();
+const importDeclarations = originallyParsedCode.findAllImportDeclarations();
 if (importDeclarations.length > 0) {
     console.warn(`Warning: Import declarations found after bundling:\r\n${importDeclarations.map(x => x.toSource()).join('\r\n')}\r\n`);
 }
 
-var importExpressions = originallyParsedCode.findAllImportExpressions();
+const importExpressions = originallyParsedCode.findAllImportExpressions();
 if (importExpressions.length > 0) {
     console.warn(`Warning: Import expressions found after bundling:\r\n${importExpressions.map(x => `Function: ${x.getFunctionSignature() ?? 'N/A (Possibly in global scope)'} | Code: "${x.toSource()}"`).join('\r\n')}\r\n`);
 }
 
-var minifiedCodeResult = await codeMinifier.minifyCode(code);
+const minifiedCodeResult = await codeMinifier.minifyCode(code);
 
 if (!minifiedCodeResult.success) {
     throw Error(JSON.stringify(minifiedCodeResult.error));
 }
 
-var parsedCodeResult = codeTransformer.parseCode(minifiedCodeResult.minifiedCode);
+const parsedCodeResult = codeTransformer.parseCode(minifiedCodeResult.minifiedCode);
 
 if (!parsedCodeResult.success) {
     throw Error(JSON.stringify(parsedCodeResult.error));
 }
 
-var parsedCode = parsedCodeResult.instance;
+const parsedCode = parsedCodeResult.instance;
 
 const variableNameToTest = nameOf(() => a);
 
 
-var globalObjectDeclarator: CodeTransformerVariableDeclarator | null | undefined;
+let globalObjectDeclarator: CodeTransformerVariableDeclarator | null | undefined;
 
 const globalObjectDeclaration = parsedCode.findFirstGlobalExportNamedDeclarationByExportedName(variableNameToTest);
 const globalObjectDeclarationSpecifier = parsedCode.findFirstGlobalExportNamedDeclarationSpecifierByExportedName(variableNameToTest);
@@ -107,7 +107,7 @@ if (globalObjectDeclarationSpecifier != null) {
 }
 
 if (globalObjectDeclarator == null) {
-    var errorMessage = `No global object '${variableNameToTest}' found`;
+    const errorMessage = `No global object '${variableNameToTest}' found`;
     console.log(errorMessage);
     throw Error(errorMessage);
 } else {
@@ -119,21 +119,21 @@ if (globalObjectDeclarator == null) {
         throw Error(`Global variable: '${variableNameToTest}' is not an object.`);
     }
 
-    var objectExpression = globalObjectDeclarator.initValue as CodeTransformerObjectExpression;
+    const objectExpression = globalObjectDeclarator.initValue as CodeTransformerObjectExpression;
 
     // Map to store extracted functions
     const extractedFunctions: { [name: string]: { name: string, nameInternal?: string, arguments: string, body: string, canBeCalledFromOtherFunctions: boolean } } = {};
 
     const jsObject: any = constructedObject;
-    for (var key in jsObject) {
-        var value: any = jsObject[key];
+    for (const key in jsObject) {
+        const value: any = jsObject[key];
         if (!!value 
                 && typeof value === 'object' 
                 && /*TODO: fields<T>().function*/'function' in value
         ) {
-            var functionValue = value.function;
+            const functionValue = value.function;
             if (typeof functionValue === 'function') {
-                var functionDetails = await getFunctionDetails(functionValue);
+                const functionDetails = await getFunctionDetails(functionValue);
                 extractedFunctions[key] = { 
                     name: key, 
                     ...((functionDetails?.functionName != null && functionDetails?.functionName.toString().trim() != '') ? { nameInternal: functionDetails?.functionName } : {}),
@@ -150,7 +150,7 @@ if (globalObjectDeclarator == null) {
     console.log('Extracted Functions:', Object.keys(extractedFunctions));
 
     // Step 2: Remove the function declarations
-    for (var key in extractedFunctions) {
+    for (const key in extractedFunctions) {
         const funcNameInternal = extractedFunctions[key]?.nameInternal;
 
         if (funcNameInternal != null && funcNameInternal.toString().trim().length > 0) {
@@ -174,7 +174,7 @@ if (globalObjectDeclarator == null) {
     console.log('\n✅ Final Code:\n', finalCode.minifiedCode);
     console.log(`\nExtracted functions: \n${JSON.stringify(extractedFunctions)}\n`)
 
-    var result = { codeContext: finalCode.minifiedCode, exportedObjectName: nameOf(() => a), functions: extractedFunctions };
+    const result = { codeContext: finalCode.minifiedCode, exportedObjectName: nameOf(() => a), functions: extractedFunctions };
 }
 
 console.log('Done!');

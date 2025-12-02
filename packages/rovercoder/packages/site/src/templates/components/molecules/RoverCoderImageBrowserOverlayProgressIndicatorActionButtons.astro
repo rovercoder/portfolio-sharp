@@ -1,0 +1,27 @@
+---
+import ImageBrowserOverlayProgressIndicatorActionButtons from "../../../components/molecules/ImageBrowserOverlayProgressIndicatorActionButtons.astro";
+import RoverCoderText from "../atoms/RoverCoderText.astro";
+
+const actionIndicatorsPadding = '0.125rem';
+const backgroundColor = '#1C1C1C';
+const progressIndicatorTextColor = '#000000';
+const progressIndicatorGap = '0.25rem';
+const progressIndicatorPadding = '0.125rem 0.375rem';
+const progressIndicatorMargin = '0.125rem';
+const progressIndicatorBorderRadius = '2rem';
+const progressIndicatorBackgroundColor = '#C3C3C3';
+---
+
+<ImageBrowserOverlayProgressIndicatorActionButtons 
+        actionIndicatorsPadding={actionIndicatorsPadding} 
+        progressIndicatorGap={progressIndicatorGap} 
+        progressIndicatorPadding={progressIndicatorPadding} 
+        progressIndicatorMargin={progressIndicatorMargin} 
+        progressIndicatorBorderRadius={progressIndicatorBorderRadius}
+        progressIndicatorBackgroundColor={progressIndicatorBackgroundColor}
+        backgroundColor={backgroundColor}
+>
+    <RoverCoderText slot="progress-indicator-index" content="0" type="image-browser-progress-indicator-index" color={progressIndicatorTextColor} />
+    <RoverCoderText slot="progress-indicator-of" content="of" type="image-browser-progress-indicator-of" color={progressIndicatorTextColor} />
+    <RoverCoderText slot="progress-indicator-total" content="0" type="image-browser-progress-indicator-total" color={progressIndicatorTextColor} />
+</ImageBrowserOverlayProgressIndicatorActionButtons>

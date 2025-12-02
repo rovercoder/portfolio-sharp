@@ -1,80 +1,150 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasOverlays = hasOverlays;
-exports.openOverlay = openOverlay;
-exports.closeOverlayLast = closeOverlayLast;
-exports.closeOverlays = closeOverlays;
-var utilities_1 = require("./utilities");
-var overlayShownClass = 'shown';
-var overlaysOpenBodyClass = 'overlay-open';
-function hasOverlays() {
-    var _a, _b;
-    return ((_b = (_a = getOverlayContentElement()) === null || _a === void 0 ? void 0 : _a.children.length) !== null && _b !== void 0 ? _b : 0) > 0;
+import { initCssVariableElementWatcher, runOnElementRemoval } from "./utilities.js";
+const overlayShownClass = 'shown';
+const overlaysOpenBodyClass = 'overlay-open';
+initCssVariableElementWatcher({ element: getOverlayContentElement(), elementToAttachVariableTo: getOverlayContentElement(), cssVariableName: '--overlayHeight', elementPropertyWatched: 'height' });
+export function hasOverlays() {
+    return (getOverlayContentElement()?.children.length ?? 0) > 0;
 }
-var _overlayContentElement = getOverlayContentElement();
+let _overlayContentElement = getOverlayContentElement();
 if (_overlayContentElement != null) {
-    var overlayMutationObserver = new MutationObserver(function () {
+    const overlayMutationObserver = new MutationObserver(function () {
         resetOverlayShownClassOnBody();
     });
-    var overlayResizeObserver = new ResizeObserver(function () {
+    const overlayResizeObserver = new ResizeObserver(function () {
         resetOverlayShownClassOnBody();
     });
     overlayMutationObserver.observe(_overlayContentElement, { subtree: true, childList: true });
     overlayResizeObserver.observe(_overlayContentElement);
 }
 function resetOverlayShownClassOnBody() {
-    var parentElement = getOverlayContentElement();
+    const parentElement = getOverlayContentElement();
     if (parentElement == null) {
         return;
     }
-    var allChildren = [];
-    for (var i = 0; i < parentElement.children.length; i++) {
+    const allChildren = [];
+    for (let i = 0; i < parentElement.children.length; i++) {
         allChildren.push(parentElement.children[i]);
     }
-    var displayedChildren = allChildren.filter(function (x) { var _a, _b; return !((_b = (_a = x.computedStyleMap().get('display')) === null || _a === void 0 ? void 0 : _a.toString().toLowerCase().startsWith('none')) !== null && _b !== void 0 ? _b : false); });
+    const displayedChildren = allChildren.filter(x => !(x.computedStyleMap().get('display')?.toString().toLowerCase().startsWith('none') ?? false));
     if (displayedChildren.length > 0) {
-        document === null || document === void 0 ? void 0 : document.documentElement.classList.add(overlaysOpenBodyClass);
+        document?.documentElement.classList.add(overlaysOpenBodyClass);
     }
     else {
-        document === null || document === void 0 ? void 0 : document.documentElement.classList.remove(overlaysOpenBodyClass);
+        document?.documentElement.classList.remove(overlaysOpenBodyClass);
     }
 }
-function openOverlay(elementToAdd) {
-    var _a;
-    var element = (_a = getOverlayContentElement()) === null || _a === void 0 ? void 0 : _a.appendChild(elementToAdd);
+export function openOverlay(elementToAdd) {
+    if (elementToAdd == null) {
+        return;
+    }
+    removeScriptsAndStyles(elementToAdd);
+    const element = getOverlayContentElement()?.appendChild(elementToAdd);
     // triggers animation
-    setTimeout(function () { return element === null || element === void 0 ? void 0 : element.classList.add(overlayShownClass); }, 0);
+    setTimeout(() => element?.classList.add(overlayShownClass), 0);
+    if (element) {
+        initializeOverlay(element);
+    }
     return element;
 }
-function closeOverlayLast() {
+function removeScriptsAndStyles(element) {
+    if (['script', 'style'].includes(element.tagName.toLowerCase())
+        || ('link' === element.tagName.toLowerCase() && (['stylesheet', 'script'].includes(element.attributes.getNamedItem('rel')?.value ?? '')
+            || (['stylesheet', 'script'].includes(element.attributes.getNamedItem('as')?.value ?? ''))))) {
+        element.remove();
+        return;
+    }
+    if (element.children == null) {
+        return;
+    }
+    for (let i = 0; i < element.children.length; i++) {
+        removeScriptsAndStyles(element.children[i]);
+    }
+}
+function initializeOverlay(element) {
+    initializeOverlayElement(element);
+    if (element.children == null) {
+        return;
+    }
+    for (let i = 0; i < element.children.length; i++) {
+        initializeOverlay(element.children[i]);
+    }
+}
+function initializeOverlayElement(element) {
+    const attribute = element.attributes.getNamedItem('data-initialization-javascript');
+    if (attribute != null) {
+        eval(attribute.value);
+    }
+}
+export function closeOverlayLast() {
     return closeOverlays(false);
 }
 function _removeOverlay(overlay, previousOverlay) {
     if (overlay == null) {
         throw Error('Overlay Invalid!');
     }
-    var removePreviousOverlay = function () {
+    const removePreviousOverlay = () => {
         if (previousOverlay != null) {
             _removeOverlay(previousOverlay);
         }
     };
-    for (var c = 0; c < overlay.children.length; c++) {
-        var childOfOverlay = overlay.children[c];
-        var computedStyle = childOfOverlay.computedStyleMap();
-        var animationCssPropertyValue = computedStyle.get('animation');
-        var transitionCssPropertyValue = computedStyle.get('transition');
-        var animated = (animationCssPropertyValue != null && animationCssPropertyValue.toString().trim().length > 0)
-            || (transitionCssPropertyValue != null && transitionCssPropertyValue.toString().trim().length > 0);
+    const cleanupFunctionsIfAnimationTransitionListenerFails = [];
+    const cleanupFunctionsIfAnimationTransitionListenerFailsDelayAllowanceMs = 500;
+    const overlayChildren = Array.from(overlay.children);
+    for (let c = 0; c < overlayChildren.length; c++) {
+        const childOfOverlay = overlayChildren[c];
+        const getAnimationTransitionCssTimeTotalMs = (timeStr) => {
+            // Handle possible comma-separated lists (e.g., "0.3s, 0s")
+            const durations = timeStr.split(',').map(part => part.trim());
+            let totalMilliseconds = 0;
+            for (let i = 0; i < durations.length; i++) {
+                const duration = durations[i].trim();
+                if (duration === '' || duration === '0' || duration === '0s' || duration === '0ms') {
+                    continue;
+                }
+                let _duration = '';
+                let isSeconds = false;
+                let isMilliseconds = false;
+                if (duration.endsWith('ms')) {
+                    _duration = duration.substring(0, duration.length - 'ms'.length);
+                    isMilliseconds = true;
+                }
+                else if (duration.endsWith('s')) {
+                    _duration = duration.substring(0, duration.length - 's'.length);
+                    isSeconds = true;
+                }
+                else {
+                    // Invalid state
+                    console.error(`Invalid duration: ${duration}`);
+                    continue;
+                }
+                const durationParsed = parseFloat(_duration);
+                if (isNaN(durationParsed)) {
+                    console.error(`Invalid duration: ${duration}`);
+                    continue;
+                }
+                else {
+                    totalMilliseconds += durationParsed * (isSeconds ? 1000 : (isMilliseconds ? 1 : 0));
+                }
+            }
+            return totalMilliseconds;
+        };
+        const computedStyle = window.getComputedStyle(childOfOverlay);
+        const animationDurationMs = getAnimationTransitionCssTimeTotalMs(computedStyle.animationDuration);
+        const transitionDurationMs = getAnimationTransitionCssTimeTotalMs(computedStyle.transitionDuration);
+        const animated = (computedStyle.animationName != null && computedStyle.animationName.trim().length > 0 && computedStyle.animationName.trim().toLowerCase() !== 'none' && animationDurationMs > 0)
+            || (computedStyle.transitionProperty != null && computedStyle.transitionProperty.trim().length > 0 && computedStyle.transitionProperty.trim().toLowerCase() !== 'none' && transitionDurationMs > 0);
         if (animated) {
-            var onElementEnd = function () {
-                childOfOverlay === null || childOfOverlay === void 0 ? void 0 : childOfOverlay.remove();
+            const maxAnimationTransitionDurationMs = Math.max(animationDurationMs, transitionDurationMs);
+            const onElementEnd = () => {
+                childOfOverlay?.remove();
                 if (overlay != null && overlay.children.length === 0) {
                     overlay.remove();
                 }
             };
             childOfOverlay.addEventListener('animationend', onElementEnd);
             childOfOverlay.addEventListener('transitionend', onElementEnd);
-            (0, utilities_1.runOnElementRemoval)(childOfOverlay, onElementEnd, document.body);
+            runOnElementRemoval(childOfOverlay, onElementEnd, document.body);
+            cleanupFunctionsIfAnimationTransitionListenerFails.push(() => setTimeout(onElementEnd, maxAnimationTransitionDurationMs + cleanupFunctionsIfAnimationTransitionListenerFailsDelayAllowanceMs));
         }
         else {
             childOfOverlay.remove();
@@ -82,18 +152,18 @@ function _removeOverlay(overlay, previousOverlay) {
     }
     // triggers animation
     overlay.classList.remove(overlayShownClass);
-    (0, utilities_1.runOnElementRemoval)(overlay, removePreviousOverlay);
+    cleanupFunctionsIfAnimationTransitionListenerFails.forEach((fn) => fn());
+    runOnElementRemoval(overlay, removePreviousOverlay);
     if (overlay.children.length === 0) {
         overlay.remove();
     }
 }
-function closeOverlays(allOverlays) {
-    if (allOverlays === void 0) { allOverlays = true; }
-    var parentElement = getOverlayContentElement();
-    if ((parentElement === null || parentElement === void 0 ? void 0 : parentElement.children) != null && parentElement.children.length > 0) {
-        for (var i = parentElement.children.length - 1; i >= 0; i--) {
-            var child = parentElement.children[i];
-            var previousChild = i > 0 ? parentElement.children[i - 1] : null;
+export function closeOverlays(allOverlays = true) {
+    const parentElement = getOverlayContentElement();
+    if (parentElement?.children != null && parentElement.children.length > 0) {
+        for (let i = parentElement.children.length - 1; i >= 0; i--) {
+            const child = parentElement.children[i];
+            const previousChild = i > 0 ? parentElement.children[i - 1] : null;
             if (i === 0) {
                 _removeOverlay(child, allOverlays ? previousChild : null);
             }

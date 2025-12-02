@@ -49,9 +49,9 @@ export function dedupeScripts(html) {
             const node = children[i];
             if ('tagName' in node && node.tagName === 'script') {
                 const key = scriptKey(node);
-                var allKeys = Object.keys(seen);
+                const allKeys = Object.keys(seen);
 
-                var fn = () => {
+                const fn = () => {
                     // remove node from parent's childNodes
                     const idx = parent.childNodes.indexOf(node);
                     if (idx !== -1) parent.childNodes.splice(idx, 1);

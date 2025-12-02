@@ -1,26 +1,28 @@
 ---
 import Icon from "../atoms/Icon.astro";
 import Image from "../atoms/Image.astro";
-import { prepareInlineScript } from "../../helpers/scripts";
-import type { ImageProps } from "./CardHeader.types";
+import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "./CardHeader.types";
+import { getImagesForCardHeaderAndImageBrowser } from "./CardHeader.functions";
+import { imageIndexCssVariableName } from "./CardHeader.consts";
 
 interface Props {
-    image?: ImageProps | ImageProps[];
+    images?: ImageProps | ImageProps[];
     imageIsIcon?: boolean;
     imageHeight?: string;
     imageBorderRadius?: string | undefined;
     iconSize?: string;
     iconMargin?: string;
+    iconFn?: (args: { icon: ImageProps, iconBorderRadius: string | undefined, iconMargin: string | undefined, iconSize: string }) => any;
     info?: string;
     type?: string;
 }
-const { image, imageIsIcon, imageHeight = '15rem', imageBorderRadius, iconSize = '3rem', iconMargin = '1rem', info, type } = Astro.props;
+const { images: images_, imageIsIcon, imageHeight = '15rem', imageBorderRadius, iconSize = '3rem', iconMargin = '1rem', iconFn, info, type } = Astro.props;
 
-var images = (image == null || (Array.isArray(image) && image.filter(x => x != null).length === 0)) ? null : (Array.isArray(image) ? image.filter(x => x != null) : [image]);
-var _mainImage;
+const images = getImagesForCardHeaderAndImageBrowser(images_);
+let _mainImage: ImageProps | undefined;
 const otherImages: ImageProps[] = [];
 if (images) {
-    for (var i = 0; i < (images?.length ?? 0); i++) {
+    for (let i = 0; i < (images?.length ?? 0); i++) {
         if (images[i].isMainImage && _mainImage == null) {
             _mainImage = images[i];
         } else {
@@ -28,12 +30,10 @@ if (images) {
         }
     }
 }
-var currentImage = _mainImage ?? (images == null ? null : (images.length > 0 ? images[0] : null));
+const currentImage = _mainImage ?? (images == null ? null : (images.length > 0 ? images[0] : null));
 
-var currentImageIndex = currentImage != null ? Math.max((images?.indexOf(currentImage) ?? 0), 0) : null;
-var imagesTotal = images?.length;
-
-const imageIndexCssVariableName = '--imageIndex';
+const currentImageIndex = currentImage != null ? Math.max((images?.indexOf(currentImage) ?? 0), 0) : null;
+const imagesTotal = images?.length;
 
 const hasImagesMinimum = (minimum?: number) => images != null && images.length >= Math.max(minimum ?? 1, 1) && currentImage != null;
 ---
@@ -43,11 +43,19 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
         <div class="image-preview">
             {
                 (imageIsIcon
-                    ? <Icon url={currentImage.url} color={currentImage.color} imageSize={currentImage.imageSize} borderRadius={imageBorderRadius} containerMargin={iconMargin} size={iconSize} />
+                    ? (Astro.slots.has('icon')
+                        ? <Fragment set:html={await Astro.slots.render('icon', [{ icon: currentImage, iconBorderRadius: imageBorderRadius, iconMargin, iconSize }] satisfies Parameters<CardHeaderIconFnType>)} />
+                        : <Icon url={currentImage.url} color={currentImage.color} imageSize={currentImage.imageSize} borderRadius={imageBorderRadius} containerMargin={iconMargin} size={iconSize} />
+                    )
                     :   <div class="images-container">
                             {
-                                images?.map(image =>
-                                    <div class="image-container-outer"><Image url={image.url} color={image.color} imageSize={image.imageSize} imageRepeat={image.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} /></div>
+                                images?.map(async image =>
+                                    <div class="image-container-outer">
+                                        {(Astro.slots.has('image')
+                                            ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageBorderRadius, imageHeight }] satisfies Parameters<CardHeaderImageFnType>)} />
+                                            : <Image url={image.url} color={image.color} imageSize={image.imageSize} imageRepeat={image.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
+                                        )}
+                                    </div>
                                 )
                             }
                         </div>
@@ -69,10 +77,15 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
                     </Fragment>
             }
             {
-                hasImagesMinimum() && !imageIsIcon &&
-                    <div role="button" class="image-browser-open">
-                        <slot name="imageBrowserOpenButton" />
-                    </div>
+                hasImagesMinimum() && !imageIsIcon && Astro.slots.has('imageBrowser') &&
+                    <Fragment>
+                        <div role="button" class="image-browser-open">
+                            <slot name="imageBrowserOpenButton" />
+                        </div>
+                        <div class="overlay overlay-image-browser" aria-hidden="true">
+                            <slot name="imageBrowser" />
+                        </div>
+                    </Fragment>
             }
         </div>
         {
@@ -89,9 +102,11 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
     </div>
 </div>
 
-<script is:inline set:html={await prepareInlineScript("/src/scripts/.tsc-build/card-header.js")} />
+<script>
+    import '/src/scripts/card-header.ts';
+</script>
 
-<style>
+<style lang="scss">
     .card-header-inner {
         position: relative;
         align-self: stretch;
@@ -133,10 +148,10 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
 
     .card-header-inner .controls {
         display: grid;
-    }
 
-    .card-header-inner .controls > * {
-        grid-area: 1 / 1 / 2 / 2;
+        > * {
+            grid-area: 1 / 1 / 2 / 2;
+        }
     }
 
     .card-header-inner .controls .controls-top {
@@ -158,5 +173,9 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
     .card-header-inner .controls .controls-middle * {
         opacity: 1;
         transition: 0.3s ease-in-out;
+    }
+
+    .overlay:not(.shown) {
+        display: none;
     }
 </style>

@@ -1,0 +1,202 @@
+---
+import { getImagesForCardHeaderAndImageBrowser } from './CardHeader.functions';
+import type { ImageProps } from './CardHeader.types';
+import Image from '../atoms/Image.astro';
+import Text from '../atoms/Text.astro';
+import type { ImageBrowserOverlayImageFnType, ImageBrowserOverlayTextFnType } from './ImageBrowserOverlay.types';
+
+interface Props {
+    images?: ImageProps | ImageProps[];
+    containerPadding?: string;
+    widthLargerThanMobile?: string;
+    backdropColor?: string;
+    backgroundColor?: string;
+    imageHeight?: string;
+    imageBackgroundColor?: string;
+    textBackgroundColor?: string;
+    textContainerPadding?: string;
+    actionIndicatorsPadding?: string;
+}
+const { 
+    images: _images, 
+    containerPadding: imageBrowserOverlayContainerPadding = '2rem', 
+    widthLargerThanMobile: imageBrowserOverlayWidthLargerThanMobile = '100%',
+    backdropColor: imageBrowserOverlayBackdropColor = '#00000050',
+    backgroundColor: imageBrowserOverlayBackgroundColor = '#FFFFFF', 
+    imageHeight: _imageBrowserOverlayImageHeight = '80vh',
+    imageBackgroundColor: imageBrowserOverlayImageBackgroundColor = '#000000',
+    textBackgroundColor: imageBrowserOverlayTextBackgroundColor = '#FFFFFF',
+    textContainerPadding: imageBrowserOverlayTextContainerPadding = '0.5rem',
+    actionIndicatorsPadding: imageBrowserOverlayActionIndicatorsPadding = '0.125rem'
+} = Astro.props;
+
+const images = getImagesForCardHeaderAndImageBrowser(_images);
+const imageBrowserOverlayImageHeight = `calc(${_imageBrowserOverlayImageHeight} - var(--image-browser-progress-indicators-action-buttons-height, 0px))`
+---
+
+<div class="image-browser-backdrop"></div>
+<div class="overlay-image-browser-inner" data-initialization-javascript="initImageBrowserOverlay()">
+    <div class="image-browser-container">
+        <div class="image-browser">
+            <div class="images-container">
+                {
+                    images?.map(async image =>
+                        <div class="image-container-outer">
+                            {(
+                                Astro.slots.has('image')
+                                    ? <Fragment set:html={await Astro.slots.render('image', [{ image }] satisfies Parameters<ImageBrowserOverlayImageFnType>)} />
+                                    : <Image url={image.url} color={image.color} imageSize={image.imageSize ?? 'contain'} imageRepeat={image.imageRepeat ?? 'no-repeat'} />
+                            )}
+                        </div>
+                    )
+                }
+            </div>
+            <div class="texts-container">
+                {
+                    images?.map(async image =>
+                        <div class="text-container-outer">
+                            {(
+                                Astro.slots.has('text')
+                                    ? <Fragment set:html={await Astro.slots.render('text', [{ image }] satisfies Parameters<ImageBrowserOverlayTextFnType>)} />
+                                    : <Fragment>
+                                        { 
+                                            image.description && 
+                                                <div class="description">
+                                                    <Text 
+                                                        content={image.description} 
+                                                        fontFamily='inherit' 
+                                                        fontSize='inherit'  
+                                                        color='inherit' 
+                                                        fontWeight='inherit'  
+                                                        fontStyle='inherit' 
+                                                        letterSpacing='inherit' 
+                                                        isParagraph={true}
+                                                    /> 
+                                                </div>
+                                        } 
+                                    </Fragment>
+                            )}
+                        </div>
+                    )
+                }
+            </div>
+            <div class="progress-indicators-action-buttons-spacing">
+                <slot name="progressIndicatorActionButtons" />
+            </div>
+        </div>
+    </div>
+    <div class="image-browser-overlay-container">
+        <div></div>
+        <slot name="progressIndicatorActionButtons" />
+    </div>
+</div>
+
+<script>
+    import '/src/scripts/image-browser-overlay.ts';
+</script>
+
+<style lang="scss" define:vars={{ imageBrowserOverlayContainerPadding, imageBrowserOverlayWidthLargerThanMobile, imageBrowserOverlayBackdropColor, imageBrowserOverlayBackgroundColor, imageBrowserOverlayImageHeight, imageBrowserOverlayImageBackgroundColor, imageBrowserOverlayTextBackgroundColor, imageBrowserOverlayTextContainerPadding }}>
+    @use '/src/styles/variables.scss' as *;
+
+    .overlay-image-browser-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-items: center;
+        transition: 0.3s ease-in-out;
+    }
+
+    .image-browser-backdrop {
+        background-color: var(--imageBrowserOverlayBackdropColor);
+        transition: 0.3s ease-in-out;
+    }
+
+    .overlay-image-browser-inner .image-browser-container {
+        width: 100%;
+        min-height: 100%;
+        padding: var(--imageBrowserOverlayContainerPadding);
+        overflow-y: scroll;
+    }
+
+    .overlay-image-browser-inner .image-browser-overlay-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: var(--imageBrowserOverlayContainerPadding);
+        overflow-y: scroll;
+        pointer-events: none;
+    }
+
+    .overlay-image-browser-inner .image-browser-overlay-container > * {
+        pointer-events: auto;
+    }
+
+    .overlay-image-browser-inner .image-browser {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 100%;
+        height: auto;
+        background-color: var(--imageBrowserOverlayBackgroundColor);
+    }
+
+    @media screen and (min-width: $mobileBreakpoint) {
+        .overlay-image-browser-inner .image-browser {
+            width: var(--imageBrowserOverlayWidthLargerThanMobile);
+        }
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container {
+        width: 100%;
+        min-height: var(--imageBrowserOverlayImageHeight);
+        height: var(--imageBrowserOverlayImageHeight);
+        background-color: var(--imageBrowserOverlayImageBackgroundColor);
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container {
+        display: grid;
+
+        > * {
+            grid-area: 1 / 1 / 2 / 2;
+        }
+    }
+
+    .overlay-image-browser-inner .image-browser .texts-container {
+        flex-grow: 1;
+        background-color: var(--imageBrowserOverlayTextBackgroundColor);
+    }
+
+    .overlay-image-browser-inner .image-browser .texts-container {
+        display: grid;
+
+        > * {
+            grid-area: 1 / 1 / 2 / 2;
+        }
+    }
+
+    .overlay-image-browser-inner .image-browser .texts-container .text-container-outer {
+        padding: var(--imageBrowserOverlayTextContainerPadding);
+    }
+
+    .overlay-image-browser-inner .image-browser .progress-indicators-action-buttons-spacing {
+        visibility: hidden;
+        pointer-events: none;
+    }
+</style>
+
+<style is:global>
+    .overlay:not(.shown) .overlay-image-browser-inner {
+        transform: scale(0);
+    }
+
+    .overlay:not(.shown) .image-browser-backdrop {
+        background-color: #00000000;
+    }
+</style>

@@ -2,8 +2,8 @@
     "compilerOptions": {
         "outDir": "./.tsc-build/",
         "rootDir": "./",
-        "target": "ES5",
-        "module": "CommonJS",
+        "module": "NodeNext",
+        "target": "esnext",
         "strict": true,
         "forceConsistentCasingInFileNames": true
     },

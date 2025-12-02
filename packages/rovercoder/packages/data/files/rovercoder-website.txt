@@ -210,8 +210,8 @@ class HolidaysRestAndLeaveEntries {
     { name: "", startDateMonth: number, startDateDay: number, startDateHour: number?, startDateMinute: number?, endDateMonth: number, endDateDay: number, endDateHour: number?, endDateMinute: number?, startDateTimezone: string?, endDateTimezone: string? },
     { name: "Good Friday", mainDateFunctionName: "getCatholicEasterByYear", startDateDayOffsetFromMainDate: -2, endDateDayOffsetFromMainDate: -1, startDateTimezone: string?, endDateTimezone: string? } 
     /*
-      var declaredFunctions = {}; for (var i = 0; i < functions.length; i++) { declaredFunctions[functions[i].name] = {fn: new Function(functions[i].arguments, functions[i].body), args: functions[i].arguments.split(",").map(x => x.trim()) } } 
-      for (var i = 0; i < 10; i++) { var funcWithArgs = declaredFunctions["getCatholicEasterByYear"]; var args = []; for (var j = 0; j < funcWithArgs.args.length; j++) { switch(funcWithArgs.args[j]) { case 'year': args.push(2016+i); break; default: args.push(undefined); break; } } var date = funcWithArgs.fn.call(this, ...args); console.log(date); }
+      const declaredFunctions = {}; for (let i = 0; i < functions.length; i++) { declaredFunctions[functions[i].name] = {fn: new Function(functions[i].arguments, functions[i].body), args: functions[i].arguments.split(",").map(x => x.trim()) } } 
+      for (let i = 0; i < 10; i++) { const funcWithArgs = declaredFunctions["getCatholicEasterByYear"]; const args = []; for (let j = 0; j < funcWithArgs.args.length; j++) { switch(funcWithArgs.args[j]) { case 'year': args.push(2016+i); break; default: args.push(undefined); break; } } const date = funcWithArgs.fn.call(this, ...args); console.log(date); }
     */,
     { name: "Last day of month for June and September to November", mainDateFunctionName: "getLastDayOfMonth", mainDateFunctionRunOnlyFor: { months: '6,9-11', years: '1997-' }, dateDayOffsetFromMainDate: -1 }
   ],

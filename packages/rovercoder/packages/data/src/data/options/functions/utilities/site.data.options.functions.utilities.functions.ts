@@ -16,49 +16,49 @@ function getStartDateAndEndDate(obj: { dates: { baseDate?: DateTypePartialForPar
         return args.find(x => !isUndefinedOrNull(x));
     }
     
-    var startDateYear = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.year, obj.dates.baseDate?.year, obj.fillDateProps?.year]);
+    const startDateYear = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.year, obj.dates.baseDate?.year, obj.fillDateProps?.year]);
     if (isUndefinedOrNull(startDateYear)) {
         return { valid: false, error: { type: 'arguments', message: 'Start date year is unspecified!' } };
     }
 
-    var startDateMonth = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.month, obj.dates.baseDate?.month, obj.fillDateProps?.month]);
+    const startDateMonth = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.month, obj.dates.baseDate?.month, obj.fillDateProps?.month]);
     if (isUndefinedOrNull(startDateMonth)) {
         return { valid: false, error: { type: 'arguments', message: 'Start date month is unspecified!' } };
     }
 
-    var startDateDay = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.day, obj.dates.baseDate?.day, obj.fillDateProps?.day]);
+    const startDateDay = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.day, obj.dates.baseDate?.day, obj.fillDateProps?.day]);
     if (isUndefinedOrNull(startDateDay)) {
         return { valid: false, error: { type: 'arguments', message: 'Start date day is unspecified!' } };
     }
 
-    var startDateHours = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.hours, obj.dates.baseDate?.hours, obj.fillDateProps?.hours]),
+    const startDateHours = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.hours, obj.dates.baseDate?.hours, obj.fillDateProps?.hours]),
         startDateMinutes = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.minutes, obj.dates.baseDate?.minutes, obj.fillDateProps?.minutes]),
         startDateSeconds = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.seconds, obj.dates.baseDate?.seconds, obj.fillDateProps?.seconds]),
         startDateMilliSeconds = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.startDate?.milliSeconds, obj.dates.baseDate?.milliSeconds, obj.fillDateProps?.milliSeconds]);
 
-    var endDateYear = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.year, obj.dates.baseDate?.year, obj.fillDateProps?.year]);
+    const endDateYear = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.year, obj.dates.baseDate?.year, obj.fillDateProps?.year]);
     if (isUndefinedOrNull(endDateYear)) {
         return { valid: false, error: { type: 'arguments', message: 'End date year is unspecified!' } };
     }
 
-    var endDateMonth = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.month, obj.dates.baseDate?.month, obj.fillDateProps?.month]);
+    const endDateMonth = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.month, obj.dates.baseDate?.month, obj.fillDateProps?.month]);
     if (isUndefinedOrNull(endDateMonth)) {
         return { valid: false, error: { type: 'arguments', message: 'End date month is unspecified!' } };
     }
 
-    var endDateDay = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.day, obj.dates.baseDate?.day, obj.fillDateProps?.day]);
+    const endDateDay = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.day, obj.dates.baseDate?.day, obj.fillDateProps?.day]);
     if (isUndefinedOrNull(endDateDay)) {
         return { valid: false, error: { type: 'arguments', message: 'End date day is unspecified!' } };
     }
 
-    var endDateHours = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.hours, obj.dates.baseDate?.hours, obj.fillDateProps?.hours]),
+    const endDateHours = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.hours, obj.dates.baseDate?.hours, obj.fillDateProps?.hours]),
         endDateMinutes = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.minutes, obj.dates.baseDate?.minutes, obj.fillDateProps?.minutes]),
         endDateSeconds = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.seconds, obj.dates.baseDate?.seconds, obj.fillDateProps?.seconds]),
         endDateMilliSeconds = _firstDefinedAndNonNullOrElseUndefined<string|number|undefined>([obj.dates.endDate?.milliSeconds, obj.dates.baseDate?.milliSeconds, obj.fillDateProps?.milliSeconds]);
 
-    var timeZone = obj.dates.timeZone;
+    const timeZone = obj.dates.timeZone;
 
-    var startDateValidationResult = validateAndCleanDate({
+    const startDateValidationResult = validateAndCleanDate({
         year: startDateYear!,
         month: startDateMonth!,
         day: startDateDay!,
@@ -73,7 +73,7 @@ function getStartDateAndEndDate(obj: { dates: { baseDate?: DateTypePartialForPar
         return { ...startDateValidationResult, value: undefined };
     }
 
-    var endDateValidationResult = validateAndCleanDate({
+    const endDateValidationResult = validateAndCleanDate({
         year: endDateYear!,
         month: endDateMonth!,
         day: endDateDay!,
@@ -88,7 +88,7 @@ function getStartDateAndEndDate(obj: { dates: { baseDate?: DateTypePartialForPar
         return { ...endDateValidationResult, value: undefined };
     }
 
-    var startDateResult = buildDate({
+    const startDateResult = buildDate({
         ...startDateValidationResult.value!,
         startOfDateNotEndOfDate: true
     });
@@ -96,7 +96,7 @@ function getStartDateAndEndDate(obj: { dates: { baseDate?: DateTypePartialForPar
         return { ...startDateResult, value: undefined };
     }
 
-    var endDateResult = buildDate({
+    const endDateResult = buildDate({
         ...endDateValidationResult.value!,
         startOfDateNotEndOfDate: (isUndefinedOrNull(obj.dates.endDate) && isUndefinedOrNull(endDateValidationResult.value!.hours) && isUndefinedOrNull(endDateValidationResult.value!.minutes) && isUndefinedOrNull(endDateValidationResult.value!.seconds) && isUndefinedOrNull(endDateValidationResult.value!.milliSeconds)) ? false : true
     });
@@ -120,29 +120,29 @@ function validateAndCleanDate(dateObj: DateTypeStrictForParsing): { value?: Date
         return { valid: false, error: { type: 'arguments', message: `Invalid year! Year: ${dateObj.year}` } };
     }
 
-    var year = getValidYear(dateObj.year!);
+    const year = getValidYear(dateObj.year!);
 
     if (!isValidMonth({ month: dateObj.month, year: year })) {
         return { valid: false, error: { type: 'arguments', message: `Invalid month! Month: ${dateObj.month}` } };
     }
 
-    var month = getValidMonth({ month: dateObj.month, year: year });
+    const month = getValidMonth({ month: dateObj.month, year: year });
 
-    var monthForJavaScriptDate = month - 1;
+    const monthForJavaScriptDate = month - 1;
 
     if (!isValidDay({ day: dateObj.day, month: month, year: year })) {
         return { valid: false, error: { type: 'arguments', message: `Invalid day! Day: ${dateObj.day}` } };
     }
 
-    var day = getValidDay({ day: dateObj.day, month: month, year: year });
+    const day = getValidDay({ day: dateObj.day, month: month, year: year });
 
-    var timeZone = dateObj.timeZone?.toString().trim() ?? '';
-    var isTimeZoneValid = isValidTimeZone(timeZone);
+    const timeZone = dateObj.timeZone?.toString().trim() ?? '';
+    const isTimeZoneValid = isValidTimeZone(timeZone);
     if (!isTrue(isTimeZoneValid) && !isUndefinedOrNull(isTimeZoneValid)) {
         return { valid: false, error: { type: 'arguments', message: `Invalid timeZone! TimeZone: ${dateObj.timeZone}` } };
     }
     
-    var hours: number | undefined;
+    let hours: number | undefined;
     if (!isUndefinedOrNull(dateObj.hours)) {
         if (isValidHours(dateObj.hours)) {
             hours = getValidHours(dateObj.hours);
@@ -151,7 +151,7 @@ function validateAndCleanDate(dateObj: DateTypeStrictForParsing): { value?: Date
         }
     }
     
-    var minutes: number | undefined;
+    let minutes: number | undefined;
     if (!isUndefinedOrNull(dateObj.minutes)) {
         if (isValidMinutes(dateObj.minutes)) {
             minutes = getValidMinutes(dateObj.minutes);
@@ -160,7 +160,7 @@ function validateAndCleanDate(dateObj: DateTypeStrictForParsing): { value?: Date
         }
     }
     
-    var seconds: number | undefined;
+    let seconds: number | undefined;
     if (!isUndefinedOrNull(dateObj.seconds)) {
         if (isValidSeconds(dateObj.seconds)) {
             seconds = getValidSeconds(dateObj.seconds);
@@ -169,7 +169,7 @@ function validateAndCleanDate(dateObj: DateTypeStrictForParsing): { value?: Date
         }
     }
 
-    var milliseconds: number | undefined;
+    let milliseconds: number | undefined;
     if (!isUndefinedOrNull(dateObj.milliSeconds)) {
         if (isValidMilliSeconds(dateObj.milliSeconds)) {
             milliseconds = getValidMilliSeconds(dateObj.milliSeconds);
@@ -195,12 +195,12 @@ function validateAndCleanDate(dateObj: DateTypeStrictForParsing): { value?: Date
 
 function buildDate(dateObj: DateTypeStrictForParsingExpanded): { value?: TZDate | Date | undefined, valid: boolean, error?: { type: string, message: string } } {
 
-    var result = validateAndCleanDate(dateObj);
+    const result = validateAndCleanDate(dateObj);
     if (!isTrue(result.valid) || isUndefinedOrNull(result.value)) {
         return { ...result, value: undefined };
     }
     
-    var date: TZDate | Date = 
+    let date: TZDate | Date = 
         areTimeZonesSupported() 
             ? new TZDate(result.value!.year, result.value!.month - 1, result.value!.day, result.value!.timeZone) 
             : new Date(result.value!.year, result.value!.month - 1, result.value!.day);
@@ -246,7 +246,7 @@ function isValidMonth(obj: { month: string | number | undefined, year: number })
 }
 
 function getValidMonth(obj: { month: string | number | undefined, year: number }): number {
-    var month = _getValidMonthOrUndefined(obj);
+    const month = _getValidMonthOrUndefined(obj);
     if (isUndefinedOrNull(month)) {
         throw Error(`Month (${obj?.month}) is invalid!`);
     }
@@ -262,18 +262,18 @@ function _getValidMonthOrUndefined(obj: { month: string | number | undefined, ye
         throw Error(`Invalid obj.year parameter! Year: ${obj.year}`);
     }
     
-    var allMonths = eachMonthOfInterval({ start: new Date(obj.year, 1, 1), end: new Date(obj.year + 1, 1, 1) }).map(x => x.getMonth()).map(x => x + 1);
+    let allMonths = eachMonthOfInterval({ start: new Date(obj.year, 1, 1), end: new Date(obj.year + 1, 1, 1) }).map(x => x.getMonth()).map(x => x + 1);
     allMonths = allMonths.filter((item, pos) => allMonths.indexOf(item) == pos);
     allMonths.sort();
-    var allMonthsNames = allMonths.map(x => [x, enUS.localize.month(x - 1 as any, { width: 'abbreviated' }), enUS.localize.month(x - 1 as any, { width: 'wide' })]);
+    const allMonthsNames = allMonths.map(x => [x, enUS.localize.month(x - 1 as any, { width: 'abbreviated' }), enUS.localize.month(x - 1 as any, { width: 'wide' })]);
 
-    var month;
+    let month;
     if (!isUndefinedOrNull(obj.month)) {
-        var monthStringLowerCased = obj.month!.toString().trim().toLowerCase();
+        const monthStringLowerCased = obj.month!.toString().trim().toLowerCase();
         if (!isNaN(obj.month!.toString().trim() as unknown as number) && !isNaN(parseFloat(obj.month!.toString().trim()))) {
             month = allMonths.find(x => x === parseInt(monthStringLowerCased));
         } else {
-            var _monthNames = allMonthsNames.find(x => x.some(y => y.toString().trim().toLowerCase() === monthStringLowerCased));
+            const _monthNames = allMonthsNames.find(x => x.some(y => y.toString().trim().toLowerCase() === monthStringLowerCased));
             if (_monthNames !== undefined && _monthNames !== null) {
                 month = _monthNames[0] as number;
             }
@@ -287,7 +287,7 @@ function isValidDay(obj: { day: string | number | undefined, month: number, year
 }
 
 function getValidDay(obj: { day: string | number | undefined, month: number, year: number }): number {
-    var day = _getValidDayOrUndefined(obj);
+    const day = _getValidDayOrUndefined(obj);
     if (isUndefinedOrNull(day)) {
         throw Error(`Day (${obj?.day}) is invalid!`);
     }
@@ -307,12 +307,12 @@ function _getValidDayOrUndefined(obj: { day: string | number | undefined, month:
         throw Error(`Invalid obj.month parameter! Year: ${obj.month}`);
     }
 
-    var daysInAMonth = getDaysInMonth(new Date(obj.year, obj.month - 1));
+    const daysInAMonth = getDaysInMonth(new Date(obj.year, obj.month - 1));
 
-    var day: number | undefined;
+    let day: number | undefined;
     if (!isUndefinedOrNull(obj.day)) {
         if (!isNaN(obj.day!.toString().trim() as unknown as number) && !isNaN(parseFloat(obj.day!.toString().trim()))) {
-            var _day = parseInt(obj.day!.toString().trim());
+            const _day = parseInt(obj.day!.toString().trim());
             if (_day >= 1 && _day <= daysInAMonth) {
                 day = _day;
             }
@@ -326,7 +326,7 @@ function isValidHours(hours: string | number | undefined): boolean {
 }
 
 function getValidHours(hours: string | number | undefined): number {
-    var _hours = _getValidTimeUnitOrUndefined({timeUnit: 'hours', timeUnitPoint: hours});
+    const _hours = _getValidTimeUnitOrUndefined({timeUnit: 'hours', timeUnitPoint: hours});
     if (isUndefinedOrNull(_hours)) {
         throw Error(`Hours (${hours}) are invalid!`);
     }
@@ -338,7 +338,7 @@ function isValidMinutes(minutes: string | number | undefined): boolean {
 }
 
 function getValidMinutes(minutes: string | number | undefined): number {
-    var _minutes = _getValidTimeUnitOrUndefined({timeUnit: 'minutes', timeUnitPoint: minutes});
+    const _minutes = _getValidTimeUnitOrUndefined({timeUnit: 'minutes', timeUnitPoint: minutes});
     if (isUndefinedOrNull(_minutes)) {
         throw Error(`Minutes (${minutes}) are invalid!`);
     }
@@ -350,7 +350,7 @@ function isValidSeconds(seconds: string | number | undefined): boolean {
 }
 
 function getValidSeconds(seconds: string | number | undefined): number {
-    var _seconds = _getValidTimeUnitOrUndefined({timeUnit: 'seconds', timeUnitPoint: seconds});
+    const _seconds = _getValidTimeUnitOrUndefined({timeUnit: 'seconds', timeUnitPoint: seconds});
     if (isUndefinedOrNull(_seconds)) {
         throw Error(`Seconds (${seconds}) are invalid!`);
     }
@@ -362,7 +362,7 @@ function isValidMilliSeconds(milliseconds: string | number | undefined): boolean
 }
 
 function getValidMilliSeconds(milliseconds: string | number | undefined): number {
-    var _milliseconds = _getValidTimeUnitOrUndefined({timeUnit: 'milliseconds', timeUnitPoint: milliseconds});
+    const _milliseconds = _getValidTimeUnitOrUndefined({timeUnit: 'milliseconds', timeUnitPoint: milliseconds});
     if (isUndefinedOrNull(_milliseconds)) {
         throw Error(`MilliSeconds (${milliseconds}) are invalid!`);
     }
@@ -379,7 +379,7 @@ function _getValidTimeUnitOrUndefined(obj: { timeUnit: "hours" | "minutes" | "se
     }
 
     if (!isUndefinedOrNull(obj.timeUnitPoint) && !isNaN(obj.timeUnitPoint!.toString().trim() as unknown as number) && !isNaN(parseFloat(obj.timeUnitPoint!.toString().trim()))) {
-        var _timeUnitPoints = parseInt(obj.timeUnitPoint!.toString().trim());
+        const _timeUnitPoints = parseInt(obj.timeUnitPoint!.toString().trim());
         if (getAvailableTimeUnitPoints(obj.timeUnit).includes(_timeUnitPoints)) {
             return _timeUnitPoints;
         }
@@ -459,20 +459,20 @@ function getAvailableTimeUnitPoints(timeUnit: 'hours' | 'minutes' | 'seconds' | 
         }
     }
 
-    var _timeUnitPointsDatesLoops = 2;
-    var _timeUnitPointsDate = new Date();
-    var _timeUnitPointsList: number[][] = [];
-    for (var i = 0; i < _timeUnitPointsDatesLoops; i++) {
+    const _timeUnitPointsDatesLoops = 2;
+    let _timeUnitPointsDate = new Date();
+    const _timeUnitPointsList: number[][] = [];
+    for (let i = 0; i < _timeUnitPointsDatesLoops; i++) {
         _timeUnitPointsList[i] = [];
-        var _timeUnitPoints = getTimeUnitPoints(_timeUnitPointsDate);
-        var _timeUnitPointsStart = _timeUnitPoints;
+        const _timeUnitPoints = getTimeUnitPoints(_timeUnitPointsDate);
+        const _timeUnitPointsStart = _timeUnitPoints;
         do {
             _timeUnitPointsDate = addTimeUnitPoints(_timeUnitPointsDate, 1);
-            var _timeUnitPoints = getTimeUnitPoints(_timeUnitPointsDate);
+            const _timeUnitPoints = getTimeUnitPoints(_timeUnitPointsDate);
             _timeUnitPointsList[i]?.push(_timeUnitPoints);
         } while (_timeUnitPoints != _timeUnitPointsStart)
     }
-    var _timeUnitPointsListFlattened = _timeUnitPointsList.flat();
+    let _timeUnitPointsListFlattened = _timeUnitPointsList.flat();
     _timeUnitPointsListFlattened = _timeUnitPointsListFlattened.filter((x, i) => _timeUnitPointsListFlattened.indexOf(x) === i);
     _timeUnitPointsListFlattened.sort();
     return _timeUnitPointsListFlattened;

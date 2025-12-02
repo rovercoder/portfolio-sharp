@@ -15,7 +15,7 @@ export class RollupWithPluginsSiteCodeBundler extends SiteCodeBundler {
             return { success: false, error: { type: 'arguments-invalid', message: 'Invalid input file path!' } };
         }
 
-        var _inputFilePath = isFileUrl(inputFilePath) ? fileURLToPath(inputFilePath) : inputFilePath;
+        const _inputFilePath = isFileUrl(inputFilePath) ? fileURLToPath(inputFilePath) : inputFilePath;
 
         let bundle;
         let error: any;

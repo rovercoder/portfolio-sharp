@@ -4,7 +4,7 @@ import path from 'path';
 import { existsSync } from 'fs';
 
 export async function prepareInlineScript(relativeFiles: string | string[]): Promise<string> {
-    var basePath = process.cwd();
+    const basePath = process.cwd();
 
     if (relativeFiles == null || (typeof relativeFiles !== 'string' && !Array.isArray(relativeFiles)) || (typeof relativeFiles === 'string' && relativeFiles.trim().length === 0) || (Array.isArray(relativeFiles) && relativeFiles.filter(x => x.toString().trim().length > 0).length > 0)) {
         throw Error('Argument Invalid: files');
@@ -21,18 +21,18 @@ export async function prepareInlineScript(relativeFiles: string | string[]): Pro
     const codeBundler = await getCodeBundler();
     const codeMinifier = await getCodeMinifier();
 
-    var bundledCodeStrings = [];
+    const bundledCodeStrings = [];
 
-    for (var key in _absolutePaths) {
-        var absolutePath = _absolutePaths[key];
-        var bundlingResult = await codeBundler.bundleCodeFile(absolutePath);
+    for (const key in _absolutePaths) {
+        const absolutePath = _absolutePaths[key];
+        const bundlingResult = await codeBundler.bundleCodeFile(absolutePath);
         if (!bundlingResult.success) {
             throw new Error('Bundling Error: '+JSON.stringify(bundlingResult.error));
         }
         bundledCodeStrings.push(bundlingResult.bundledCode);
     }
 
-    var minificationResult = await codeMinifier.minifyCode(bundledCodeStrings.join('\r\n'));
+    const minificationResult = await codeMinifier.minifyCode(bundledCodeStrings.join('\r\n'));
     if (!minificationResult.success) {
         throw new Error('Minification Error: '+JSON.stringify(minificationResult.error));
     }

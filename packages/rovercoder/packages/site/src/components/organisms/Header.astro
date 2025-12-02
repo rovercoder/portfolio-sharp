@@ -15,8 +15,14 @@ const {
     <nav>
         <div class="logo-container-container"><slot name="logo" /></div>
         <!-- <ThemeIcon /> -->
-        <div class="nav-links-container"><slot name="navigation" /></div>
-        <div class="hamburger-container"><slot name="hamburger" /></div>
+        <div class="nav-links-hamburger-overlap-container">
+            <div class="nav-links-overlap-container">
+                <div class="nav-links-container"><slot name="navigation" /></div>
+            </div>
+            <div class="hamburger-overlap-container">
+                <div class="hamburger-container"><slot name="hamburger" /></div>
+            </div>
+        </div>    
     </nav>
     <div class="overlay overlay-navigation-menu" aria-hidden="true">
         <slot name="navigationMenu" />
@@ -42,8 +48,18 @@ const {
         height: inherit;
     }
 
-    .nav-links-container {
-        flex-grow: 1;
+    .nav-links-hamburger-overlap-container {
+        display: grid;
+
+        > * {
+            grid-area: 1 / 1 / 2 / 2;
+        }
+    }
+
+    .nav-links-hamburger-overlap-container > * {
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: end;
     }
 
     .logo-container-container {
@@ -80,17 +96,22 @@ const {
         }
         /** :not doesn't work alone. Needs html in front of it. */
         html:not(.overlay-open) .hamburger-container {
-            display: none;
+            visibility: hidden;
+
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        .overlay-open .nav-links-container {
+            visibility: hidden;
         }
     }
 
-    @media screen and (max-width: calc($mobileBreakpoint - 1px)) {
+    @media screen and (max-width: calc($mobileBreakpoint - 0.000001px)) {
         .nav-links-container {
             display: none;
         }
-    }
-
-    .overlay-open .nav-links-container {
-        display: none;
     }
 </style>

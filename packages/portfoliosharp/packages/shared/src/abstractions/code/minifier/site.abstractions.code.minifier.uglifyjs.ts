@@ -6,7 +6,7 @@ export class UglifyJsSiteCodeMinifier extends SiteCodeMinifier {
     protected onDestroy() {};
     async minifyCode(code: string): Promise<{ minifiedCode: string, success: true, error?: { type: string, message: string } } | { success: false, error: { type: string, message: string } }> {
         try {
-            var result = minify(code, { keep_fnames: true, keep_fargs: true } as MinifyOptions & any);
+            const result = minify(code, { keep_fnames: true, keep_fargs: true } as MinifyOptions & any);
             if (!!result.error) {
                 return { success: false, error: { type: 'internal-error', message: JSON.stringify(result.error) } };
             }

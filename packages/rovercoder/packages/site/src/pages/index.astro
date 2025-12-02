@@ -24,7 +24,7 @@ const siteData: SiteData = (_siteData as any) as SiteData;
 	<ProfileFrontPageSection isFirstSection>
 		<RoverCoderCard slot="profileCard" 
 			type="profile"
-			image={siteData.content.profile.images.map(x => ({url: x.url, description: x.description, isMainImage: x.isMainImage} as ImageProps))} 
+			image={siteData.content.profile.images.map(x => ({url: x.url, description: x.description, isMainImage: x.isMainImage } as ImageProps))} 
 			title={siteData.content.profile.fullName} 
 			description={siteData.content.profile.description} 
 		/>
@@ -37,7 +37,13 @@ const siteData: SiteData = (_siteData as any) as SiteData;
 	<IntroductionCardsSection>
 		{ 
 			siteData.content.statements.map(x => 
-				<RoverCoderCard slot="introCards" image={{ url: x.imageUrl } as ImageProps} imageIsIcon title={x.title} description={x.textLines} hint={x.hint ?? undefined} />
+				<RoverCoderCard slot="introCards" 
+					image={{ url: x.imageUrl } as ImageProps} 
+					imageIsIcon 
+					title={x.title} 
+					description={x.textLines} 
+					hint={x.hint ?? undefined} 
+				/>
 			) 
 		}
 	</IntroductionCardsSection>

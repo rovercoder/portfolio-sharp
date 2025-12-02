@@ -5,21 +5,21 @@ import rovercoderJson from './rovercoder.json' assert { type: "json" };
 
 
 function getSchoolHolidaysByYear(year: number, timeZone: string, allHolidayRestAndLeaveEntries: any[], holidayRestAndLeaveEntriesApplied: any[], functions: { [key: string]: { fn: Function; args: string[] } }) {
-    var catholicEasterDate: Date = functions['getCatholicEasterByYear'].fn.call(this, ...[year]);
-    var holidayRestAndLeaveEntriesApplicable = holidayRestAndLeaveEntriesApplied.filter(x => (x.applicableFromDate === undefined || x.applicableFromDate === null || (isValid(x.applicableFromDate) && isPast(parseISO(x.applicableFromDate)))) && (x.applicableToDate === undefined || x.applicableToDate === null || (isValid(x.applicableToDate) && isFuture(parseISO(x.applicableToDate)))));
-    var holidayRestAndLeaveList = holidayRestAndLeaveEntriesApplicable.map(x => allHolidayRestAndLeaveEntries.find(y => y.key == x.holidaysRestAndLeaveEntryKey)).filter(x => x != null);
-    var publicNationalEntries = holidayRestAndLeaveList.filter(x => x.type == 'publicNational');
+    const catholicEasterDate: Date = functions['getCatholicEasterByYear'].fn.call(this, ...[year]);
+    const holidayRestAndLeaveEntriesApplicable = holidayRestAndLeaveEntriesApplied.filter(x => (x.applicableFromDate === undefined || x.applicableFromDate === null || (isValid(x.applicableFromDate) && isPast(parseISO(x.applicableFromDate)))) && (x.applicableToDate === undefined || x.applicableToDate === null || (isValid(x.applicableToDate) && isFuture(parseISO(x.applicableToDate)))));
+    const holidayRestAndLeaveList = holidayRestAndLeaveEntriesApplicable.map(x => allHolidayRestAndLeaveEntries.find(y => y.key == x.holidaysRestAndLeaveEntryKey)).filter(x => x != null);
+    const publicNationalEntries = holidayRestAndLeaveList.filter(x => x.type == 'publicNational');
     if (publicNationalEntries.length === 0) {
         return [];
     }
-    var publicNationalHolidaysDateRanges: { names: string[], startDate: TZDate, endDate: TZDate }[] = [];
-    for (var i = 0; i < publicNationalEntries.length; i++) {
-        var publicNationalEntry = publicNationalEntries[i];
-        for (var j = 0; j < publicNationalEntry.entries.length; j++) {
-            var publicNationalHoliday = publicNationalEntry.entries[j];
-            var name = publicNationalHoliday.name;
+    const publicNationalHolidaysDateRanges: { names: string[], startDate: TZDate, endDate: TZDate }[] = [];
+    for (let i = 0; i < publicNationalEntries.length; i++) {
+        const publicNationalEntry = publicNationalEntries[i];
+        for (let j = 0; j < publicNationalEntry.entries.length; j++) {
+            const publicNationalHoliday = publicNationalEntry.entries[j];
+            const name = publicNationalHoliday.name;
 
-            var result = getStartDateAndEndDate({
+            const result = getStartDateAndEndDate({
                 dates: {
                     baseDate: publicNationalHoliday.date,
                     startDate: publicNationalHoliday.startDate,
@@ -32,8 +32,8 @@ function getSchoolHolidaysByYear(year: number, timeZone: string, allHolidayRestA
             });
             if (!result.valid || !result.value) continue;
             
-            var startDate = result.value.startDate;
-            var endDate = result.value.endDate;
+            const startDate = result.value.startDate;
+            const endDate = result.value.endDate;
 
             // handle function-based dates
 
@@ -42,8 +42,8 @@ function getSchoolHolidaysByYear(year: number, timeZone: string, allHolidayRestA
     }
 }
 
-var functions = holidaysRestAndLeaveEntries.filter(x => x.key === 'holiday-rest-leave-entry#scholastic-year-holidays-malta')[0].functions;
-var declaredFunctions: { [key: string]: { fn: Function; args: string[] } } = {}; for (var i = 0; i < functions.length; i++) { declaredFunctions[functions[i].name] = { fn: new Function(functions[i].arguments, functions[i].body), args: functions[i].arguments.split(",").map(x => x.trim()) } }
+const functions = holidaysRestAndLeaveEntries.filter(x => x.key === 'holiday-rest-leave-entry#scholastic-year-holidays-malta')[0].functions;
+const declaredFunctions: { [key: string]: { fn: Function; args: string[] } } = {}; for (let i = 0; i < functions.length; i++) { declaredFunctions[functions[i].name] = { fn: new Function(functions[i].arguments, functions[i].body), args: functions[i].arguments.split(",").map(x => x.trim()) } }
 
 getSchoolHolidaysByYear(2025, 'Europe/Malta', holidaysRestAndLeaveEntries, timingSchedule.holidaysRestAndLeave, declaredFunctions);
 

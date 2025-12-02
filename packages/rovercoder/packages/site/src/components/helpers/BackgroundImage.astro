@@ -7,7 +7,7 @@ interface Props {
 	backgroundBorderRadius?: string | undefined;
 	type?: string | undefined;
 }
-var { 
+let { 
 	backgroundUrl: backgroundImageBackgroundUrl, 
 	backgroundColor: backgroundImageBackgroundColor, 
 	backgroundRepeat: backgroundImageBackgroundRepeat, 
@@ -16,11 +16,11 @@ var {
 	type: backgroundImageType = 'absolute' 
 } = Astro.props;
 backgroundImageBackgroundUrl = `url(${backgroundImageBackgroundUrl})`;
-var backgroundImageBackgroundPosition;
-var backgroundImageBackgroundHeight;
-var backgroundImageBackgroundWidth;
-var backgroundImageBackgroundTop;
-var backgroundImageBackgroundLeft;
+let backgroundImageBackgroundPosition;
+let backgroundImageBackgroundHeight;
+let backgroundImageBackgroundWidth;
+let backgroundImageBackgroundTop;
+let backgroundImageBackgroundLeft;
 switch (backgroundImageType) {
 	case 'fixedFullScreen': 
 		backgroundImageBackgroundPosition = 'fixed';

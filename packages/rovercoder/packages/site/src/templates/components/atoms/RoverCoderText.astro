@@ -6,27 +6,43 @@ interface Props {
     type?: string | undefined;
     color: string;
     isParagraph?: boolean | undefined;
+    gap?: string | undefined;
 }
-const { content, type, color, isParagraph } = Astro.props;
+const { content, type, color, isParagraph, gap } = Astro.props;
 
-var fontFamily = 'Inter';
-var fontSize = '0.8125rem';
-var fontWeight = 400;
-var fontStyle = 'normal';
-var letterSpacing = 'normal';
+let fontFamily = 'Inter';
+let fontSize = '0.8125rem';
+let fontWeight = 400;
+let fontStyle = 'normal';
+let letterSpacing = 'normal';
+let lineHeight = `calc(${fontSize} * 1.5)`;
 switch (type) {
     case 'card-title':
         fontSize = '0.9375rem';
+        lineHeight = `calc(${fontSize} * 1.5)`;
         fontWeight = 500;
         break;
     case 'statistic':
         fontSize = 'clamp(1rem, 7vw, 2rem)';
+        lineHeight = `calc(${fontSize} * 1.5)`;
         fontWeight = 400;
         break;
     case 'navigation-link':
         fontSize = '1.2rem';
+        lineHeight = `calc(${fontSize} * 1.5)`;
         fontWeight = 700;
+        break;
+    case 'image-browser-progress-indicator-index':
+    case 'image-browser-progress-indicator-total':
+        fontWeight = 500;
+        lineHeight = fontSize;
+        break;
+    case 'image-browser-progress-indicator-of':
+        fontWeight = 400;
+        lineHeight = fontSize;
+        break;
     case 'card-description': 
+    case 'image-browser-image-description':
     default: break;
 }
 ---
@@ -39,5 +55,7 @@ switch (type) {
     fontWeight={fontWeight} 
     fontStyle={fontStyle} 
     letterSpacing={letterSpacing} 
+    lineHeight={lineHeight}
     isParagraph={isParagraph}
+    gap={gap}
 />

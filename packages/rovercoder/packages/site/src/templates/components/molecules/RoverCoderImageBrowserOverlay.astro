@@ -1,0 +1,48 @@
+---
+import Image from "../../../components/atoms/Image.astro";
+import type { ImageProps } from "../../../components/molecules/CardHeader.types";
+import ImageBrowserOverlay from "../../../components/molecules/ImageBrowserOverlay.astro";
+import type { ImageBrowserOverlayImageFnType, ImageBrowserOverlayTextFnType } from "../../../components/molecules/ImageBrowserOverlay.types";
+import RoverCoderText from "../atoms/RoverCoderText.astro";
+import RoverCoderImageBrowserOverlayProgressIndicatorActionButtons from "./RoverCoderImageBrowserOverlayProgressIndicatorActionButtons.astro";
+interface Props {
+    images?: ImageProps | ImageProps[]
+}
+const { images } = Astro.props;
+const textColor = '#000000';
+const imageBrowserOverlayContainerPadding = 'clamp(1rem, 5vw, 2rem)';
+const imageBrowserOverlayWidthLargerThanMobile = '100%';
+const imageBrowserOverlayImageHeight = `calc(calc(var(--overlayHeight, 0px) - calc(${imageBrowserOverlayContainerPadding} * 2)) * .85)`;
+const imageBrowserOverlayBackgroundColor = 'transparent';
+const imageBrowserOverlayImageBackgroundColor = '#000000';
+const imageBrowserOverlayTextBackgroundColor = '#F8F8F8';
+const imageBrowserOverlayTextContainerPadding = '0.5rem';
+---
+
+<ImageBrowserOverlay 
+        images={images} 
+        containerPadding={imageBrowserOverlayContainerPadding} 
+        widthLargerThanMobile={imageBrowserOverlayWidthLargerThanMobile} 
+        imageHeight={imageBrowserOverlayImageHeight} 
+        backgroundColor={imageBrowserOverlayBackgroundColor}
+        imageBackgroundColor={imageBrowserOverlayImageBackgroundColor}
+        textBackgroundColor={imageBrowserOverlayTextBackgroundColor}
+        textContainerPadding={imageBrowserOverlayTextContainerPadding}
+>
+    <div slot="image">
+        {((args) => <Image url={args.image.url} color={args.image.color} imageSize={args.image.imageSize ?? 'contain'} imageRepeat={args.image.imageRepeat ?? 'no-repeat'} />) satisfies ImageBrowserOverlayImageFnType}
+    </div>
+    <div slot="text">
+        {((args) => 
+            <Fragment>
+                { 
+                    args.image.description != null &&
+                        <div class="description">
+                            <RoverCoderText type="image-browser-image-description" content={args.image.description} color={textColor} isParagraph />
+                        </div>
+                }
+            </Fragment>
+        ) satisfies ImageBrowserOverlayTextFnType}
+    </div>
+    <RoverCoderImageBrowserOverlayProgressIndicatorActionButtons slot="progressIndicatorActionButtons" />
+</ImageBrowserOverlay>
