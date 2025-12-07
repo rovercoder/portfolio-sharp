@@ -1,7 +1,31 @@
 export type WindowCustom = Window & typeof globalThis & { 
-    cssVariableElementDimensionsWatcher?: CssVariableElementDimensionsWatcher;
-    initImageBrowserOverlay?: Function;
-    savedCardHeaderObjects?: CardHeadersObject[];
+    _siteCustomCssVariableElementDimensionsWatcher?: CssVariableElementDimensionsWatcher;
+    _siteCustomOverlays?: Overlays;
+    _siteCustomSavedCardHeaderObjects?: CardHeadersObject[];
+}
+
+export interface Overlays {
+    [overlayType: string]: OverlayEntry;
+}
+
+export interface OverlayEntry {
+    initialize: (overlayElement: HTMLElement) => void;
+    destroy?: (overlayElement: HTMLElement) => void;
+    state: OverlayEntryStateEntry[];
+}
+
+export interface OverlayEntryStateEntry {
+    element: HTMLElement;
+    components: { [componentKey: string]: OverlayEntryStateEntryComponent };
+}
+
+export interface OverlayEntryStateEntryComponent {
+    element: HTMLElement;
+    listeners: { [listenerKey: string]: OverlayEntryStateEntryComponentListener };
+}
+
+export interface OverlayEntryStateEntryComponentListener {
+    destructor: Function;
 }
 
 export interface CssVariableElementDimensionsWatcher {
@@ -25,4 +49,5 @@ export interface CardHeadersObject {
     imageBrowserOpenButtonTapHandleRemover?: Function;
     infoButtonTapHandleRemover?: Function;
     infoButtonHoverHandleRemover?: Function;
+    imagesContainerObserverRemover?: Function;
 }

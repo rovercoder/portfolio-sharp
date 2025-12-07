@@ -42,10 +42,10 @@ export function initCssVariableElementWatcher(args) {
         return;
     }
     const _window = window;
-    if (_window.cssVariableElementDimensionsWatcher == null) {
-        _window.cssVariableElementDimensionsWatcher = {};
+    if (_window._siteCustomCssVariableElementDimensionsWatcher == null) {
+        _window._siteCustomCssVariableElementDimensionsWatcher = {};
     }
-    const cssVariableElementDimensionsWatcher = _window.cssVariableElementDimensionsWatcher;
+    const cssVariableElementDimensionsWatcher = _window._siteCustomCssVariableElementDimensionsWatcher;
     const cssVariableElementDimensionsWatcherEntry = cssVariableElementDimensionsWatcher[cssVariableName]?.find(x => x.elementToAttachVariableTo === elementToAttachVariableTo);
     if (cssVariableElementDimensionsWatcherEntry != null) {
         const observerDisposeFn = cssVariableElementDimensionsWatcherEntry.observerDisposeFn;
@@ -70,7 +70,7 @@ export function initCssVariableElementWatcher(args) {
         }
         const cssVariableElementDimensionsWatcherPreviousEntryIndex = cssVariableElementDimensionsWatcher[cssVariableName].findIndex(x => x.elementToAttachVariableTo === elementToAttachVariableTo);
         if (cssVariableElementDimensionsWatcherPreviousEntryIndex > -1) {
-            delete cssVariableElementDimensionsWatcher[cssVariableName][cssVariableElementDimensionsWatcherPreviousEntryIndex];
+            cssVariableElementDimensionsWatcher[cssVariableName].splice(cssVariableElementDimensionsWatcherPreviousEntryIndex, 1);
         }
         cssVariableElementDimensionsWatcher[cssVariableName].push({
             element: result.element,

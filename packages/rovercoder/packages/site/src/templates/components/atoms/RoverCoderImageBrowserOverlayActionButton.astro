@@ -1,0 +1,36 @@
+---
+import ImageBrowserOverlayActionButton from '../../../components/atoms/ImageBrowserOverlayActionButton.astro';
+import RoverCoderImageBrowserOverlayActionButtonImage from './RoverCoderImageBrowserOverlayActionButtonImage.astro';
+interface Props {
+    type: string;
+    containerHeight?: string;
+    padding?: string;
+    margin?: string;
+    borderRadius?: string;
+    backgroundColor?: string;
+    opacityInactive?: string;
+    iconSize?: string;
+}
+const { 
+    type, 
+    containerHeight: actionButtonContainerHeight = 'auto',
+    padding: actionButtonPadding = '0.25rem',
+    margin: actionButtonMargin = '0.25rem',
+    borderRadius: actionButtonBorderRadius = '.75rem',
+    backgroundColor: actionButtonBackgroundColor = '#000000',
+    opacityInactive: actionButtonOpacityInactive = '0.5',
+    iconSize: actionButtonIconSize = '2rem'
+} = Astro.props;
+
+---
+
+<ImageBrowserOverlayActionButton 
+    containerHeight={actionButtonContainerHeight}
+    padding={actionButtonPadding} 
+    margin={actionButtonMargin}
+    borderRadius={actionButtonBorderRadius} 
+    backgroundColor={actionButtonBackgroundColor} 
+    opacityInactive={actionButtonOpacityInactive}
+>
+    <RoverCoderImageBrowserOverlayActionButtonImage slot="image" type={type} size={actionButtonIconSize} />
+</ImageBrowserOverlayActionButton>

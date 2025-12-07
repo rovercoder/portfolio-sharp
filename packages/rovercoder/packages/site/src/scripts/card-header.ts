@@ -4,17 +4,18 @@ import { openOverlay } from "./overlay.js";
 let cardHeaderInnerElements = document.querySelectorAll('.card-header-inner');
 const imageIndexCssVariableName = '--imageIndex';
 
-(window as WindowCustom).savedCardHeaderObjects?.forEach((x) => {
+(window as WindowCustom)._siteCustomSavedCardHeaderObjects?.forEach((x) => {
     let obj = (x as CardHeadersObject);
     obj.imageBrowserOpenButtonTapHandleRemover?.();
     obj.imageNextButtonTapHandleRemover?.();
     obj.imagePreviousButtonTapHandleRemover?.();
     obj.infoButtonHoverHandleRemover?.();
     obj.infoButtonTapHandleRemover?.();
+    obj.imagesContainerObserverRemover?.();
 });
 
 let savedCardHeaderObjects: CardHeadersObject[] = [];
-(window as WindowCustom).savedCardHeaderObjects = savedCardHeaderObjects;
+(window as WindowCustom)._siteCustomSavedCardHeaderObjects = savedCardHeaderObjects;
 
 cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
     let imageBrowserOverlay: HTMLElement | undefined;
@@ -27,7 +28,8 @@ cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
         (cardHeaderInnerElement as HTMLElement).style.setProperty(imageIndexCssVariableName, imageIndex.toString());
         imageBrowserOverlay?.style.setProperty(imageIndexCssVariableName, imageIndex.toString());
     };
-    const getImagesTotal = (): number | undefined => cardHeaderInnerElement.querySelector('.image-preview .images-container')?.children.length;
+    const getImagesContainer = (): HTMLElement | undefined => cardHeaderInnerElement.querySelector('.image-preview .images-container') as HTMLElement | undefined;
+    const getImagesTotal = (): number | undefined => getImagesContainer()?.children.length;
 
     const controlsTop = cardHeaderInnerElement.querySelector('.controls-top');
     const infoButton = controlsTop?.querySelector('.info[role="button"]');
@@ -107,6 +109,14 @@ cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
         }
     }
 
+    let imagesContainerObserverRemover = undefined;
+    const imagesContainer = getImagesContainer();
+    if (imagesContainer != null) {
+        const imagesContainerObserver = new MutationObserver(() => resetImageNavigatorsVisibility());
+        imagesContainerObserver.observe(imagesContainer, { subtree: true, childList: true });
+        imagesContainerObserverRemover = () => imagesContainerObserver.disconnect();
+    }
+
     const openImageBrowser = () => {
         const _imageBrowserOverlay = cardHeaderInnerElement.querySelector('.overlay-image-browser');
         if (_imageBrowserOverlay != null) {
@@ -131,7 +141,8 @@ cardHeaderInnerElements.forEach(cardHeaderInnerElement => {
         },
         imageBrowserOpenButtonTapHandleRemover: () => {
             imageBrowserOpenButton?.removeEventListener('click', openImageBrowser);
-        }
+        },
+        imagesContainerObserverRemover
     };
     savedCardHeaderObjects.push(savedCardHeaderObject);
 });

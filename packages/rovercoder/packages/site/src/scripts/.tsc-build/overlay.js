@@ -1,7 +1,14 @@
 import { initCssVariableElementWatcher, runOnElementRemoval } from "./utilities.js";
 const overlayShownClass = 'shown';
 const overlaysOpenBodyClass = 'overlay-open';
+getInitializeOverlayObject();
 initCssVariableElementWatcher({ element: getOverlayContentElement(), elementToAttachVariableTo: getOverlayContentElement(), cssVariableName: '--overlayHeight', elementPropertyWatched: 'height' });
+function getInitializeOverlayObject() {
+    if (window._siteCustomOverlays == null) {
+        window._siteCustomOverlays = {};
+    }
+    return window._siteCustomOverlays;
+}
 export function hasOverlays() {
     return (getOverlayContentElement()?.children.length ?? 0) > 0;
 }
@@ -61,37 +68,63 @@ function removeScriptsAndStyles(element) {
     }
 }
 function initializeOverlay(element) {
-    initializeOverlayElement(element);
-    if (element.children == null) {
-        return;
-    }
-    for (let i = 0; i < element.children.length; i++) {
-        initializeOverlay(element.children[i]);
+    const overlayType = element.attributes.getNamedItem('data-overlay-type')?.value?.trim();
+    if (overlayType != null && getInitializeOverlayObject()[overlayType] != null) {
+        const overlayObjectEntry = getInitializeOverlayObject()[overlayType];
+        if (overlayObjectEntry.initialize != null && typeof overlayObjectEntry.initialize === 'function') {
+            overlayObjectEntry.initialize(element);
+        }
     }
 }
-function initializeOverlayElement(element) {
-    const attribute = element.attributes.getNamedItem('data-initialization-javascript');
-    if (attribute != null) {
-        eval(attribute.value);
+function destroyOverlay(element) {
+    const overlayObject = getInitializeOverlayObject();
+    for (const overlayObjectKey in overlayObject) {
+        const overlayObjectEntry = overlayObject[overlayObjectKey];
+        const overlayObjectEntryState = overlayObjectEntry.state ?? [];
+        for (let i = 0; i < overlayObjectEntryState.length; i++) {
+            if (overlayObjectEntryState[i].element === element) {
+                if (overlayObjectEntry.destroy != null && typeof overlayObjectEntry.destroy === 'function') {
+                    overlayObjectEntry.destroy(element);
+                }
+                const overlayObjectEntryStateEntry = overlayObjectEntryState[i];
+                if (overlayObjectEntryStateEntry.components != null && typeof overlayObjectEntryStateEntry.components === 'object') {
+                    for (const componentKey in overlayObjectEntryStateEntry.components) {
+                        const component = overlayObjectEntryStateEntry.components[componentKey];
+                        if (component.listeners != null && typeof component.listeners === 'object') {
+                            for (const listenerKey in component.listeners) {
+                                component.listeners[listenerKey].destructor();
+                            }
+                        }
+                    }
+                }
+                overlayObjectEntryState.splice(i, 1);
+                i--;
+            }
+        }
     }
 }
 export function closeOverlayLast() {
     return closeOverlays(false);
 }
-function _removeOverlay(overlay, previousOverlay) {
+function _removeOverlay(overlay, previousOverlaysFunction) {
     if (overlay == null) {
         throw Error('Overlay Invalid!');
     }
-    const removePreviousOverlay = () => {
-        if (previousOverlay != null) {
-            _removeOverlay(previousOverlay);
+    const _removePreviousOverlays = () => {
+        if (previousOverlaysFunction != null && typeof previousOverlaysFunction === 'function') {
+            previousOverlaysFunction();
         }
     };
+    const _destroyAndRemoveOverlay = (overlay) => {
+        destroyOverlay(overlay);
+        overlay.remove();
+    };
+    runOnElementRemoval(overlay, _removePreviousOverlays);
     const cleanupFunctionsIfAnimationTransitionListenerFails = [];
     const cleanupFunctionsIfAnimationTransitionListenerFailsDelayAllowanceMs = 500;
-    const overlayChildren = Array.from(overlay.children);
-    for (let c = 0; c < overlayChildren.length; c++) {
-        const childOfOverlay = overlayChildren[c];
+    const overlayChildrenLeft = Array.from(overlay.children);
+    for (let c = 0; c < overlay.children.length; c++) {
+        const childOfOverlay = overlay.children[c];
         const getAnimationTransitionCssTimeTotalMs = (timeStr) => {
             // Handle possible comma-separated lists (e.g., "0.3s, 0s")
             const durations = timeStr.split(',').map(part => part.trim());
@@ -136,9 +169,12 @@ function _removeOverlay(overlay, previousOverlay) {
         if (animated) {
             const maxAnimationTransitionDurationMs = Math.max(animationDurationMs, transitionDurationMs);
             const onElementEnd = () => {
-                childOfOverlay?.remove();
-                if (overlay != null && overlay.children.length === 0) {
-                    overlay.remove();
+                const overlayChildrenLeftIndex = overlayChildrenLeft.findIndex(x => x == childOfOverlay);
+                if (overlayChildrenLeftIndex > -1) {
+                    overlayChildrenLeft.splice(overlayChildrenLeftIndex, 1);
+                }
+                if (overlay != null && overlayChildrenLeft.length === 0) {
+                    _destroyAndRemoveOverlay(overlay);
                 }
             };
             childOfOverlay.addEventListener('animationend', onElementEnd);
@@ -147,29 +183,30 @@ function _removeOverlay(overlay, previousOverlay) {
             cleanupFunctionsIfAnimationTransitionListenerFails.push(() => setTimeout(onElementEnd, maxAnimationTransitionDurationMs + cleanupFunctionsIfAnimationTransitionListenerFailsDelayAllowanceMs));
         }
         else {
-            childOfOverlay.remove();
+            const overlayChildrenLeftIndex = overlayChildrenLeft.findIndex(x => x == childOfOverlay);
+            if (overlayChildrenLeftIndex > -1) {
+                overlayChildrenLeft.splice(overlayChildrenLeftIndex, 1);
+            }
         }
     }
     // triggers animation
     overlay.classList.remove(overlayShownClass);
     cleanupFunctionsIfAnimationTransitionListenerFails.forEach((fn) => fn());
-    runOnElementRemoval(overlay, removePreviousOverlay);
-    if (overlay.children.length === 0) {
-        overlay.remove();
+    if (overlayChildrenLeft.length === 0) {
+        _destroyAndRemoveOverlay(overlay);
     }
 }
 export function closeOverlays(allOverlays = true) {
     const parentElement = getOverlayContentElement();
     if (parentElement?.children != null && parentElement.children.length > 0) {
-        for (let i = parentElement.children.length - 1; i >= 0; i--) {
+        let removeOverlaysFunction = null;
+        for (let i = Math.max(0, allOverlays ? 0 : parentElement.children.length - 1); i < parentElement.children.length; i++) {
             const child = parentElement.children[i];
-            const previousChild = i > 0 ? parentElement.children[i - 1] : null;
-            if (i === 0) {
-                _removeOverlay(child, allOverlays ? previousChild : null);
-            }
-            if (!allOverlays) {
-                break;
-            }
+            const _removeOverlaysFunction = removeOverlaysFunction;
+            removeOverlaysFunction = () => _removeOverlay(child /** This overlay */, _removeOverlaysFunction /** Previous overlays */);
+        }
+        if (removeOverlaysFunction != null) {
+            removeOverlaysFunction();
         }
         return true;
     }

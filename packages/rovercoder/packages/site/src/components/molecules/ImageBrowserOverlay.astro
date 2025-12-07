@@ -15,40 +15,51 @@ interface Props {
     imageBackgroundColor?: string;
     textBackgroundColor?: string;
     textContainerPadding?: string;
-    actionIndicatorsPadding?: string;
 }
-const { 
-    images: _images, 
-    containerPadding: imageBrowserOverlayContainerPadding = '2rem', 
+const {
+    images: _images,
+    containerPadding: imageBrowserOverlayContainerPadding = '2rem',
     widthLargerThanMobile: imageBrowserOverlayWidthLargerThanMobile = '100%',
     backdropColor: imageBrowserOverlayBackdropColor = '#00000050',
-    backgroundColor: imageBrowserOverlayBackgroundColor = '#FFFFFF', 
+    backgroundColor: imageBrowserOverlayBackgroundColor = '#FFFFFF',
     imageHeight: imageBrowserOverlayImageHeight = '80vh',
     imageBackgroundColor: imageBrowserOverlayImageBackgroundColor = '#000000',
     textBackgroundColor: imageBrowserOverlayTextBackgroundColor = '#FFFFFF',
-    textContainerPadding: imageBrowserOverlayTextContainerPadding = '0.5rem',
-    actionIndicatorsPadding: imageBrowserOverlayActionIndicatorsPadding = '0.125rem'
+    textContainerPadding: imageBrowserOverlayTextContainerPadding = '0.5rem'
 } = Astro.props;
 
 const images = getImagesForCardHeaderAndImageBrowser(_images);
+const imageSize = 'contain';
 ---
 
 <div class="image-browser-backdrop"></div>
-<div class="overlay-image-browser-inner" data-initialization-javascript="initImageBrowserOverlay()">
+<div class="overlay-image-browser-inner">
     <div class="image-browser-container">
         <div class="image-browser">
             <div class="images-container">
-                {
-                    images?.map(async image =>
-                        <div class="image-container-outer">
-                            {(
-                                Astro.slots.has('image')
-                                    ? <Fragment set:html={await Astro.slots.render('image', [{ image }] satisfies Parameters<ImageBrowserOverlayImageFnType>)} />
-                                    : <Image url={image.url} color={image.color} imageSize={image.imageSize ?? 'contain'} imageRepeat={image.imageRepeat ?? 'no-repeat'} />
-                            )}
+                <div class="images-container-inner">
+                    {
+                        images?.map(async image =>
+                            <div class="image-container-outer">
+                                {(
+                                    Astro.slots.has('image')
+                                        ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageSize }] satisfies Parameters<ImageBrowserOverlayImageFnType>)} />
+                                        : <Image url={image.url} color={image.color} imageSize={imageSize ?? image.imageSize} imageRepeat={image.imageRepeat} />
+                                )}
+                            </div>
+                        )
+                    }
+                </div>
+                <div class="action-indicators-container">
+                    <div class="action-indicators">
+                        <div role="button" class="action previous">
+                            <slot name="action-previous" />
                         </div>
-                    )
-                }
+                        <div role="button" class="action next">
+                            <slot name="action-next" />
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="texts-container">
                 {
@@ -58,21 +69,21 @@ const images = getImagesForCardHeaderAndImageBrowser(_images);
                                 Astro.slots.has('text')
                                     ? <Fragment set:html={await Astro.slots.render('text', [{ image }] satisfies Parameters<ImageBrowserOverlayTextFnType>)} />
                                     : <Fragment>
-                                        { 
-                                            image.description && 
+                                        {
+                                            image.description &&
                                                 <div class="description">
-                                                    <Text 
-                                                        content={image.description} 
-                                                        fontFamily='inherit' 
-                                                        fontSize='inherit'  
-                                                        color='inherit' 
-                                                        fontWeight='inherit'  
-                                                        fontStyle='inherit' 
-                                                        letterSpacing='inherit' 
+                                                    <Text
+                                                        content={image.description}
+                                                        fontFamily='inherit'
+                                                        fontSize='inherit'
+                                                        color='inherit'
+                                                        fontWeight='inherit'
+                                                        fontStyle='inherit'
+                                                        letterSpacing='inherit'
                                                         isParagraph={true}
-                                                    /> 
+                                                    />
                                                 </div>
-                                        } 
+                                        }
                                     </Fragment>
                             )}
                         </div>
@@ -80,13 +91,13 @@ const images = getImagesForCardHeaderAndImageBrowser(_images);
                 }
             </div>
             <div class="progress-indicators-action-buttons-spacing">
-                <slot name="progressIndicatorActionButtons" />
+                <slot name="progress-indicator-action-buttons" />
             </div>
         </div>
     </div>
     <div class="image-browser-overlay-container">
         <div></div>
-        <slot name="progressIndicatorActionButtons" />
+        <slot name="progress-indicator-action-buttons" />
     </div>
 </div>
 
@@ -139,10 +150,6 @@ const images = getImagesForCardHeaderAndImageBrowser(_images);
         pointer-events: none;
     }
 
-    .overlay-image-browser-inner .image-browser-overlay-container > * {
-        pointer-events: auto;
-    }
-
     .overlay-image-browser-inner .image-browser {
         display: flex;
         flex-direction: column;
@@ -160,9 +167,6 @@ const images = getImagesForCardHeaderAndImageBrowser(_images);
 
     .overlay-image-browser-inner .image-browser .images-container {
         width: 100%;
-        min-height: var(--imageBrowserOverlayImageHeight);
-        height: var(--imageBrowserOverlayImageHeight);
-        background-color: var(--imageBrowserOverlayImageBackgroundColor);
     }
 
     .overlay-image-browser-inner .image-browser .images-container {
@@ -171,6 +175,46 @@ const images = getImagesForCardHeaderAndImageBrowser(_images);
         > * {
             grid-area: 1 / 1 / 2 / 2;
         }
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container .images-container-inner {
+        width: 100%;
+        min-height: var(--imageBrowserOverlayImageHeight);
+        height: var(--imageBrowserOverlayImageHeight);
+        background-color: var(--imageBrowserOverlayImageBackgroundColor);
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container .images-container-inner {
+        display: grid;
+
+        > * {
+            grid-area: 1 / 1 / 2 / 2;
+        }
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container .action-indicators-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container .action-indicators-container .action-indicators {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container .action-indicators-container .action-indicators .action {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        position: relative; // needed for proper action button focus (expanded area) - due to grid overlap
     }
 
     .overlay-image-browser-inner .image-browser .texts-container {
@@ -197,6 +241,10 @@ const images = getImagesForCardHeaderAndImageBrowser(_images);
 </style>
 
 <style is:global>
+    .overlay .overlay-image-browser-inner .image-browser-overlay-container > * {
+        pointer-events: auto;
+    }
+
     .overlay:not(.shown) .overlay-image-browser-inner {
         transform: scale(0);
     }

@@ -1,0 +1,28 @@
+---
+import Icon from '../../../components/atoms/Icon.astro';
+
+interface Props {
+    type: string;
+    size?: string;
+}
+
+const { type, size = '100%' } = Astro.props;
+
+const actionButtonPreviousIconUrl = '/_assets/images/site/icons/previous-white.svg';
+const actionButtonNextIconUrl = '/_assets/images/site/icons/next-white.svg';
+
+let actionButtonIconUrl = null;
+switch(type?.trim().toLowerCase()) {
+    case 'previous': 
+        actionButtonIconUrl = actionButtonPreviousIconUrl;
+        break;
+    case 'next':
+        actionButtonIconUrl = actionButtonNextIconUrl;
+        break;
+    default:
+        console.error(`Invalid action button type: ${type}`);
+        throw Error(`Invalid action button type: ${type}`);
+}
+---
+
+<Icon slot="image" url={actionButtonIconUrl} size={size} />

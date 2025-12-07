@@ -12,7 +12,7 @@ const { socialLinks } = Astro.props;
 ---
 
 <Footer backgroundColor={footerBackgroundColor}>
-    <SocialLinks slot="socialLinks">
+    <SocialLinks slot="social-links">
         {socialLinks.map(x => <SocialLink profileUrl={x.profileUrl} platformName={x.platformName} username={x.username} />)}
     </SocialLinks>
 </Footer>

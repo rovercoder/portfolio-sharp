@@ -9,14 +9,13 @@ interface Props {
     images?: ImageProps | ImageProps[];
     imageIsIcon?: boolean;
     imageHeight?: string;
+    imageImageSize?: string;
     imageBorderRadius?: string | undefined;
     iconSize?: string;
     iconMargin?: string;
-    iconFn?: (args: { icon: ImageProps, iconBorderRadius: string | undefined, iconMargin: string | undefined, iconSize: string }) => any;
     info?: string;
-    type?: string;
 }
-const { images: images_, imageIsIcon, imageHeight = '15rem', imageBorderRadius, iconSize = '3rem', iconMargin = '1rem', iconFn, info, type } = Astro.props;
+const { images: images_, imageIsIcon, imageHeight = '15rem', imageImageSize = 'cover', imageBorderRadius, iconSize = '3rem', iconMargin = '1rem', info } = Astro.props;
 
 const images = getImagesForCardHeaderAndImageBrowser(images_);
 let _mainImage: ImageProps | undefined;
@@ -52,8 +51,8 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
                                 images?.map(async image =>
                                     <div class="image-container-outer">
                                         {(Astro.slots.has('image')
-                                            ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageBorderRadius, imageHeight }] satisfies Parameters<CardHeaderImageFnType>)} />
-                                            : <Image url={image.url} color={image.color} imageSize={image.imageSize} imageRepeat={image.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
+                                            ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageBorderRadius, imageHeight, imageSize: imageImageSize }] satisfies Parameters<CardHeaderImageFnType>)} />
+                                            : <Image url={image.url} color={image.color} imageSize={imageImageSize ?? image.imageSize} imageRepeat={image.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
                                         )}
                                     </div>
                                 )
@@ -69,21 +68,21 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
                 info != null && info.toString().trim().length > 0 &&
                     <Fragment>
                         <div role="button" class="info">
-                            <slot name="infoButton" />
+                            <slot name="info-button" />
                         </div>
                         <div class="info-text display-none">
-                            <slot name="infoText" />
+                            <slot name="info-text" />
                         </div>
                     </Fragment>
             }
             {
-                hasImagesMinimum() && !imageIsIcon && Astro.slots.has('imageBrowser') &&
+                hasImagesMinimum() && !imageIsIcon && Astro.slots.has('image-browser') &&
                     <Fragment>
                         <div role="button" class="image-browser-open">
-                            <slot name="imageBrowserOpenButton" />
+                            <slot name="image-browser-open-button" />
                         </div>
-                        <div class="overlay overlay-image-browser" aria-hidden="true">
-                            <slot name="imageBrowser" />
+                        <div class="overlay overlay-image-browser" data-overlay-type="image-browser" aria-hidden="true">
+                            <slot name="image-browser" />
                         </div>
                     </Fragment>
             }
@@ -92,10 +91,10 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
             hasImagesMinimum(2) && !imageIsIcon &&
                 <div class="controls-middle">
                     <div role="button" class={`image-previous ${currentImageIndex != null && currentImageIndex <= 0 ? 'visually-hidden' : ''}`}>
-                        <slot name="imagePreviousNavigatorButton" />
+                        <slot name="image-previous-navigator-button" />
                     </div>
                     <div role="button" class={`image-next ${currentImageIndex != null && imagesTotal != null && currentImageIndex >= imagesTotal - 1 ? 'visually-hidden' : ''}`}>
-                        <slot name="imageNextNavigatorButton" />
+                        <slot name="image-next-navigator-button" />
                     </div>
                 </div>
         }

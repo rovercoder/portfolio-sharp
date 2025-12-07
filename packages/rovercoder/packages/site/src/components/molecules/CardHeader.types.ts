@@ -7,5 +7,5 @@ export interface ImageProps {
     isMainImage?: boolean | undefined;
 }
 
-export type CardHeaderImageFnType = (params: { image: ImageProps, imageBorderRadius: string | undefined, imageHeight: string }) => any;
+export type CardHeaderImageFnType = (params: { image: ImageProps, imageBorderRadius: string | undefined, imageHeight: string, imageSize: string }) => any;
 export type CardHeaderIconFnType = (params: { icon: ImageProps, iconBorderRadius: string | undefined, iconMargin: string | undefined, iconSize: string }) => any;

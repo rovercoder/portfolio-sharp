@@ -52,7 +52,7 @@ const navigationMenuOverlayBackgroundColor = '#000000';
         }
     </Navigation>
     <Hamburger slot="hamburger" lineMarginTopBottom={hamburgerMarginTopBottom} lineHeight={hamburgerLineHeight} color={hamburgerColor} />
-    <NavigationMenuOverlay slot="navigationMenu" navLinksItemsGap={navLinksItemsGap} containerPadding={navigationMenuOverlayContainerPadding} backgroundColor={navigationMenuOverlayBackgroundColor}>
+    <NavigationMenuOverlay slot="navigation-menu" navLinksItemsGap={navLinksItemsGap} containerPadding={navigationMenuOverlayContainerPadding} backgroundColor={navigationMenuOverlayBackgroundColor}>
         {
             navLinks.map(x => 
                 <NavLink link={x.link} textColor={navLinkMenuTextColor} hoverFocusTextColor={navLinkMenuHoverFocusTextColor} hoverFocusBackgroundColor={navLinkMenuHoverFocusBackgroundColor} padding={navLinkMenuPadding} textAlign={navLinkMenuTextAlign} textMinimumWidth={navLinkMenuTextMinWidth}>
