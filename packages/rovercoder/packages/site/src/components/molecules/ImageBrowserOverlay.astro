@@ -1,6 +1,6 @@
 ---
-import { getImagesForCardHeaderAndImageBrowser } from './CardHeader.functions';
-import type { ImageProps } from './CardHeader.types';
+import { getImagesForCardHeaderAndImageBrowser } from './CardHeaderDefault.functions';
+import type { ImageProps } from './CardHeaderDefault.types';
 import Image from '../atoms/Image.astro';
 import Text from '../atoms/Text.astro';
 import type { ImageBrowserOverlayImageFnType, ImageBrowserOverlayTextFnType } from './ImageBrowserOverlay.types';
@@ -33,7 +33,7 @@ const imageSize = 'contain';
 ---
 
 <div class="image-browser-backdrop"></div>
-<div class="overlay-image-browser-inner">
+<div class="overlay-image-browser-inner" data-overlay-type="image-browser">
     <div class="image-browser-container">
         <div class="image-browser">
             <div class="images-container">
@@ -90,19 +90,19 @@ const imageSize = 'contain';
                     )
                 }
             </div>
-            <div class="progress-indicators-action-buttons-spacing">
-                <slot name="progress-indicator-action-buttons" />
+            <div class="status-bar-spacing">
+                <slot name="status-bar" />
             </div>
         </div>
     </div>
     <div class="image-browser-overlay-container">
         <div></div>
-        <slot name="progress-indicator-action-buttons" />
+        <slot name="status-bar" />
     </div>
 </div>
 
 <script>
-    import '/src/scripts/image-browser-overlay.ts';
+    import '/src/scripts/overlay-image-browser.ts';
 </script>
 
 <style lang="scss" define:vars={{ imageBrowserOverlayContainerPadding, imageBrowserOverlayWidthLargerThanMobile, imageBrowserOverlayBackdropColor, imageBrowserOverlayBackgroundColor, imageBrowserOverlayImageHeight, imageBrowserOverlayImageBackgroundColor, imageBrowserOverlayTextBackgroundColor, imageBrowserOverlayTextContainerPadding }}>
@@ -234,7 +234,7 @@ const imageSize = 'contain';
         padding: var(--imageBrowserOverlayTextContainerPadding);
     }
 
-    .overlay-image-browser-inner .image-browser .progress-indicators-action-buttons-spacing {
+    .overlay-image-browser-inner .image-browser .status-bar-spacing {
         visibility: hidden;
         pointer-events: none;
     }

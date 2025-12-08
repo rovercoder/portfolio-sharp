@@ -1,8 +1,8 @@
 ---
 import Icon from "../../../components/atoms/Icon.astro";
 import Image from "../../../components/atoms/Image.astro";
-import CardHeader from "../../../components/molecules/CardHeader.astro";
-import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "../../../components/molecules/CardHeader.types";
+import CardHeaderDefault from "../../../components/molecules/CardHeaderDefault.astro";
+import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "../../../components/molecules/CardHeaderDefault.types";
 import RoverCoderText from "../atoms/RoverCoderText.astro";
 import RoverCoderImageBrowserOverlay from "./RoverCoderImageBrowserOverlay.astro";
 
@@ -46,7 +46,7 @@ const photoNavigationButtonMargin = '0.3rem';
 const photoNavigationButtonPadding = '0.125rem';
 ---
 
-<CardHeader 
+<CardHeaderDefault 
         images={images} 
         imageIsIcon={imageIsIcon} 
         imageHeight={imageHeight} 
@@ -67,4 +67,4 @@ const photoNavigationButtonPadding = '0.125rem';
     <RoverCoderImageBrowserOverlay slot="image-browser" images={images} />
     <Icon slot="image-previous-navigator-button" url={previousPhotoNavigationButtonIconUrl} color={photoNavigationButtonColor} borderRadius={photoNavigationButtonBorderRadius} containerMargin={photoNavigationButtonMargin} containerPadding={photoNavigationButtonPadding} size={photoNavigationButtonSize} />
     <Icon slot="image-next-navigator-button" url={nextPhotoNavigationButtonIconUrl} color={photoNavigationButtonColor} borderRadius={photoNavigationButtonBorderRadius} containerMargin={photoNavigationButtonMargin} containerPadding={photoNavigationButtonPadding} size={photoNavigationButtonSize} />
-</CardHeader>
+</CardHeaderDefault>

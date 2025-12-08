@@ -1,11 +1,11 @@
 ---
 import Image from "../../../components/atoms/Image.astro";
-import type { ImageProps } from "../../../components/molecules/CardHeader.types";
+import type { ImageProps } from "../../../components/molecules/CardHeaderDefault.types";
 import ImageBrowserOverlay from "../../../components/molecules/ImageBrowserOverlay.astro";
 import type { ImageBrowserOverlayImageFnType, ImageBrowserOverlayTextFnType } from "../../../components/molecules/ImageBrowserOverlay.types";
 import RoverCoderImageBrowserOverlayActionButton from "../atoms/RoverCoderImageBrowserOverlayActionButton.astro";
 import RoverCoderText from "../atoms/RoverCoderText.astro";
-import RoverCoderImageBrowserOverlayProgressIndicatorActionButtons from "./RoverCoderImageBrowserOverlayProgressIndicatorActionButtons.astro";
+import RoverCoderImageBrowserOverlayStatusBar from "./RoverCoderImageBrowserOverlayStatusBar.astro";
 interface Props {
     images?: ImageProps | ImageProps[]
 }
@@ -14,7 +14,7 @@ const { images } = Astro.props;
 const textColor = '#000000';
 const imageBrowserOverlayContainerPadding = 'clamp(1rem, 5vw, 2rem)';
 const imageBrowserOverlayWidthLargerThanMobile = '100%';
-const imageBrowserOverlayImageHeight = `calc(calc(calc(var(--overlayHeight, 0px) - calc(${imageBrowserOverlayContainerPadding} * 2)) - var(--image-browser-progress-indicators-action-buttons-height, 0px)) * .85)`;
+const imageBrowserOverlayImageHeight = `calc(calc(calc(var(--overlayHeight, 0px) - calc(${imageBrowserOverlayContainerPadding} * 2)) - var(--image-browser-status-bar-height, 0px)) * .85)`;
 const imageBrowserOverlayBackgroundColor = 'transparent';
 const imageBrowserOverlayImageBackgroundColor = '#000000';
 const imageBrowserOverlayTextBackgroundColor = '#F8F8F8';
@@ -28,15 +28,15 @@ const imageBrowserOverlayImageActionButtonBackgroundColor = '#000000';
 const imageBrowserOverlayImageActionButtonOpacityInactive = '0.5';
 const imageBrowserOverlayImageActionButtonIconSize = '2rem';
 
-const progressIndicatorActionButtonsActionIndicatorsPadding = '0.125rem';
-const progressIndicatorActionButtonsActionIndicatorsOpacityInactive = '0.5';
-const progressIndicatorActionButtonsBackgroundColor = '#1C1C1C';
-const progressIndicatorActionButtonsProgressIndicatorTextColor = '#000000';
-const progressIndicatorActionButtonsProgressIndicatorGap = '0.25rem';
-const progressIndicatorActionButtonsProgressIndicatorPadding = '0.125rem 0.375rem';
-const progressIndicatorActionButtonsProgressIndicatorMargin = '0.125rem';
-const progressIndicatorActionButtonsProgressIndicatorBorderRadius = '2rem';
-const progressIndicatorActionButtonsProgressIndicatorBackgroundColor = '#C3C3C3';
+const statusBarActionIndicatorsPadding = '0.125rem';
+const statusBarActionIndicatorsOpacityInactive = '0.5';
+const statusBarBackgroundColor = '#1C1C1C';
+const statusBarProgressIndicatorTextColor = '#000000';
+const statusBarProgressIndicatorGap = '0.25rem';
+const statusBarProgressIndicatorPadding = '0.125rem 0.375rem';
+const statusBarProgressIndicatorMargin = '0.125rem';
+const statusBarProgressIndicatorBorderRadius = '2rem';
+const statusBarProgressIndicatorBackgroundColor = '#C3C3C3';
 ---
 
 <ImageBrowserOverlay 
@@ -86,16 +86,16 @@ const progressIndicatorActionButtonsProgressIndicatorBackgroundColor = '#C3C3C3'
         opacityInactive={imageBrowserOverlayImageActionButtonOpacityInactive}
         iconSize={imageBrowserOverlayImageActionButtonIconSize}
     />
-    <RoverCoderImageBrowserOverlayProgressIndicatorActionButtons 
-        slot="progress-indicator-action-buttons" 
-        actionIndicatorsPadding={progressIndicatorActionButtonsActionIndicatorsPadding}
-        actionIndicatorsOpacityInactive={progressIndicatorActionButtonsActionIndicatorsOpacityInactive}
-        backgroundColor={progressIndicatorActionButtonsBackgroundColor}
-        progressIndicatorTextColor={progressIndicatorActionButtonsProgressIndicatorTextColor}
-        progressIndicatorGap={progressIndicatorActionButtonsProgressIndicatorGap}
-        progressIndicatorPadding={progressIndicatorActionButtonsProgressIndicatorPadding}
-        progressIndicatorMargin={progressIndicatorActionButtonsProgressIndicatorMargin}
-        progressIndicatorBorderRadius={progressIndicatorActionButtonsProgressIndicatorBorderRadius}
-        progressIndicatorBackgroundColor={progressIndicatorActionButtonsProgressIndicatorBackgroundColor}
+    <RoverCoderImageBrowserOverlayStatusBar 
+        slot="status-bar" 
+        actionIndicatorsPadding={statusBarActionIndicatorsPadding}
+        actionIndicatorsOpacityInactive={statusBarActionIndicatorsOpacityInactive}
+        backgroundColor={statusBarBackgroundColor}
+        progressIndicatorTextColor={statusBarProgressIndicatorTextColor}
+        progressIndicatorGap={statusBarProgressIndicatorGap}
+        progressIndicatorPadding={statusBarProgressIndicatorPadding}
+        progressIndicatorMargin={statusBarProgressIndicatorMargin}
+        progressIndicatorBorderRadius={statusBarProgressIndicatorBorderRadius}
+        progressIndicatorBackgroundColor={statusBarProgressIndicatorBackgroundColor}
     />
 </ImageBrowserOverlay>

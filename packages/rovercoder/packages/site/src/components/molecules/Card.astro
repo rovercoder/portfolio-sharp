@@ -32,6 +32,10 @@ const {
     {Astro.slots.has('footer') && <div class="card-footer"><slot name="footer" /></div>}
 </div>
 
+<script>
+    import '/src/scripts/card-header.ts';
+</script>
+
 <style define:vars={{ cardBodyMargin, cardBodyPadding, cardBodyBackgroundColor, cardWidth, cardBackgroundColor, cardBorderRadius, cardBorder, cardPadding, cardTextAlign, cardBoxShadow }}>
     .card {
         width: var(--cardWidth);

@@ -1,9 +1,9 @@
 ---
 import Icon from "../atoms/Icon.astro";
 import Image from "../atoms/Image.astro";
-import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "./CardHeader.types";
-import { getImagesForCardHeaderAndImageBrowser } from "./CardHeader.functions";
-import { imageIndexCssVariableName } from "./CardHeader.consts";
+import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "./CardHeaderDefault.types";
+import { getImagesForCardHeaderAndImageBrowser } from "./CardHeaderDefault.functions";
+import { imageIndexCssVariableName } from "./CardHeaderDefault.consts";
 
 interface Props {
     images?: ImageProps | ImageProps[];
@@ -37,7 +37,7 @@ const imagesTotal = images?.length;
 const hasImagesMinimum = (minimum?: number) => images != null && images.length >= Math.max(minimum ?? 1, 1) && currentImage != null;
 ---
 
-<div class="card-header-inner" style={!imageIsIcon && hasImagesMinimum() && currentImageIndex != null && `${imageIndexCssVariableName}: ${currentImageIndex};`}>
+<div class="card-header-inner" data-card-header-type="default" style={!imageIsIcon && hasImagesMinimum() && currentImageIndex != null && `${imageIndexCssVariableName}: ${currentImageIndex};`}>
     { hasImagesMinimum() && currentImage != null &&
         <div class="image-preview">
             {
@@ -81,7 +81,7 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
                         <div role="button" class="image-browser-open">
                             <slot name="image-browser-open-button" />
                         </div>
-                        <div class="overlay overlay-image-browser" data-overlay-type="image-browser" aria-hidden="true">
+                        <div class="overlay overlay-image-browser" aria-hidden="true">
                             <slot name="image-browser" />
                         </div>
                     </Fragment>
@@ -102,7 +102,7 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
 </div>
 
 <script>
-    import '/src/scripts/card-header.ts';
+    import '/src/scripts/card-header-default.ts';
 </script>
 
 <style lang="scss">

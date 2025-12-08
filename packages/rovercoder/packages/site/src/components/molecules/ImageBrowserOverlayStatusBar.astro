@@ -1,0 +1,106 @@
+---
+interface Props {
+    actionIndicatorsPadding?: string;
+    actionIndicatorsOpacityInactive?: string;
+    backgroundColor?: string;
+    progressIndicatorGap?: string;
+    progressIndicatorPadding?: string;
+    progressIndicatorMargin?: string;
+    progressIndicatorBorderRadius?: string;
+    progressIndicatorBackgroundColor?: string;
+}
+const { 
+    actionIndicatorsPadding: imageBrowserOverlayStatusBarActionIndicatorsPadding = '0.125rem',
+    actionIndicatorsOpacityInactive: imageBrowserOverlayStatusBarActionIndicatorsOpacityInactive = '1',
+    progressIndicatorGap: imageBrowserOverlayStatusBarProgressIndicatorGap = '0.25rem',
+    progressIndicatorPadding: imageBrowserOverlayStatusBarProgressIndicatorPadding = '0.25rem',
+    progressIndicatorMargin: imageBrowserOverlayStatusBarProgressIndicatorMargin = '0.125rem',
+    progressIndicatorBorderRadius: imageBrowserOverlayStatusBarProgressIndicatorBorderRadius = '2rem',
+    progressIndicatorBackgroundColor: imageBrowserOverlayStatusBarProgressIndicatorBackgroundColor,
+    backgroundColor: imageBrowserOverlayStatusBarBackgroundColor,
+} = Astro.props;
+---
+
+<div class="status-bar">
+    <div class="progress-indicator-container">
+        <div class="progress-indicator">
+            <span class="progress-indicator-element index">
+                <slot name="progress-indicator-index" />
+            </span>
+            <span class="progress-indicator-element of">
+                <slot name="progress-indicator-of" />
+            </span>
+            <span class="progress-indicator-element total">
+                <slot name="progress-indicator-total" />
+            </span>
+        </div>
+    </div>
+    <div class="action-indicators-container">
+        <div class="action-indicators">
+            <div role="button" class="action previous">
+                <slot name="action-previous" />
+            </div>
+            <div role="button" class="action next">
+                <slot name="action-next" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<style lang="scss" define:vars={{ imageBrowserOverlayStatusBarActionIndicatorsPadding, imageBrowserOverlayStatusBarActionIndicatorsOpacityInactive, imageBrowserOverlayStatusBarBackgroundColor, imageBrowserOverlayStatusBarProgressIndicatorGap, imageBrowserOverlayStatusBarProgressIndicatorPadding, imageBrowserOverlayStatusBarProgressIndicatorMargin, imageBrowserOverlayStatusBarProgressIndicatorBorderRadius, imageBrowserOverlayStatusBarProgressIndicatorBackgroundColor }}>
+    .status-bar {
+        background-color: var(--imageBrowserOverlayStatusBarBackgroundColor);
+    }
+    
+    .status-bar {
+        display: grid;
+
+        > * {
+            grid-area: 1 / 1 / 2 / 2;
+        }
+    }
+
+    .status-bar .progress-indicator {
+        display: flex;
+        gap: var(--imageBrowserOverlayStatusBarProgressIndicatorGap);
+        margin: var(--imageBrowserOverlayStatusBarProgressIndicatorMargin);
+        padding: var(--imageBrowserOverlayStatusBarProgressIndicatorPadding);
+        border-radius: var(--imageBrowserOverlayStatusBarProgressIndicatorBorderRadius);
+        background-color: var(--imageBrowserOverlayStatusBarProgressIndicatorBackgroundColor);
+    }
+
+    .status-bar .progress-indicator-container,
+    .status-bar .action-indicators-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+        align-self: stretch;
+        justify-self: stretch;
+    }
+
+    .status-bar .action-indicators { 
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .status-bar .action-indicators .action.previous,
+    .status-bar .action-indicators .action.next {
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        padding: var(--imageBrowserOverlayStatusBarActionIndicatorsPadding);
+        opacity: var(--imageBrowserOverlayStatusBarActionIndicatorsOpacityInactive);
+        transition: 0.1s ease-in-out;
+    }
+
+    .status-bar .action-indicators .action.previous:hover,
+    .status-bar .action-indicators .action.previous:active,
+    .status-bar .action-indicators .action.next:hover,
+    .status-bar .action-indicators .action.next:active {
+        opacity: 1;
+    }
+</style>

@@ -1,5 +1,5 @@
 ---
-import ImageBrowserOverlayProgressIndicatorActionButtons from "../../../components/molecules/ImageBrowserOverlayProgressIndicatorActionButtons.astro";
+import ImageBrowserOverlayStatusBar from "../../../components/molecules/ImageBrowserOverlayStatusBar.astro";
 import RoverCoderImageBrowserOverlayActionButtonImage from "../atoms/RoverCoderImageBrowserOverlayActionButtonImage.astro";
 import RoverCoderText from "../atoms/RoverCoderText.astro";
 interface Props {
@@ -27,7 +27,7 @@ const {
 } = Astro.props;
 ---
 
-<ImageBrowserOverlayProgressIndicatorActionButtons 
+<ImageBrowserOverlayStatusBar 
         actionIndicatorsPadding={actionIndicatorsPadding} 
         actionIndicatorsOpacityInactive={actionIndicatorsOpacityInactive}
         progressIndicatorGap={progressIndicatorGap} 
@@ -42,4 +42,4 @@ const {
     <RoverCoderText slot="progress-indicator-total" content="0" type="image-browser-progress-indicator-total" color={progressIndicatorTextColor} />
     <RoverCoderImageBrowserOverlayActionButtonImage slot="action-previous" type="previous" />
     <RoverCoderImageBrowserOverlayActionButtonImage slot="action-next" type="next" />
-</ImageBrowserOverlayProgressIndicatorActionButtons>
+</ImageBrowserOverlayStatusBar>

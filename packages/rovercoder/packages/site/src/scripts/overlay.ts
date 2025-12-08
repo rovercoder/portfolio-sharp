@@ -1,14 +1,16 @@
-import { Overlays, WindowCustom } from "./global.types.js";
-import { initCssVariableElementWatcher, runOnElementRemoval } from "./utilities.js";
+import { OverlaysObjectGroups, WindowCustom } from "./global.types.js";
+import { destroyManagedLifecycleObject, initializeManagedLifecycleObject } from "./utilities-lifecycle.js";
+import { initCssVariableElementWatcher, runOnElementRemoval } from "./utilities-general.js";
 
 const overlayShownClass = 'shown';
 const overlaysOpenBodyClass = 'overlay-open';
+const overlayTypeAttributeName = 'data-overlay-type';
 
-getInitializeOverlayObject();
+getInitializeOverlayObjectsGroups();
 
 initCssVariableElementWatcher({ element: getOverlayContentElement() as HTMLElement, elementToAttachVariableTo: getOverlayContentElement() as HTMLElement, cssVariableName: '--overlayHeight', elementPropertyWatched: 'height' });
 
-function getInitializeOverlayObject(): Overlays {
+export function getInitializeOverlayObjectsGroups(): OverlaysObjectGroups {
     if ((window as WindowCustom)._siteCustomOverlays == null) {
         (window as WindowCustom)._siteCustomOverlays = {};
     }
@@ -60,7 +62,11 @@ export function openOverlay(elementToAdd: Element): Element | undefined {
     // triggers animation
     setTimeout(() => element?.classList.add(overlayShownClass), 0);
     if (element) {
-        initializeOverlay(element);
+        initializeManagedLifecycleObject({ 
+            element, 
+            attributeName: overlayTypeAttributeName, 
+            objectGetterInitializer: getInitializeOverlayObjectsGroups 
+        });
     }
     return element;
 }
@@ -80,44 +86,6 @@ function removeScriptsAndStyles(element: Element) {
     }
 }
 
-function initializeOverlay(element: Element) {
-    const overlayType = element.attributes.getNamedItem('data-overlay-type')?.value?.trim();
-    if (overlayType != null && getInitializeOverlayObject()[overlayType] != null) {
-        const overlayObjectEntry = getInitializeOverlayObject()[overlayType];
-        if (overlayObjectEntry.initialize != null && typeof overlayObjectEntry.initialize === 'function') {
-            overlayObjectEntry.initialize(element as HTMLElement);
-        }
-    }
-}
-
-function destroyOverlay(element: Element) {
-    const overlayObject = getInitializeOverlayObject();
-    for (const overlayObjectKey in overlayObject) {
-        const overlayObjectEntry = overlayObject[overlayObjectKey];
-        const overlayObjectEntryState = overlayObjectEntry.state ?? [];
-        for (let i = 0; i < overlayObjectEntryState.length; i++) {
-            if (overlayObjectEntryState[i].element === element) {
-                if (overlayObjectEntry.destroy != null && typeof overlayObjectEntry.destroy === 'function') {
-                    overlayObjectEntry.destroy(element as HTMLElement);
-                }
-                const overlayObjectEntryStateEntry = overlayObjectEntryState[i];
-                if (overlayObjectEntryStateEntry.components != null && typeof overlayObjectEntryStateEntry.components === 'object') {
-                    for (const componentKey in overlayObjectEntryStateEntry.components) {
-                        const component = overlayObjectEntryStateEntry.components[componentKey];
-                        if (component.listeners != null && typeof component.listeners === 'object') {
-                            for (const listenerKey in component.listeners) {
-                                component.listeners[listenerKey].destructor();
-                            }
-                        }
-                    }
-                }
-                overlayObjectEntryState.splice(i, 1);
-                i--;
-            }
-        }
-    }
-}
-
 export function closeOverlayLast(): boolean {
     return closeOverlays(false);
 }
@@ -134,7 +102,7 @@ function _removeOverlay(overlay: Element, previousOverlaysFunction?: Function | 
     };
 
     const _destroyAndRemoveOverlay = (overlay: Element) => {
-        destroyOverlay(overlay);
+        destroyManagedLifecycleObject({ element: overlay, objectGetterInitializer: getInitializeOverlayObjectsGroups });
         overlay.remove();
     };
 

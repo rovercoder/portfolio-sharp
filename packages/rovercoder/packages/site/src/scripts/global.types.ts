@@ -1,30 +1,40 @@
 export type WindowCustom = Window & typeof globalThis & { 
     _siteCustomCssVariableElementDimensionsWatcher?: CssVariableElementDimensionsWatcher;
-    _siteCustomOverlays?: Overlays;
-    _siteCustomSavedCardHeaderObjects?: CardHeadersObject[];
+    _siteCustomOverlays?: OverlaysObjectGroups;
+    _siteCustomCardHeaders?: CardHeadersObjectsGroups;
 }
 
-export interface Overlays {
-    [overlayType: string]: OverlayEntry;
+export type OverlaysObjectGroups = ManagedLifecycleObjectGroups;
+export type OverlaysObjectGroup = ManagedLifecycleObjectGroup;
+export type CardHeadersObjectsGroups = ManagedLifecycleObjectGroups;
+export type CardHeadersObjectsGroup = ManagedLifecycleObjectGroup;
+
+export interface ManagedLifecycleObjectGroups {
+    [objectGroupName: string]: ManagedLifecycleObjectGroup;
 }
 
-export interface OverlayEntry {
-    initialize: (overlayElement: HTMLElement) => void;
-    destroy?: (overlayElement: HTMLElement) => void;
-    state: OverlayEntryStateEntry[];
+export interface ManagedLifecycleObjectGroup {
+    initialize: (mainElement: HTMLElement) => void;
+    destroy?: (mainElement: HTMLElement) => void;
+    state: ManagedLifecycleObject[];
 }
 
-export interface OverlayEntryStateEntry {
+export interface ManagedLifecycleObject {
     element: HTMLElement;
-    components: { [componentKey: string]: OverlayEntryStateEntryComponent };
+    components: { [componentKey: string]: ManagedLifecycleObjectComponent };
 }
 
-export interface OverlayEntryStateEntryComponent {
+export interface ManagedLifecycleObjectComponent {
     element: HTMLElement;
-    listeners: { [listenerKey: string]: OverlayEntryStateEntryComponentListener };
+    observables: { [observableKey: string]: ManagedLifecycleObjectComponentObservable }
+    listeners: { [listenerKey: string]: ManagedLifecycleObjectComponentListener };
 }
 
-export interface OverlayEntryStateEntryComponentListener {
+export interface ManagedLifecycleObjectComponentObservable {
+    destructor: Function;
+}
+
+export interface ManagedLifecycleObjectComponentListener {
     destructor: Function;
 }
 
@@ -49,5 +59,5 @@ export interface CardHeadersObject {
     imageBrowserOpenButtonTapHandleRemover?: Function;
     infoButtonTapHandleRemover?: Function;
     infoButtonHoverHandleRemover?: Function;
-    imagesContainerObserverRemover?: Function;
+    imagesControlsObserverRemover?: Function;
 }
