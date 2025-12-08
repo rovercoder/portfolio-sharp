@@ -1,6 +1,7 @@
 import { ManagedLifecycleObject, OverlaysObjectGroup } from "./global.types.js";
 import { getInitializeOverlayObjectsGroups } from "./overlay.js";
 import { initCssVariableElementWatcher, removeCssVariableElementWatcherEntryIfExists, replaceHTMLElementText } from "./utilities-general.js";
+import { destroyManagedLifecycleObject } from "./utilities-lifecycle.js";
 
 getInitializeImageBrowserOverlayObjectsGroup();
 
@@ -22,6 +23,8 @@ function getInitializeImageBrowserOverlayObjectsGroup(): OverlaysObjectGroup {
 }
 
 function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
+    destroyManagedLifecycleObject({ element: overlayElement, objectGetterInitializer: getInitializeOverlayObjectsGroups });
+
     const imageBrowserOverlayObjectGroup = getInitializeImageBrowserOverlayObjectsGroup();
 
     const imageBrowserStatusBarHeightElementWatched = overlayElement.querySelector('.status-bar-spacing') as HTMLElement;

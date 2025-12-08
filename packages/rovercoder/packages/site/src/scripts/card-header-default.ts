@@ -1,6 +1,7 @@
 import { getInitializeCardHeaderObjectsGroups } from "./card-header.js";
 import { CardHeadersObjectsGroup, ManagedLifecycleObject } from "./global.types.js";
 import { openOverlay } from "./overlay.js";
+import { destroyManagedLifecycleObject } from "./utilities-lifecycle.js";
 
 const imageIndexCssVariableName = '--imageIndex';
 const imageUnloadedClass = 'image-unloaded';
@@ -22,6 +23,8 @@ function getInitializeDefaultCardHeaderObjectsGroup(): CardHeadersObjectsGroup {
 }
 
 function initializeDefaultCardHeader(cardHeaderElement: HTMLElement) {
+    destroyManagedLifecycleObject({ element: cardHeaderElement, objectGetterInitializer: getInitializeCardHeaderObjectsGroups });
+
     var defaultCardHeaderObjectGroup = getInitializeDefaultCardHeaderObjectsGroup();
     const cardHeaderInnerElement = cardHeaderElement.querySelector('.card-header-inner');
     if (cardHeaderInnerElement == null) {

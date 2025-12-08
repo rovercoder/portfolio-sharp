@@ -59,8 +59,6 @@ export function openOverlay(elementToAdd: Element): Element | undefined {
     }
     removeScriptsAndStyles(elementToAdd);
     const element = getOverlayContentElement()?.appendChild(elementToAdd);
-    // triggers animation
-    setTimeout(() => element?.classList.add(overlayShownClass), 0);
     if (element) {
         initializeManagedLifecycleObject({ 
             element, 
@@ -68,6 +66,8 @@ export function openOverlay(elementToAdd: Element): Element | undefined {
             objectGetterInitializer: getInitializeOverlayObjectsGroups 
         });
     }
+    // triggers animation
+    setTimeout(() => element?.classList.add(overlayShownClass), 0);
     return element;
 }
 
