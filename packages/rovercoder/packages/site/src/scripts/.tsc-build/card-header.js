@@ -1,6 +1,5 @@
 import { destroyAllManagedLifecycleObjects, initializeManagedLifecycleObject } from "./utilities-lifecycle.js";
 getInitializeCardHeaderObjectsGroups();
-destroyAllManagedLifecycleObjects({ objectGetterInitializer: getInitializeCardHeaderObjectsGroups });
 const cardHeaderTypeAttributeName = 'data-card-header-type';
 export function getInitializeCardHeaderObjectsGroups() {
     if (window._siteCustomCardHeaders == null) {
@@ -12,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     initializeAllCardHeaders();
 });
 function initializeAllCardHeaders() {
+    destroyAllManagedLifecycleObjects({ objectGetterInitializer: getInitializeCardHeaderObjectsGroups });
     document.querySelectorAll('.card .card-header').forEach(cardHeaderElement => {
         initializeManagedLifecycleObject({
             element: cardHeaderElement,

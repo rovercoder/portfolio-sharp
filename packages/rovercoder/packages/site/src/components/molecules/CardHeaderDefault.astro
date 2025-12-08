@@ -48,8 +48,8 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
                     )
                     :   <div class="images-container">
                             {
-                                images?.map(async image =>
-                                    <div class="image-container-outer">
+                                images?.map(async (image, index) =>
+                                    <div class={'image-container-outer' + (currentImageIndex !== index ? ' image-unloaded' : '')}>
                                         {(Astro.slots.has('image')
                                             ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageBorderRadius, imageHeight, imageSize: imageImageSize }] satisfies Parameters<CardHeaderImageFnType>)} />
                                             : <Image url={image.url} color={image.color} imageSize={imageImageSize ?? image.imageSize} imageRepeat={image.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />

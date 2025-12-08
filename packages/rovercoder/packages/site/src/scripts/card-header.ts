@@ -3,8 +3,6 @@ import { destroyAllManagedLifecycleObjects, initializeManagedLifecycleObject } f
 
 getInitializeCardHeaderObjectsGroups();
 
-destroyAllManagedLifecycleObjects({ objectGetterInitializer: getInitializeCardHeaderObjectsGroups });
-
 const cardHeaderTypeAttributeName = 'data-card-header-type';
 
 export function getInitializeCardHeaderObjectsGroups(): CardHeadersObjectsGroups {
@@ -19,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 });
 
 function initializeAllCardHeaders() {
+    destroyAllManagedLifecycleObjects({ objectGetterInitializer: getInitializeCardHeaderObjectsGroups });
     document.querySelectorAll('.card .card-header').forEach(cardHeaderElement => {
         initializeManagedLifecycleObject({ 
             element: cardHeaderElement, 

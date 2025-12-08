@@ -3,6 +3,7 @@ import { CardHeadersObjectsGroup, ManagedLifecycleObject } from "./global.types.
 import { openOverlay } from "./overlay.js";
 
 const imageIndexCssVariableName = '--imageIndex';
+const imageUnloadedClass = 'image-unloaded';
 
 getInitializeDefaultCardHeaderObjectsGroup();
 
@@ -34,10 +35,18 @@ function initializeDefaultCardHeader(cardHeaderElement: HTMLElement) {
     };
     const setImageIndex = (imageIndex: number): void => { 
         (cardHeaderInnerElement as HTMLElement).style.setProperty(imageIndexCssVariableName, imageIndex.toString());
+        const imagesContainer = getImagesContainer();
+        if (imagesContainer != null) {
+            if (imageIndex in imagesContainer.children && imagesContainer.children[imageIndex]) {
+                imagesContainer.children[imageIndex].classList.remove(imageUnloadedClass);
+            }
+        }
         imageBrowserOverlay?.style.setProperty(imageIndexCssVariableName, imageIndex.toString());
     };
     const getImagesContainer = (): HTMLElement | undefined => cardHeaderInnerElement.querySelector('.image-preview .images-container') as HTMLElement | undefined;
     const getImagesTotal = (): number | undefined => getImagesContainer()?.children.length;
+
+    setImageIndex(getImageIndex() ?? 0);
 
     const controlsTop = cardHeaderInnerElement.querySelector('.controls-top');
     const infoButton = controlsTop?.querySelector('.info[role="button"]');
@@ -60,7 +69,7 @@ function initializeDefaultCardHeader(cardHeaderElement: HTMLElement) {
         } else if (imageIndex < 0) {
             setImageIndex(0);
         }
-        resetImageNavigatorsVisibility();
+        refreshVisualState();
     };
 
     const increaseImageIndex = () => {
@@ -78,6 +87,10 @@ function initializeDefaultCardHeader(cardHeaderElement: HTMLElement) {
         } else if (imageIndex < 0) {
             setImageIndex(0);
         }
+        refreshVisualState();
+    };
+
+    const refreshVisualState = () => {
         resetImageNavigatorsVisibility();
     };
 
@@ -117,10 +130,12 @@ function initializeDefaultCardHeader(cardHeaderElement: HTMLElement) {
         }
     }
 
+    refreshVisualState();
+
     let imagesContainerObserverRemover = () => {};
     let cardHeaderInnerElementAttributeObserverRemover = () => {};
     
-    const onMutationRefresh = () => resetImageNavigatorsVisibility();
+    const onMutationRefresh = () => refreshVisualState();
     
     const imagesContainer = getImagesContainer();
     if (imagesContainer != null) {

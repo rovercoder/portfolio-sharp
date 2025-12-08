@@ -40,7 +40,7 @@ const imageSize = 'contain';
                 <div class="images-container-inner">
                     {
                         images?.map(async image =>
-                            <div class="image-container-outer">
+                            <div class="image-container-outer image-unloaded">
                                 {(
                                     Astro.slots.has('image')
                                         ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageSize }] satisfies Parameters<ImageBrowserOverlayImageFnType>)} />
@@ -192,6 +192,15 @@ const imageSize = 'contain';
         }
     }
 
+    .overlay-image-browser-inner .image-browser .images-container .images-container-inner > * {
+        opacity: 0;
+        transition: 0.3s ease-in-out;
+    }
+
+    .overlay-image-browser-inner .image-browser .images-container .images-container-inner > .active {
+        opacity: 1;
+    }
+
     .overlay-image-browser-inner .image-browser .images-container .action-indicators-container {
         width: 100%;
         display: flex;
@@ -215,6 +224,7 @@ const imageSize = 'contain';
         align-content: center;
         justify-content: center;
         position: relative; // needed for proper action button focus (expanded area) - due to grid overlap
+        transition: 0.1s ease-in-out;
     }
 
     .overlay-image-browser-inner .image-browser .texts-container {
@@ -228,6 +238,15 @@ const imageSize = 'contain';
         > * {
             grid-area: 1 / 1 / 2 / 2;
         }
+    }
+
+    .overlay-image-browser-inner .image-browser .texts-container > * {
+        opacity: 0;
+        transition: 0.3s ease-in-out;
+    }
+
+    .overlay-image-browser-inner .image-browser .texts-container > .active {
+        opacity: 1;
     }
 
     .overlay-image-browser-inner .image-browser .texts-container .text-container-outer {

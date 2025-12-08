@@ -1,6 +1,7 @@
 import { getInitializeCardHeaderObjectsGroups } from "./card-header.js";
 import { openOverlay } from "./overlay.js";
 const imageIndexCssVariableName = '--imageIndex';
+const imageUnloadedClass = 'image-unloaded';
 getInitializeDefaultCardHeaderObjectsGroup();
 function getInitializeDefaultCardHeaderObjectsGroup() {
     var cardHeaderObjectsGroups = getInitializeCardHeaderObjectsGroups();
@@ -27,10 +28,17 @@ function initializeDefaultCardHeader(cardHeaderElement) {
     };
     const setImageIndex = (imageIndex) => {
         cardHeaderInnerElement.style.setProperty(imageIndexCssVariableName, imageIndex.toString());
+        const imagesContainer = getImagesContainer();
+        if (imagesContainer != null) {
+            if (imageIndex in imagesContainer.children && imagesContainer.children[imageIndex]) {
+                imagesContainer.children[imageIndex].classList.remove(imageUnloadedClass);
+            }
+        }
         imageBrowserOverlay?.style.setProperty(imageIndexCssVariableName, imageIndex.toString());
     };
     const getImagesContainer = () => cardHeaderInnerElement.querySelector('.image-preview .images-container');
     const getImagesTotal = () => getImagesContainer()?.children.length;
+    setImageIndex(getImageIndex() ?? 0);
     const controlsTop = cardHeaderInnerElement.querySelector('.controls-top');
     const infoButton = controlsTop?.querySelector('.info[role="button"]');
     const imageBrowserOpenButton = controlsTop?.querySelector('.image-browser-open[role="button"]');
@@ -51,7 +59,7 @@ function initializeDefaultCardHeader(cardHeaderElement) {
         else if (imageIndex < 0) {
             setImageIndex(0);
         }
-        resetImageNavigatorsVisibility();
+        refreshVisualState();
     };
     const increaseImageIndex = () => {
         const imageIndex = getImageIndex() ?? 0;
@@ -69,6 +77,9 @@ function initializeDefaultCardHeader(cardHeaderElement) {
         else if (imageIndex < 0) {
             setImageIndex(0);
         }
+        refreshVisualState();
+    };
+    const refreshVisualState = () => {
         resetImageNavigatorsVisibility();
     };
     const resetImageNavigatorsVisibility = () => {
@@ -104,9 +115,10 @@ function initializeDefaultCardHeader(cardHeaderElement) {
             imageNextButton?.classList.add(visuallyHiddenClass);
         }
     };
+    refreshVisualState();
     let imagesContainerObserverRemover = () => { };
     let cardHeaderInnerElementAttributeObserverRemover = () => { };
-    const onMutationRefresh = () => resetImageNavigatorsVisibility();
+    const onMutationRefresh = () => refreshVisualState();
     const imagesContainer = getImagesContainer();
     if (imagesContainer != null) {
         const imagesContainerObserver = new MutationObserver(onMutationRefresh);

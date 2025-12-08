@@ -172,3 +172,25 @@ function observeElementResizing(args) {
         observerDisposeFn: () => observer.unobserve(element)
     };
 }
+export function replaceHTMLElementText(element, newText, currentText) {
+    if (element == null) {
+        console.error('Element is undefined!');
+        return;
+    }
+    const _currentText = currentText ?? element.textContent;
+    if (element.innerHTML.trim() === _currentText.trim()) {
+        element.innerHTML = newText;
+        return true;
+    }
+    else {
+        if (element.children.length > 0) {
+            for (let i = 0; i < element.children.length; i++) {
+                const result = replaceHTMLElementText(element.children[i], newText, _currentText);
+                if (result == true) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
