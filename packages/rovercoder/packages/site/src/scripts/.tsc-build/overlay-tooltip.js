@@ -343,18 +343,26 @@ function initializeTooltipOverlay(overlayElement, extra) {
             let scrollViewVisibleHorizontallyScore = (element.clientWidth / element.scrollWidth) * divisor;
             let scrollViewVisibleVerticallyScore = (element.clientHeight / element.scrollHeight) * divisor;
             const childDivisor = divisor * (tooltipScrollFactorCalculationForChildrenPercentage / 100);
-            let _scrollViewVisibleScoreChildren = 0;
-            let _scrollViewVisibleScoreHorizontallyChildren = 0;
-            let _scrollViewVisibleScoreVerticallyChildren = 0;
+            let _scrollViewVisibleScoreChildren = [];
+            let _scrollViewVisibleScoreHorizontallyChildren = [];
+            let _scrollViewVisibleScoreVerticallyChildren = [];
             for (let i = 0; i < element.children.length; i++) {
-                const { scrollViewVisibleScore: _scrollViewVisibleScore, scrollViewVisibleHorizontallyScore: _scrollViewVisibleHorizontallyScore, scrollViewVisibleVerticallyScore: _scrollViewVisibleVerticallyScore } = _getScrollViewVisibleScoreResponseRecursive(element.children.item(i), childDivisor);
-                _scrollViewVisibleScoreChildren += _scrollViewVisibleScore;
-                _scrollViewVisibleScoreHorizontallyChildren += _scrollViewVisibleHorizontallyScore;
-                _scrollViewVisibleScoreVerticallyChildren += _scrollViewVisibleVerticallyScore;
+                const childElement = ensureHTMLElementOrNull(element.children.item(i));
+                const { scrollViewVisibleScore: _scrollViewVisibleScore, scrollViewVisibleHorizontallyScore: _scrollViewVisibleHorizontallyScore, scrollViewVisibleVerticallyScore: _scrollViewVisibleVerticallyScore } = _getScrollViewVisibleScoreResponseRecursive(childElement, childDivisor);
+                const childElementAreaFactor = ((childElement?.offsetHeight ?? 0) * (childElement?.offsetWidth ?? 0)) / (element.scrollHeight * element.scrollWidth);
+                _scrollViewVisibleScoreChildren.push({ areaFactor: childElementAreaFactor, score: _scrollViewVisibleScore });
+                _scrollViewVisibleScoreHorizontallyChildren.push({ areaFactor: childElementAreaFactor, score: _scrollViewVisibleHorizontallyScore });
+                _scrollViewVisibleScoreVerticallyChildren.push({ areaFactor: childElementAreaFactor, score: _scrollViewVisibleVerticallyScore });
             }
-            scrollViewVisibleScore += element.children.length == 0 ? 0 : (_scrollViewVisibleScoreChildren / element.children.length);
-            scrollViewVisibleHorizontallyScore += element.children.length == 0 ? 0 : (_scrollViewVisibleScoreHorizontallyChildren / element.children.length);
-            scrollViewVisibleVerticallyScore += element.children.length == 0 ? 0 : (_scrollViewVisibleScoreVerticallyChildren / element.children.length);
+            const _scrollViewVisibleScoreChildrenAreaFactorSum = _scrollViewVisibleScoreChildren.length == 0 ? 0 : _scrollViewVisibleScoreChildren.map(x => x.areaFactor).reduce((partialSum, a) => partialSum + a, 0);
+            const _scrollViewVisibleScoreHorizontallyChildrenAreaFactorSum = _scrollViewVisibleScoreHorizontallyChildren.length == 0 ? 0 : _scrollViewVisibleScoreHorizontallyChildren.map(x => x.areaFactor).reduce((partialSum, a) => partialSum + a, 0);
+            const _scrollViewVisibleScoreVerticallyChildrenAreaFactorSum = _scrollViewVisibleScoreVerticallyChildren.length == 0 ? 0 : _scrollViewVisibleScoreVerticallyChildren.map(x => x.areaFactor).reduce((partialSum, a) => partialSum + a, 0);
+            const _scrollViewVisibleScoreChildrenScores = _scrollViewVisibleScoreChildren.map(x => (x.areaFactor / _scrollViewVisibleScoreChildrenAreaFactorSum) * x.score);
+            const _scrollViewVisibleScoreHorizontallyChildrenScores = _scrollViewVisibleScoreHorizontallyChildren.map(x => (x.areaFactor / _scrollViewVisibleScoreHorizontallyChildrenAreaFactorSum) * x.score);
+            const _scrollViewVisibleScoreVerticallyChildrenScores = _scrollViewVisibleScoreVerticallyChildren.map(x => (x.areaFactor / _scrollViewVisibleScoreVerticallyChildrenAreaFactorSum) * x.score);
+            scrollViewVisibleScore += _scrollViewVisibleScoreChildrenScores.length == 0 ? 0 : _scrollViewVisibleScoreChildrenScores.reduce((partialSum, a) => partialSum + a, 0);
+            scrollViewVisibleHorizontallyScore += _scrollViewVisibleScoreHorizontallyChildrenScores.length == 0 ? 0 : _scrollViewVisibleScoreHorizontallyChildrenScores.reduce((partialSum, a) => partialSum + a, 0);
+            scrollViewVisibleVerticallyScore += _scrollViewVisibleScoreVerticallyChildrenScores.length == 0 ? 0 : _scrollViewVisibleScoreVerticallyChildrenScores.reduce((partialSum, a) => partialSum + a, 0);
             return {
                 scrollViewVisibleScore,
                 scrollViewVisibleHorizontallyScore,
