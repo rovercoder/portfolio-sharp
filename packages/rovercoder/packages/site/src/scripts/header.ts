@@ -1,3 +1,13 @@
-import { initCssVariableElementWatcher } from "./utilities-general.js";
+import { headerHeightCssVariableName } from "./header.consts.js";
+import { ensureHTMLElementThrowOrNull, getRootElement, initCssVariableElementWatcher } from "./utilities-general.js";
 
-initCssVariableElementWatcher({ element: document.querySelector('header') as HTMLElement, elementToAttachVariableTo: document.querySelector(':root') as HTMLElement, cssVariableName: '--headerHeight', elementPropertyWatched: 'height' });
+const _headerElement = getHeaderElement();
+if (_headerElement == null) {
+    console.error('Header element is undefined!');
+} else {
+    initCssVariableElementWatcher({ element: _headerElement, elementToAttachVariableTo: getRootElement(), cssVariableName: headerHeightCssVariableName, elementPropertyWatched: 'height' });
+}
+
+function getHeaderElement(): HTMLElement | null {
+    return ensureHTMLElementThrowOrNull(document.querySelector('header'), 'Header element is invalid!');
+}

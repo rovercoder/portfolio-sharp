@@ -1,5 +1,6 @@
 ---
 import { getImagesForCardHeaderAndImageBrowser } from './CardHeaderDefault.functions';
+import { imageUnloadedClass } from './ImageBrowserOverlay.consts';
 import type { ImageProps } from './CardHeaderDefault.types';
 import Image from '../atoms/Image.astro';
 import Text from '../atoms/Text.astro';
@@ -40,7 +41,7 @@ const imageSize = 'contain';
                 <div class="images-container-inner">
                     {
                         images?.map(async image =>
-                            <div class="image-container-outer image-unloaded">
+                            <div class={`image-container-outer ${imageUnloadedClass}`}>
                                 {(
                                     Astro.slots.has('image')
                                         ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageSize }] satisfies Parameters<ImageBrowserOverlayImageFnType>)} />

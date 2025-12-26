@@ -2,7 +2,9 @@
 import Image from "../../../components/atoms/Image.astro";
 import type { ImageProps } from "../../../components/molecules/CardHeaderDefault.types";
 import ImageBrowserOverlay from "../../../components/molecules/ImageBrowserOverlay.astro";
+import { imageBrowserStatusBarHeightCssVariableName } from "../../../components/molecules/ImageBrowserOverlay.consts";
 import type { ImageBrowserOverlayImageFnType, ImageBrowserOverlayTextFnType } from "../../../components/molecules/ImageBrowserOverlay.types";
+import { overlayHeightCssVariableName } from "../../../components/molecules/Overlay.consts";
 import RoverCoderImageBrowserOverlayActionButton from "../atoms/RoverCoderImageBrowserOverlayActionButton.astro";
 import RoverCoderText from "../atoms/RoverCoderText.astro";
 import RoverCoderImageBrowserOverlayStatusBar from "./RoverCoderImageBrowserOverlayStatusBar.astro";
@@ -14,7 +16,7 @@ const { images } = Astro.props;
 const textColor = '#000000';
 const imageBrowserOverlayContainerPadding = 'clamp(1rem, 5vw, 2rem)';
 const imageBrowserOverlayWidthLargerThanMobile = '100%';
-const imageBrowserOverlayImageHeight = `calc(calc(calc(var(--overlayHeight, 0px) - calc(${imageBrowserOverlayContainerPadding} * 2)) - var(--image-browser-status-bar-height, 0px)) * .85)`;
+const imageBrowserOverlayImageHeight = `calc(calc(calc(var(${overlayHeightCssVariableName}, 0px) - calc(${imageBrowserOverlayContainerPadding} * 2)) - var(${imageBrowserStatusBarHeightCssVariableName}, 0px)) * .85)`;
 const imageBrowserOverlayBackgroundColor = 'transparent';
 const imageBrowserOverlayImageBackgroundColor = '#000000';
 const imageBrowserOverlayTextBackgroundColor = '#F8F8F8';

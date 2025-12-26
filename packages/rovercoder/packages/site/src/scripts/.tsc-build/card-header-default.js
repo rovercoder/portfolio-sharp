@@ -1,8 +1,9 @@
 import { getInitializeCardHeaderObjectsGroups } from "./card-header.js";
+import { imageIndexCssVariableName, imageUnloadedClass } from "./global.consts.js";
+import { tooltipOpenerInitializer } from "./overlay-tooltip-opener.js";
 import { openOverlay } from "./overlay.js";
+import { ensureHTMLElementOrNull, ensureHTMLElementThrowOrUndefined } from "./utilities-general.js";
 import { destroyManagedLifecycleObject } from "./utilities-lifecycle.js";
-const imageIndexCssVariableName = '--imageIndex';
-const imageUnloadedClass = 'image-unloaded';
 getInitializeDefaultCardHeaderObjectsGroup();
 function getInitializeDefaultCardHeaderObjectsGroup() {
     var cardHeaderObjectsGroups = getInitializeCardHeaderObjectsGroups();
@@ -18,7 +19,7 @@ function getInitializeDefaultCardHeaderObjectsGroup() {
 function initializeDefaultCardHeader(cardHeaderElement) {
     destroyManagedLifecycleObject({ element: cardHeaderElement, objectGetterInitializer: getInitializeCardHeaderObjectsGroups });
     var defaultCardHeaderObjectGroup = getInitializeDefaultCardHeaderObjectsGroup();
-    const cardHeaderInnerElement = cardHeaderElement.querySelector('.card-header-inner');
+    const cardHeaderInnerElement = ensureHTMLElementOrNull(cardHeaderElement.querySelector('.card-header-inner'));
     if (cardHeaderInnerElement == null) {
         return;
     }
@@ -38,15 +39,18 @@ function initializeDefaultCardHeader(cardHeaderElement) {
         }
         imageBrowserOverlay?.style.setProperty(imageIndexCssVariableName, imageIndex.toString());
     };
-    const getImagesContainer = () => cardHeaderInnerElement.querySelector('.image-preview .images-container');
+    const getImagesContainer = () => {
+        return ensureHTMLElementThrowOrUndefined(cardHeaderInnerElement.querySelector('.image-preview .images-container'), 'Images container element is invalid!');
+    };
     const getImagesTotal = () => getImagesContainer()?.children.length;
     setImageIndex(getImageIndex() ?? 0);
-    const controlsTop = cardHeaderInnerElement.querySelector('.controls-top');
-    const infoButton = controlsTop?.querySelector('.info[role="button"]');
-    const imageBrowserOpenButton = controlsTop?.querySelector('.image-browser-open[role="button"]');
-    const controlsMiddle = cardHeaderInnerElement.querySelector('.controls-middle');
-    const imagePreviousButton = controlsMiddle?.querySelector('.image-previous[role="button"]');
-    const imageNextButton = controlsMiddle?.querySelector('.image-next[role="button"]');
+    const controlsTop = ensureHTMLElementOrNull(cardHeaderInnerElement.querySelector('.controls-top'));
+    const infoButton = ensureHTMLElementOrNull(controlsTop?.querySelector('.info[role="button"]'));
+    const overlayInfoText = ensureHTMLElementOrNull(controlsTop?.querySelector('.overlay-info-text'));
+    const imageBrowserOpenButton = ensureHTMLElementOrNull(controlsTop?.querySelector('.image-browser-open[role="button"]'));
+    const controlsMiddle = ensureHTMLElementOrNull(cardHeaderInnerElement.querySelector('.controls-middle'));
+    const imagePreviousButton = ensureHTMLElementOrNull(controlsMiddle?.querySelector('.image-previous[role="button"]'));
+    const imageNextButton = ensureHTMLElementOrNull(controlsMiddle?.querySelector('.image-next[role="button"]'));
     const decreaseImageIndex = () => {
         const imageIndex = getImageIndex() ?? 0;
         const imagesTotal = getImagesTotal();
@@ -132,13 +136,15 @@ function initializeDefaultCardHeader(cardHeaderElement) {
         cardHeaderInnerElementAttributeObserver.observe(cardHeaderInnerElement, { attributes: true }); // to listen to CSS variable changes
         cardHeaderInnerElementAttributeObserverRemover = () => cardHeaderInnerElementAttributeObserver.disconnect();
     }
-    const openImageBrowser = () => {
-        const _imageBrowserOverlay = cardHeaderInnerElement.querySelector('.overlay-image-browser');
+    const openImageBrowser = (triggerElement, triggerElementEventType) => {
+        const _imageBrowserOverlay = ensureHTMLElementOrNull(cardHeaderInnerElement.querySelector('.overlay-image-browser'));
         if (_imageBrowserOverlay != null) {
-            const imageBrowserOverlayClone = _imageBrowserOverlay.cloneNode(true);
-            imageBrowserOverlayClone.removeAttribute('aria-hidden');
-            imageBrowserOverlay = openOverlay(imageBrowserOverlayClone);
-            setImageIndex(getImageIndex() ?? 0);
+            const imageBrowserOverlayClone = ensureHTMLElementOrNull(_imageBrowserOverlay.cloneNode(true));
+            if (imageBrowserOverlayClone != null) {
+                imageBrowserOverlayClone.removeAttribute('aria-hidden');
+                imageBrowserOverlay = openOverlay(imageBrowserOverlayClone, { originalElement: _imageBrowserOverlay, trigger: { element: triggerElement, eventType: triggerElementEventType } });
+                setImageIndex(getImageIndex() ?? 0);
+            }
         }
     };
     imagePreviousButton?.addEventListener('click', decreaseImageIndex);
@@ -149,10 +155,18 @@ function initializeDefaultCardHeader(cardHeaderElement) {
     const imageNextButtonTapHandleRemover = () => {
         imageNextButton?.removeEventListener('click', increaseImageIndex);
     };
-    imageBrowserOpenButton?.addEventListener('click', openImageBrowser);
+    const imageBrowserOpenButtonOpenImageBrowserClickFn = () => imageBrowserOpenButton && openImageBrowser(imageBrowserOpenButton, 'click');
+    imageBrowserOpenButton?.addEventListener('click', imageBrowserOpenButtonOpenImageBrowserClickFn);
     const imageBrowserOpenButtonTapHandleRemover = () => {
-        imageBrowserOpenButton?.removeEventListener('click', openImageBrowser);
+        imageBrowserOpenButton?.removeEventListener('click', imageBrowserOpenButtonOpenImageBrowserClickFn);
     };
+    const stateComponentGroups = {};
+    if (infoButton != null && overlayInfoText != null) {
+        const infoButtonOverlayComponentGroup = tooltipOpenerInitializer({ triggerElement: infoButton, tooltipOverlayRawSource: overlayInfoText });
+        if (infoButtonOverlayComponentGroup != null) {
+            stateComponentGroups['infoButtonOverlay'] = infoButtonOverlayComponentGroup;
+        }
+    }
     const stateEntry = {
         element: cardHeaderElement,
         components: {
@@ -164,7 +178,8 @@ function initializeDefaultCardHeader(cardHeaderElement) {
                         'imagePreviousButtonTapHandleRemover': {
                             destructor: imagePreviousButtonTapHandleRemover
                         }
-                    }
+                    },
+                    loops: {}
                 }
             } : {}),
             ...(imageNextButton != null ? {
@@ -175,7 +190,8 @@ function initializeDefaultCardHeader(cardHeaderElement) {
                         'imageNextButtonTapHandleRemover': {
                             destructor: imageNextButtonTapHandleRemover
                         }
-                    }
+                    },
+                    loops: {}
                 }
             } : {}),
             ...(imageBrowserOpenButton != null ? {
@@ -186,7 +202,8 @@ function initializeDefaultCardHeader(cardHeaderElement) {
                         'imageBrowserOpenButtonTapHandleRemover': {
                             destructor: imageBrowserOpenButtonTapHandleRemover
                         }
-                    }
+                    },
+                    loops: {}
                 }
             } : {}),
             ...(imagesContainer != null ? {
@@ -197,7 +214,8 @@ function initializeDefaultCardHeader(cardHeaderElement) {
                             destructor: imagesContainerObserverRemover
                         }
                     },
-                    listeners: {}
+                    listeners: {},
+                    loops: {}
                 }
             } : {}),
             ...(cardHeaderInnerElement != null ? {
@@ -208,10 +226,12 @@ function initializeDefaultCardHeader(cardHeaderElement) {
                             destructor: cardHeaderInnerElementAttributeObserverRemover
                         }
                     },
-                    listeners: {}
+                    listeners: {},
+                    loops: {}
                 }
             } : {})
-        }
+        },
+        componentsGroups: stateComponentGroups
     };
     defaultCardHeaderObjectGroup.state.push(stateEntry);
 }

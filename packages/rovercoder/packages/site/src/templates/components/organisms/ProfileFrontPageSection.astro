@@ -2,6 +2,7 @@
 import Section from "../../../components/atoms/Section.astro";
 import type { FlexProperties } from "../../../components/atoms/Section.types";
 import type { BackgroundProperties } from "../../../components/helpers/Background.types";
+import { headerHeightCssVariableName } from "../../../components/organisms/Header.consts";
 
 interface Props {
 	isFirstSection?: boolean;
@@ -12,7 +13,7 @@ const { isFirstSection } = Astro.props;
 const _isFirstSection = isFirstSection?.toString().toLowerCase() === 'true';
 
 // isFirstSection to eliminate jump from svh to lvg when safe area changes on scroll on iOS
-const minHeight = `calc(var(${_isFirstSection ? '--viewportHeightMinimum' : '--viewportHeightMaximum'}) - var(--headerHeight))`;
+const minHeight = `calc(var(${_isFirstSection ? '--viewportHeightMinimum' : '--viewportHeightMaximum'}) - var(${headerHeightCssVariableName}, 0px))`;
 const padding = '2rem clamp(1rem, 5vw, 2rem)';
 const backgroundProperties: BackgroundProperties = {
 	backgroundImageUrl: '/assets/images/site/backgrounds/seamless-circuit-board-pattern.svg',

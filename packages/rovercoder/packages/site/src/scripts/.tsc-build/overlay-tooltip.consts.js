@@ -1,0 +1,9 @@
+export const tooltipCalculationsTestingContainerClass = 'tooltip-calculations-testing-container';
+export const tooltipOuterToDisplayClass = 'tooltip-outer-to-display';
+export const tooltipOuterHiddenForSizeClass = 'tooltip-outer-hidden-for-size';
+export const tooltipOuterHiddenForSizeFullClass = 'tooltip-outer-hidden-for-size-full';
+export const tooltipOuterPlacementAttribute = 'data-tooltip-outer-placement';
+export const tooltipSpaceAwayFromTriggerElementClass = 'tooltip-space-away-from-trigger-element';
+export const tooltipPositionAttribute = 'data-tooltip-position';
+export const tooltipMarginClosestToTriggerElementEnabledAttribute = 'data-tooltip-margin-closest-to-trigger-element-enabled';
+export const tooltipScrollFactorCalculationForChildrenPercentageAttribute = 'data-tooltip-scroll-factor-calculation-for-children-percentage';

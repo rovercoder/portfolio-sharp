@@ -13,21 +13,38 @@ export interface ManagedLifecycleObjectGroups {
     [objectGroupName: string]: ManagedLifecycleObjectGroup;
 }
 
+export interface ManagedLifecycleObjectGroupInitializeExtraArguments { 
+    originalElement?: HTMLElement;
+    trigger?: { 
+        element: HTMLElement;
+        eventType: string;
+    }
+}
+
 export interface ManagedLifecycleObjectGroup {
-    initialize: (mainElement: HTMLElement) => void;
+    initialize: (mainElement: HTMLElement, extra?: ManagedLifecycleObjectGroupInitializeExtraArguments) => void;
     destroy?: (mainElement: HTMLElement) => void;
     state: ManagedLifecycleObject[];
 }
 
 export interface ManagedLifecycleObject {
     element: HTMLElement;
+    originalElement?: HTMLElement;
+    trigger?: {
+        element: HTMLElement;
+        eventType: string;
+    }
     components: { [componentKey: string]: ManagedLifecycleObjectComponent };
+    componentsGroups: {
+        [componentGroupKey: string]: { [componentKey: string]: ManagedLifecycleObjectComponent };
+    }
 }
 
 export interface ManagedLifecycleObjectComponent {
     element: HTMLElement;
     observables: { [observableKey: string]: ManagedLifecycleObjectComponentObservable }
     listeners: { [listenerKey: string]: ManagedLifecycleObjectComponentListener };
+    loops: { [loopKey: string]: ManagedLifecycleObjectComponentListener };
 }
 
 export interface ManagedLifecycleObjectComponentObservable {
@@ -43,21 +60,11 @@ export interface CssVariableElementDimensionsWatcher {
 }
 
 export interface CssVariableElementDimensionsWatcherEntryValue {
-    element: Element;
-    elementToAttachVariableTo: Element;
+    element: HTMLElement;
+    elementToAttachVariableTo: HTMLElement;
     propertyWatched: ElementPropertyWatched;
     observerDisposeFn: Function;
 }
 
 export type ElementPropertyWatchedWidthHeight = 'width' | 'height';
 export type ElementPropertyWatched = ElementPropertyWatchedWidthHeight;
-
-export interface CardHeadersObject {
-    innerElement: HTMLElement;
-    imagePreviousButtonTapHandleRemover?: Function;
-    imageNextButtonTapHandleRemover?: Function;
-    imageBrowserOpenButtonTapHandleRemover?: Function;
-    infoButtonTapHandleRemover?: Function;
-    infoButtonHoverHandleRemover?: Function;
-    imagesControlsObserverRemover?: Function;
-}

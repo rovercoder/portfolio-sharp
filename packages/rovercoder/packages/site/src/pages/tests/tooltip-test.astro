@@ -1,0 +1,104 @@
+---
+import Section from "../../components/atoms/Section.astro";
+import type { FlexProperties } from "../../components/atoms/Section.types";
+import type { BackgroundProperties } from "../../components/helpers/Background.types";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Background from "../../components/helpers/Background.astro";
+import TooltipOverlay from "../../components/molecules/TooltipOverlay.astro";
+
+const pageTitle = 'Tooltip Test';
+const sectionPadding = '3rem';
+const backgroundProperties: BackgroundProperties = {
+	backgroundColor: '#ff0',
+	backgroundType: 'absolute'
+};
+const displayProperties: FlexProperties = {
+	display: 'flex',
+	flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    alignItems: 'flex-start',
+    alignContent: 'center'
+};
+const buttonBackgroundColor = '#FF0000';
+
+const tooltipPadding = '0.5rem';
+const tooltipMargin = '1rem';
+const tooltipBackgroundColor = '#FFFFFF';
+const tooltipBorderWidth = '0.125rem';
+const tooltipBorderColor = '#000000';
+const tooltipSpaceAwayFromTriggerElement = '0.375rem';
+const tooltipHeightMaximum = '10rem';
+const tooltipWidthMaximum = '40rem';
+---
+
+<BaseLayout pageTitle={pageTitle}>
+    <Section padding={sectionPadding} backgroundProperties={backgroundProperties} displayProperties={displayProperties}>
+        <div class="info-container" style="background: #eee; padding: 2rem; position: relative;">
+            <div class="info-container-inner" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-items: center; align-content: center; justify-content: center;">
+                <Background color={buttonBackgroundColor}>
+                    <div role="button" class="info" tabindex="0" data-tooltip-position="topRight topCenter topLeft top centerLeft centerRight leftTop leftBottom left rightTop rightBottom right bottomRight bottomCenter bottomLeft bottom">
+                        This<br/>is a<br/>button
+                    </div>
+                </Background>
+                <div class="overlay overlay-tooltip overlay-non-detectable" aria-hidden="true">
+                    <TooltipOverlay 
+                            padding={tooltipPadding} 
+                            margin={tooltipMargin}
+                            backgroundColor={tooltipBackgroundColor} 
+                            borderWidth={tooltipBorderWidth} 
+                            borderColor={tooltipBorderColor} 
+                            spaceAwayFromTriggerElement={tooltipSpaceAwayFromTriggerElement} 
+                            heightMaximum={tooltipHeightMaximum} 
+                            widthMaximum={tooltipWidthMaximum}
+                    >
+                        This is a tooltip! It can contain a lot of information, even enough to make it wrap onto multiple lines.    
+                    </TooltipOverlay>
+                </div>
+            </div>
+        </div>
+    </Section>
+</BaseLayout>
+
+<script>
+import { tooltipOpenerInitializer } from "../../scripts/overlay-tooltip-opener";
+import { ensureHTMLElementOrNull, filterByHTMLElement } from "../../scripts/utilities-general";
+
+filterByHTMLElement(document.querySelectorAll('.info-container')).forEach((infoContainerElement) => {
+    const triggerElement = ensureHTMLElementOrNull(infoContainerElement.querySelector('.info[role="button"]'));
+    const tooltipOverlayRawSource = ensureHTMLElementOrNull(infoContainerElement.querySelector('.overlay.overlay-tooltip'));
+
+    if (triggerElement == null) {
+        console.error('Trigger element is invalid!');
+        return;
+    }
+
+    if (tooltipOverlayRawSource == null) {
+        console.error('Tooltip overlay to clone is invalid!');
+        return;
+    }
+
+    tooltipOpenerInitializer({ triggerElement, tooltipOverlayRawSource });
+});
+</script>
+
+<style>
+    .overlay:not(.shown) {
+        display: none;
+    }
+
+    .overlay.overlay-tooltip {
+        pointer-events: none !important;
+    }
+
+    .info-container {
+        max-height: 20rem;
+        max-width: 20rem;
+        overflow: auto;
+    }
+
+    .info-container > * {
+        min-height: 40rem;
+        min-width: 40rem;
+    }
+</style>

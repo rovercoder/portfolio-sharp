@@ -1,13 +1,14 @@
-import { ManagedLifecycleObjectGroups } from "./global.types.js";
+import { ManagedLifecycleObject, ManagedLifecycleObjectComponent, ManagedLifecycleObjectGroupInitializeExtraArguments, ManagedLifecycleObjectGroups } from "./global.types.js";
+import { isHTMLElement } from "./utilities-general.js";
 
-export function initializeManagedLifecycleObject(args: { element: Element, attributeName: string, objectGetterInitializer: () => ManagedLifecycleObjectGroups }) {
+export function initializeManagedLifecycleObject(args: { element: HTMLElement, extraArguments?: ManagedLifecycleObjectGroupInitializeExtraArguments, attributeName: string, objectGetterInitializer: () => ManagedLifecycleObjectGroups }) {
     if (args == null) {
         console.error('Arguments are undefined!');
         return;
     }
     
-    if (args.element == null) {
-        console.error('Element is undefined!');
+    if (args.element == null || !isHTMLElement(args.element)) {
+        console.error('Element is undefined or invalid!');
         return;
     }
 
@@ -31,12 +32,12 @@ export function initializeManagedLifecycleObject(args: { element: Element, attri
     if (attributeValue != null && args.objectGetterInitializer()[attributeValue] != null) {
         const lifecycleObjectGroupEntry = args.objectGetterInitializer()[attributeValue];
         if (lifecycleObjectGroupEntry.initialize != null && typeof lifecycleObjectGroupEntry.initialize === 'function') {
-            lifecycleObjectGroupEntry.initialize(args.element as HTMLElement);
+            lifecycleObjectGroupEntry.initialize(args.element, args.extraArguments);
         }
     }
 }
 
-export function destroyManagedLifecycleObject(args: { element: Element, objectGetterInitializer: () => ManagedLifecycleObjectGroups }) {
+export function destroyManagedLifecycleObject(args: { element: HTMLElement, objectGetterInitializer: () => ManagedLifecycleObjectGroups }) {
     if (args == null) {
         console.error('Arguments are undefined!');
         return;
@@ -74,7 +75,7 @@ export function destroyAllManagedLifecycleObjects(args: { objectGetterInitialize
     });
 }
 
-function _destroyManagedLifecycleObjects(args: { filterByElement?: Element, objectGetterInitializer: () => ManagedLifecycleObjectGroups }) {
+function _destroyManagedLifecycleObjects(args: { filterByElement?: HTMLElement, objectGetterInitializer: () => ManagedLifecycleObjectGroups }) {
     if (args == null) {
         console.error('Arguments are undefined!');
         return;
@@ -92,32 +93,59 @@ function _destroyManagedLifecycleObjects(args: { filterByElement?: Element, obje
         for (let i = 0; i < managedLifecycleObjectGroupState.length; i++) {
             if (args.filterByElement == null || managedLifecycleObjectGroupState[i].element === args.filterByElement) {
                 if (managedLifecycleObjectGroup.destroy != null && typeof managedLifecycleObjectGroup.destroy === 'function') {
-                    managedLifecycleObjectGroup.destroy(managedLifecycleObjectGroupState[i].element as HTMLElement);
+                    managedLifecycleObjectGroup.destroy(managedLifecycleObjectGroupState[i].element);
                 }
                 const managedLifecycleObjectGroupStateEntry = managedLifecycleObjectGroupState[i];
                 if (managedLifecycleObjectGroupStateEntry.components != null && typeof managedLifecycleObjectGroupStateEntry.components === 'object') {
                     for (const componentKey in managedLifecycleObjectGroupStateEntry.components) {
                         const component = managedLifecycleObjectGroupStateEntry.components[componentKey];
-                        if (component.observables != null && typeof component.observables === 'object') {
-                            for (const observableKey in component.observables) {
-                                const destructor = component.observables[observableKey].destructor;
-                                if (destructor != null && typeof destructor === 'function') {
-                                    destructor();
-                                }
-                            }
-                        }
-                        if (component.listeners != null && typeof component.listeners === 'object') {
-                            for (const listenerKey in component.listeners) {
-                                const destructor = component.listeners[listenerKey].destructor;
-                                if (destructor != null && typeof destructor === 'function') {
-                                    destructor();
-                                }
+                        destroyManagedLifecycleObjectComponent(component);
+                    }
+                }
+                if (managedLifecycleObjectGroupStateEntry.componentsGroups != null && typeof managedLifecycleObjectGroupStateEntry.componentsGroups === 'object') {
+                    for (const componentGroupKey in managedLifecycleObjectGroupStateEntry.componentsGroups) {
+                        const componentGroup = managedLifecycleObjectGroupStateEntry.componentsGroups[componentGroupKey];
+                        if (componentGroup != null && typeof componentGroup === 'object') {
+                            for (const componentKey in componentGroup) {
+                                const component = componentGroup[componentKey];
+                                destroyManagedLifecycleObjectComponent(component);
                             }
                         }
                     }
                 }
                 managedLifecycleObjectGroupState.splice(i, 1);
                 i--;
+            }
+        }
+    }
+}
+
+export function destroyManagedLifecycleObjectComponent(component: ManagedLifecycleObjectComponent) {
+    if (component == null || typeof component != 'object') {
+        return;
+    }
+    
+    if (component.observables != null && typeof component.observables === 'object') {
+        for (const observableKey in component.observables) {
+            const destructor = component.observables[observableKey].destructor;
+            if (destructor != null && typeof destructor === 'function') {
+                destructor();
+            }
+        }
+    }
+    if (component.listeners != null && typeof component.listeners === 'object') {
+        for (const listenerKey in component.listeners) {
+            const destructor = component.listeners[listenerKey].destructor;
+            if (destructor != null && typeof destructor === 'function') {
+                destructor();
+            }
+        }
+    }
+    if (component.loops != null && typeof component.loops === 'object') {
+        for (const loopKey in component.loops) {
+            const destructor = component.loops[loopKey].destructor;
+            if (destructor != null && typeof destructor === 'function') {
+                destructor();
             }
         }
     }

@@ -1,3 +1,4 @@
+import { filterByHTMLElement } from "./utilities-general.js";
 import { destroyAllManagedLifecycleObjects, initializeManagedLifecycleObject } from "./utilities-lifecycle.js";
 getInitializeCardHeaderObjectsGroups();
 const cardHeaderTypeAttributeName = 'data-card-header-type';
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 });
 function initializeAllCardHeaders() {
     destroyAllManagedLifecycleObjects({ objectGetterInitializer: getInitializeCardHeaderObjectsGroups });
-    document.querySelectorAll('.card .card-header').forEach(cardHeaderElement => {
+    filterByHTMLElement(document.querySelectorAll('.card .card-header')).forEach(cardHeaderElement => {
         initializeManagedLifecycleObject({
             element: cardHeaderElement,
             attributeName: cardHeaderTypeAttributeName,

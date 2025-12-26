@@ -5,6 +5,7 @@ import CardHeaderDefault from "../../../components/molecules/CardHeaderDefault.a
 import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "../../../components/molecules/CardHeaderDefault.types";
 import RoverCoderText from "../atoms/RoverCoderText.astro";
 import RoverCoderImageBrowserOverlay from "./RoverCoderImageBrowserOverlay.astro";
+import RoverCoderTooltipOverlay from "./RoverCoderTooltipOverlay.astro";
 
 interface Props {
     image?: ImageProps | ImageProps[];
@@ -53,16 +54,23 @@ const photoNavigationButtonPadding = '0.125rem';
         imageImageSize={imageImageSize}
         imageBorderRadius={imageBorderRadius} 
         iconSize={iconSize} 
-        iconMargin={iconMargin} 
-        info={info}>
+        iconMargin={iconMargin}>
     <div slot="icon">
         {((args) => <Icon url={args.icon.url} color={args.icon.color} imageSize={args.icon.imageSize} borderRadius={args.iconBorderRadius} containerMargin={args.iconMargin} size={args.iconSize} />) satisfies CardHeaderIconFnType}
     </div>
     <div slot="image">
         {((args) => <Image url={args.image.url} color={args.image.color} imageSize={args.imageSize ?? args.image.imageSize} imageRepeat={args.image.imageRepeat} borderRadius={args.imageBorderRadius} height={args.imageHeight} />) satisfies CardHeaderImageFnType}
     </div>
-    <Icon slot="info-button" url={infoIconButtonUrl} color={infoIconButtonColor} borderRadius={infoIconButtonBorderRadius} containerMargin={infoIconButtonMargin} containerPadding={infoIconButtonPadding} size={infoIconButtonSize} />
-    <RoverCoderText slot="info-text" type="card-hint" content={info ?? ''} color={textColor} isParagraph />
+    {
+        (info ?? '').trim().length > 0 && 
+            <Icon slot="info-button" url={infoIconButtonUrl} color={infoIconButtonColor} borderRadius={infoIconButtonBorderRadius} containerMargin={infoIconButtonMargin} containerPadding={infoIconButtonPadding} size={infoIconButtonSize} />
+    }
+    {
+        (info ?? '').trim().length > 0 && 
+            <RoverCoderTooltipOverlay slot="info-tooltip">
+                <RoverCoderText slot="tooltip-text" type="card-hint" content={info ?? ''} color={textColor} isParagraph />
+            </RoverCoderTooltipOverlay>
+    }
     <Icon slot="image-browser-open-button" url={imageBrowserButtonIconUrl} color={imageBrowserButtonColor} borderRadius={imageBrowserButtonBorderRadius} containerMargin={imageBrowserButtonMargin} containerPadding={imageBrowserButtonPadding} size={imageBrowserButtonSize} />
     <RoverCoderImageBrowserOverlay slot="image-browser" images={images} />
     <Icon slot="image-previous-navigator-button" url={previousPhotoNavigationButtonIconUrl} color={photoNavigationButtonColor} borderRadius={photoNavigationButtonBorderRadius} containerMargin={photoNavigationButtonMargin} containerPadding={photoNavigationButtonPadding} size={photoNavigationButtonSize} />

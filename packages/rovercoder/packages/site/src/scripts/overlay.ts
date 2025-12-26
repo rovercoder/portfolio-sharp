@@ -1,14 +1,19 @@
-import { OverlaysObjectGroups, WindowCustom } from "./global.types.js";
+import { ManagedLifecycleObjectGroupInitializeExtraArguments, OverlaysObjectGroups, WindowCustom } from "./global.types.js";
 import { destroyManagedLifecycleObject, initializeManagedLifecycleObject } from "./utilities-lifecycle.js";
-import { initCssVariableElementWatcher, runOnElementRemoval } from "./utilities-general.js";
+import { ensureHTMLElementThrowOrNull, filterByHTMLElement, initCssVariableElementWatcher, isHTMLElement, runOnElementRemoval } from "./utilities-general.js";
+import { overlayHeightCssVariableName, overlayNonDetectableClass, overlayOpenBodyClass, overlayShownClass } from "./overlay.consts.js";
 
-const overlayShownClass = 'shown';
-const overlaysOpenBodyClass = 'overlay-open';
 const overlayTypeAttributeName = 'data-overlay-type';
 
 getInitializeOverlayObjectsGroups();
 
-initCssVariableElementWatcher({ element: getOverlayContentElement() as HTMLElement, elementToAttachVariableTo: getOverlayContentElement() as HTMLElement, cssVariableName: '--overlayHeight', elementPropertyWatched: 'height' });
+let _overlayContentElement = getOverlayContentElement();
+
+if (_overlayContentElement == null) {
+    console.error('Overlay content element is undefined!');
+} else {
+    initCssVariableElementWatcher({ element: _overlayContentElement, elementToAttachVariableTo: _overlayContentElement, cssVariableName: overlayHeightCssVariableName, elementPropertyWatched: 'height' });
+}
 
 export function getInitializeOverlayObjectsGroups(): OverlaysObjectGroups {
     if ((window as WindowCustom)._siteCustomOverlays == null) {
@@ -17,11 +22,17 @@ export function getInitializeOverlayObjectsGroups(): OverlaysObjectGroups {
     return (window as WindowCustom)._siteCustomOverlays!;
 }
 
-export function hasOverlays(): boolean {
-    return (getOverlayContentElement()?.children.length ?? 0) > 0;
+export function hasOverlays(args?: { detectNonDetectable?: boolean }): boolean {
+    let detectNonDetectable = false;
+    if (args != null && typeof args === 'object') {
+        detectNonDetectable = args.detectNonDetectable?.toString().toLowerCase() == 'true';
+    }
+    const overlayContentElement = getOverlayContentElement();
+    if (overlayContentElement == null) {
+        return false;
+    }
+    return Array.from(overlayContentElement.children).filter(x => detectNonDetectable || !x.classList.contains(overlayNonDetectableClass)).length > 0;
 }
-
-let _overlayContentElement = getOverlayContentElement();
 
 if (_overlayContentElement != null) {
     const overlayMutationObserver = new MutationObserver(function () {
@@ -45,15 +56,15 @@ function resetOverlayShownClassOnBody() {
         allChildren.push(parentElement.children[i]);
     }
 
-    const displayedChildren = allChildren.filter(x => !(x.computedStyleMap().get('display')?.toString().toLowerCase().startsWith('none') ?? false))
+    const displayedChildren = allChildren.filter(x => !(x.computedStyleMap().get('display')?.toString().toLowerCase().startsWith('none') ?? false) && !x.classList.contains(overlayNonDetectableClass));
     if (displayedChildren.length > 0) {
-        document?.documentElement.classList.add(overlaysOpenBodyClass);
+        document?.documentElement.classList.add(overlayOpenBodyClass);
     } else {
-        document?.documentElement.classList.remove(overlaysOpenBodyClass);
+        document?.documentElement.classList.remove(overlayOpenBodyClass);
     }
 }
 
-export function openOverlay(elementToAdd: Element): Element | undefined {
+export function openOverlay(elementToAdd: HTMLElement, extraArguments?: ManagedLifecycleObjectGroupInitializeExtraArguments): HTMLElement | undefined {
     if (elementToAdd == null) {
         return;
     }
@@ -62,6 +73,7 @@ export function openOverlay(elementToAdd: Element): Element | undefined {
     if (element) {
         initializeManagedLifecycleObject({ 
             element, 
+            extraArguments,
             attributeName: overlayTypeAttributeName, 
             objectGetterInitializer: getInitializeOverlayObjectsGroups 
         });
@@ -86,12 +98,21 @@ function removeScriptsAndStyles(element: Element) {
     }
 }
 
-export function closeOverlayLast(): boolean {
-    return closeOverlays(false);
+export function closeOverlay(overlayElement: HTMLElement): boolean {
+    return closeOverlays({ closeAllOverlays: true, closeNonDetectable: true, byElement: overlayElement });
 }
 
-function _removeOverlay(overlay: Element, previousOverlaysFunction?: Function | null) {
-    if (overlay == null) {
+export function closeOverlayLast(args: { closeNonDetectable: boolean, byClass?: string, byElement?: HTMLElement }): boolean {
+    if (args == null || typeof args !== 'object') {
+        console.error('Arguments invalid!');
+        return false;
+    }
+
+    return closeOverlays({ closeAllOverlays: false, closeNonDetectable: args.closeNonDetectable, byClass: args.byClass, byElement: args.byElement });
+}
+
+function _removeOverlay(overlay: HTMLElement, previousOverlaysFunction?: Function | null) {
+    if (overlay == null || !isHTMLElement(overlay)) {
         throw Error('Overlay Invalid!');
     }
 
@@ -101,7 +122,7 @@ function _removeOverlay(overlay: Element, previousOverlaysFunction?: Function | 
         }
     };
 
-    const _destroyAndRemoveOverlay = (overlay: Element) => {
+    const _destroyAndRemoveOverlay = (overlay: HTMLElement) => {
         destroyManagedLifecycleObject({ element: overlay, objectGetterInitializer: getInitializeOverlayObjectsGroups });
         overlay.remove();
     };
@@ -198,12 +219,26 @@ function _removeOverlay(overlay: Element, previousOverlaysFunction?: Function | 
     }
 }
 
-export function closeOverlays(allOverlays: boolean = true): boolean {
+export function closeOverlays(args: { closeAllOverlays: boolean, closeNonDetectable: boolean, byClass?: string, byElement?: HTMLElement }): boolean {
+    if (args == null || typeof args !== 'object') {
+        console.error('Arguments invalid!');
+        return false;
+    }
+
+    const closeAllOverlays = args.closeAllOverlays.toString().toLowerCase() === 'true';
+    const closeNonDetectable = args.closeNonDetectable.toString().toLowerCase() === 'true';
+    const closeByClasses = args.byClass?.toString().trim().split(/\s+/) ?? [];
+    const closeByElement = args.byElement;
+
     const parentElement = getOverlayContentElement();
-    if (parentElement?.children != null && parentElement.children.length > 0) {
+    var filteredOverlays = filterByHTMLElement(Array.from(parentElement?.children ?? []))
+            .filter(element => closeNonDetectable || !element.classList.contains(overlayNonDetectableClass))
+            .filter(element => closeByClasses.length === 0 || closeByClasses.every(cls => element.classList.contains(cls)))
+            .filter(element => closeByElement == null || closeByElement == element);
+    if (filteredOverlays.length > 0) {
         let removeOverlaysFunction: Function | null = null;
-        for (let i = Math.max(0, allOverlays ? 0 : parentElement.children.length - 1); i < parentElement.children.length; i++) {
-            const child = parentElement.children[i];
+        for (let i = Math.max(0, closeAllOverlays ? 0 : filteredOverlays.length - 1); i < filteredOverlays.length; i++) {
+            const child = filteredOverlays[i];
             const _removeOverlaysFunction = removeOverlaysFunction;
             removeOverlaysFunction = () => _removeOverlay(child /** This overlay */, _removeOverlaysFunction /** Previous overlays */);
         }
@@ -215,6 +250,6 @@ export function closeOverlays(allOverlays: boolean = true): boolean {
     return false;
 }
 
-function getOverlayContentElement(): Element | null { 
-    return document.querySelector('#overlay-main > #overlay-content');
+function getOverlayContentElement(): HTMLElement | null { 
+    return ensureHTMLElementThrowOrNull(document.querySelector('#overlay-main > #overlay-content'), 'Overlay content is invalid!');
 }

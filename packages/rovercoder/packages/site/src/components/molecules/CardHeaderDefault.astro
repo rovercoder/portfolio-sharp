@@ -3,7 +3,7 @@ import Icon from "../atoms/Icon.astro";
 import Image from "../atoms/Image.astro";
 import type { CardHeaderIconFnType, CardHeaderImageFnType, ImageProps } from "./CardHeaderDefault.types";
 import { getImagesForCardHeaderAndImageBrowser } from "./CardHeaderDefault.functions";
-import { imageIndexCssVariableName } from "./CardHeaderDefault.consts";
+import { imageIndexCssVariableName, imageUnloadedClass, overlayNonDetectableClass } from "./CardHeaderDefault.consts";
 
 interface Props {
     images?: ImageProps | ImageProps[];
@@ -13,9 +13,8 @@ interface Props {
     imageBorderRadius?: string | undefined;
     iconSize?: string;
     iconMargin?: string;
-    info?: string;
 }
-const { images: images_, imageIsIcon, imageHeight = '15rem', imageImageSize = 'cover', imageBorderRadius, iconSize = '3rem', iconMargin = '1rem', info } = Astro.props;
+const { images: images_, imageIsIcon, imageHeight = '15rem', imageImageSize = 'cover', imageBorderRadius, iconSize = '3rem', iconMargin = '1rem' } = Astro.props;
 
 const images = getImagesForCardHeaderAndImageBrowser(images_);
 let _mainImage: ImageProps | undefined;
@@ -49,7 +48,7 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
                     :   <div class="images-container">
                             {
                                 images?.map(async (image, index) =>
-                                    <div class={'image-container-outer' + (currentImageIndex !== index ? ' image-unloaded' : '')}>
+                                    <div class={'image-container-outer' + (currentImageIndex !== index ? ` ${imageUnloadedClass}` : '')}>
                                         {(Astro.slots.has('image')
                                             ? <Fragment set:html={await Astro.slots.render('image', [{ image, imageBorderRadius, imageHeight, imageSize: imageImageSize }] satisfies Parameters<CardHeaderImageFnType>)} />
                                             : <Image url={image.url} color={image.color} imageSize={imageImageSize ?? image.imageSize} imageRepeat={image.imageRepeat} borderRadius={imageBorderRadius} height={imageHeight} />
@@ -65,13 +64,13 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
     <div class="controls">
         <div class="controls-top">
             {
-                info != null && info.toString().trim().length > 0 &&
+                Astro.slots.has('info-button') && Astro.slots.has('info-tooltip') &&
                     <Fragment>
-                        <div role="button" class="info">
+                        <div role="button" class="info" tabindex="0" data-tooltip-position="topRight topCenter topLeft top centerLeft centerRight leftTop leftBottom left rightTop rightBottom right bottomRight bottomCenter bottomLeft bottom">
                             <slot name="info-button" />
                         </div>
-                        <div class="info-text display-none">
-                            <slot name="info-text" />
+                        <div class={`overlay overlay-tooltip overlay-info-text ${overlayNonDetectableClass}`} aria-hidden="true">
+                            <slot name="info-tooltip" />
                         </div>
                     </Fragment>
             }
@@ -176,5 +175,9 @@ const hasImagesMinimum = (minimum?: number) => images != null && images.length >
 
     .overlay:not(.shown) {
         display: none;
+    }
+
+    .overlay.overlay-tooltip {
+        pointer-events: none !important;
     }
 </style>

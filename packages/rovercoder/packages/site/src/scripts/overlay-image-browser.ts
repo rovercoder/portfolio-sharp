@@ -1,12 +1,11 @@
-import { ManagedLifecycleObject, OverlaysObjectGroup } from "./global.types.js";
+import { imageIndexCssVariableName, imageUnloadedClass } from "./global.consts.js";
+import { ManagedLifecycleObject, ManagedLifecycleObjectGroupInitializeExtraArguments, OverlaysObjectGroup } from "./global.types.js";
+import { imageBrowserStatusBarHeightCssVariableName } from "./overlay-image-browser.consts.js";
 import { getInitializeOverlayObjectsGroups } from "./overlay.js";
-import { initCssVariableElementWatcher, removeCssVariableElementWatcherEntryIfExists, replaceHTMLElementText } from "./utilities-general.js";
+import { ensureHTMLElementOrNull, ensureHTMLElementThrowOrNull, ensureHTMLElementThrowOrUndefined, filterByHTMLElement, initCssVariableElementWatcher, removeCssVariableElementWatcherEntryIfExists, replaceHTMLElementText } from "./utilities-general.js";
 import { destroyManagedLifecycleObject } from "./utilities-lifecycle.js";
 
 getInitializeImageBrowserOverlayObjectsGroup();
-
-const imageIndexCssVariableName = '--imageIndex';
-const imageUnloadedClass = 'image-unloaded';
 
 function getInitializeImageBrowserOverlayObjectsGroup(): OverlaysObjectGroup {
     var overlayObjectsGroups = getInitializeOverlayObjectsGroups();
@@ -22,14 +21,13 @@ function getInitializeImageBrowserOverlayObjectsGroup(): OverlaysObjectGroup {
     return overlayObjectsGroups['image-browser']!;
 }
 
-function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
+function initializeImageBrowserOverlay(overlayElement: HTMLElement, extra?: ManagedLifecycleObjectGroupInitializeExtraArguments) {
     destroyManagedLifecycleObject({ element: overlayElement, objectGetterInitializer: getInitializeOverlayObjectsGroups });
 
     const imageBrowserOverlayObjectGroup = getInitializeImageBrowserOverlayObjectsGroup();
 
-    const imageBrowserStatusBarHeightElementWatched = overlayElement.querySelector('.status-bar-spacing') as HTMLElement;
-    const imageBrowserStatusBarHeightElementToAttachVariableTo = overlayElement as HTMLElement;
-    const imageBrowserStatusBarHeightCssVariableName = '--image-browser-status-bar-height';
+    const imageBrowserStatusBarHeightElementWatched = ensureHTMLElementOrNull(overlayElement.querySelector('.status-bar-spacing'));
+    const imageBrowserStatusBarHeightElementToAttachVariableTo = overlayElement;
 
     let imageBrowserStatusBarHeightWatcherDestructor = () => {};
     if (imageBrowserStatusBarHeightElementWatched != null) {
@@ -48,12 +46,12 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
     }
 
     const getImageIndex = (): number | undefined => {
-        const value = (overlayElement as HTMLElement).style.getPropertyValue(imageIndexCssVariableName);
+        const value = overlayElement.style.getPropertyValue(imageIndexCssVariableName);
         const valueParsed = parseInt(value);
         return isNaN(valueParsed) ? undefined : valueParsed;
     };
     const setImageIndex = (imageIndex: number): void => { 
-        (overlayElement as HTMLElement).style.setProperty(imageIndexCssVariableName, imageIndex.toString());
+        overlayElement.style.setProperty(imageIndexCssVariableName, imageIndex.toString());
         const imagesContainer = getImagesContainer();
         if (imagesContainer != null) {
             if (imageIndex in imagesContainer.children && imagesContainer.children[imageIndex]) {
@@ -61,16 +59,20 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
             }
         }
     };
-    const getImagesContainer = (): HTMLElement | undefined => overlayElement.querySelector('.images-container .images-container-inner') as HTMLElement | undefined;
-    const getTextsContainer = (): HTMLElement | undefined => overlayElement.querySelector('.texts-container') as HTMLElement | undefined;
+    const getImagesContainer = (): HTMLElement | undefined => {
+        return ensureHTMLElementThrowOrUndefined(overlayElement.querySelector('.images-container .images-container-inner'), 'Images container inner element is invalid!');
+    }
+    const getTextsContainer = (): HTMLElement | undefined => {
+        return ensureHTMLElementThrowOrUndefined(overlayElement.querySelector('.texts-container'), 'Texts container element is invalid!');
+    }
     const getImagesTotal = (): number | undefined => getImagesContainer()?.children.length;
 
     setImageIndex(getImageIndex() ?? 0);
 
-    const imagePreviousButtons = Array.from(overlayElement.querySelectorAll('.action-indicators .action.previous[role="button"]'));
-    const imageNextButtons = Array.from(overlayElement.querySelectorAll('.action-indicators .action.next[role="button"]'));
-    const progressIndicatorIndexElements = Array.from(overlayElement.querySelectorAll('.progress-indicator .progress-indicator-element.index'));
-    const progressIndicatorTotalElements = Array.from(overlayElement.querySelectorAll('.progress-indicator .progress-indicator-element.total'));
+    const imagePreviousButtons = filterByHTMLElement(Array.from(overlayElement.querySelectorAll('.action-indicators .action.previous[role="button"]')));
+    const imageNextButtons = filterByHTMLElement(Array.from(overlayElement.querySelectorAll('.action-indicators .action.next[role="button"]')));
+    const progressIndicatorIndexElements = filterByHTMLElement(Array.from(overlayElement.querySelectorAll('.progress-indicator .progress-indicator-element.index')));
+    const progressIndicatorTotalElements = filterByHTMLElement(Array.from(overlayElement.querySelectorAll('.progress-indicator .progress-indicator-element.total')));
 
     const decreaseImageIndex = () => {
         const imageIndex = getImageIndex() ?? 0;
@@ -116,7 +118,7 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
         const imageIndex = getImageIndex() ?? 0;
         const imagesTotal = getImagesTotal();
 
-        const imagesContainer = getImagesContainer() as HTMLElement | null;
+        const imagesContainer = getImagesContainer();
         if (imagesContainer == null) {
             return;
         }
@@ -128,7 +130,7 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
             }
         }
 
-        const textsContainer = getTextsContainer() as HTMLElement | null;
+        const textsContainer = getTextsContainer();
         if (textsContainer == null) {
             return;
         }
@@ -145,8 +147,8 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
         const imageIndex = getImageIndex() ?? 0;
         const imagesTotal = getImagesTotal();
 
-        progressIndicatorIndexElements.forEach(x => replaceHTMLElementText(x as HTMLElement, (imageIndex + 1).toString()));
-        progressIndicatorTotalElements.forEach(x => replaceHTMLElementText(x as HTMLElement, (imagesTotal ?? 0).toString()));
+        progressIndicatorIndexElements.forEach(x => replaceHTMLElementText(x, (imageIndex + 1).toString()));
+        progressIndicatorTotalElements.forEach(x => replaceHTMLElementText(x, (imagesTotal ?? 0).toString()));
     };
 
     const resetImageNavigatorsVisibility = () => {
@@ -216,6 +218,8 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
 
     const stateEntry: ManagedLifecycleObject = {
         element: overlayElement,
+        originalElement: extra?.originalElement,
+        trigger: extra?.trigger,
         components: {
             ...(imageBrowserStatusBarHeightElementWatched != null ? {
                 'imageBrowserStatusBarSpacing': {
@@ -230,7 +234,7 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
             } : {}),
             ...Object.assign({}, ...(imagePreviousButtons.map((imagePreviousButton, i) => ({
                 [`imagePrevious-${i}`]: {
-                    element: imagePreviousButton as HTMLElement,
+                    element: imagePreviousButton,
                     observables: {},
                     listeners: {
                         'click': {
@@ -241,7 +245,7 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
             })))),
             ...Object.assign({}, ...(imageNextButtons.map((imageNextButton, i) => ({
                 [`imageNext-${i}`]: {
-                    element: imageNextButton as HTMLElement,
+                    element: imageNextButton,
                     observables: {},
                     listeners: {
                         'click': {
@@ -281,7 +285,8 @@ function initializeImageBrowserOverlay(overlayElement: HTMLElement) {
                 },
                 listeners: {}
             }
-        }
+        },
+        componentsGroups: {}
     };
     imageBrowserOverlayObjectGroup.state.push(stateEntry);
 }

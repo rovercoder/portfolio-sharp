@@ -1,0 +1,49 @@
+---
+import TooltipOverlay from '../../../components/molecules/TooltipOverlay.astro';
+
+interface Props {
+    padding?: string;
+    margin?: string;
+    backgroundColor?: string;
+    borderWidth?: string;
+    borderColor?: string;
+    borderRadius?: string;
+    spaceAwayFromTriggerElement?: string;
+    marginClosestToTriggerElementEnabled?: boolean;
+    heightMaximum?: string;
+    widthMaximum?: string;
+    transition?: string;
+    scrollFactorCalculationForChildrenPercentage?: number;
+}
+const {
+    padding: tooltipPadding = '0.5rem',
+    margin: tooltipMargin = '0.25rem',
+    backgroundColor: tooltipBackgroundColor = '#FFFFFF',
+    borderWidth: tooltipBorderWidth = '0.125rem',
+    borderColor: tooltipBorderColor = '#000000',
+    borderRadius: tooltipBorderRadius = '0.25rem',
+    spaceAwayFromTriggerElement: tooltipSpaceAwayFromTriggerElement = '0.125rem',
+    marginClosestToTriggerElementEnabled: tooltipMarginClosestToTriggerElementEnabled = false,
+    heightMaximum: tooltipHeightMaximum = '10rem',
+    widthMaximum: tooltipWidthMaximum = '40rem',
+    transition: tooltipTransition = '0.01s ease-in-out',
+    scrollFactorCalculationForChildrenPercentage: tooltipScrollFactorCalculationForChildrenPercentage = 100
+} = Astro.props;
+---
+
+<TooltipOverlay 
+        padding={tooltipPadding} 
+        margin={tooltipMargin}
+        backgroundColor={tooltipBackgroundColor}
+        borderWidth={tooltipBorderWidth}
+        borderColor={tooltipBorderColor}
+        borderRadius={tooltipBorderRadius}
+        spaceAwayFromTriggerElement={tooltipSpaceAwayFromTriggerElement}
+        marginClosestToTriggerElementEnabled={tooltipMarginClosestToTriggerElementEnabled}
+        heightMaximum={tooltipHeightMaximum}
+        widthMaximum={tooltipWidthMaximum}
+        transition={tooltipTransition}
+        scrollFactorCalculationForChildrenPercentage={tooltipScrollFactorCalculationForChildrenPercentage}
+>
+    <slot name="tooltip-text" />
+</TooltipOverlay>

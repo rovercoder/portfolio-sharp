@@ -19,11 +19,11 @@ export function runOnElementRemoval(elementToWatch, callback, parent = document.
         observer.observe(_parent, { subtree: true, childList: true });
     }
 }
-function getRootElement() {
-    return document.querySelector(':root');
+export function getRootElement() {
+    return ensureHTMLElement(document.querySelector(':root'), 'Invalid root element!');
 }
 function _processFilteringArgs(args) {
-    const elementToAttachVariableTo = (args.elementToAttachVariableTo ?? getRootElement());
+    const elementToAttachVariableTo = args.elementToAttachVariableTo ?? getRootElement();
     if (elementToAttachVariableTo == null) {
         console.error('Element for CSS variable attachment is undefined!');
         return;
@@ -110,8 +110,8 @@ function observeElementResizing(args) {
         console.error('observeElementResizing args undefined!');
         return;
     }
-    if (args.element == null) {
-        console.error('Element for dimension watching is undefined!');
+    if (args.element == null || !isHTMLElement(args.element)) {
+        console.error('Element for dimension watching is undefined or invalid!');
         return;
     }
     const elementPropertyWatched = args.elementPropertyWatched?.toString().trim();
@@ -124,13 +124,13 @@ function observeElementResizing(args) {
         console.error('cssVariableName is invalid!');
         return;
     }
-    const element = args.element;
-    const elementToAttachVariableTo = args.elementToAttachVariableTo;
-    let lastDimension;
-    if (elementToAttachVariableTo == null) {
+    if (args.elementToAttachVariableTo == null || !isHTMLElement(args.elementToAttachVariableTo)) {
         console.error('elementToAttachVariableTo is invalid!');
         return;
     }
+    const element = args.element;
+    const elementToAttachVariableTo = args.elementToAttachVariableTo;
+    let lastDimension;
     function onDimensionChanged(args) {
         if (args == null) {
             console.error('onDimensionChanged args undefined!');
@@ -193,4 +193,65 @@ export function replaceHTMLElementText(element, newText, currentText) {
         }
     }
     return false;
+}
+export function parseCssPixels(cssPixels) {
+    if (cssPixels == null) {
+        throw Error(`Invalid cssPixels: ${cssPixels}`);
+    }
+    const cssPixelsOnly = cssPixels?.replaceAll('px', '');
+    const result = parseFloat(cssPixelsOnly);
+    return !isNaN(result) ? result : undefined;
+}
+export function isHTMLElement(element) {
+    return element != null
+        && typeof element === 'object'
+        && 'ownerDocument' in element
+        && element.ownerDocument != null
+        && typeof element.ownerDocument === 'object'
+        && 'defaultView' in element.ownerDocument
+        && element.ownerDocument.defaultView != null
+        && typeof element.ownerDocument.defaultView === 'object'
+        && element instanceof element.ownerDocument.defaultView.HTMLElement;
+}
+export function filterByHTMLElement(elements) {
+    if (elements == null || typeof elements !== 'object') {
+        throw Error('Elements argument invalid!');
+    }
+    return (Array.isArray(elements) ? elements : Array.from(elements)).filter(x => isHTMLElement(x)).map(x => x);
+}
+export function ensureHTMLElement(element, message) {
+    if (!isHTMLElement(element)) {
+        throw Error(message ?? 'Element not a HTMLElement!');
+    }
+    return element;
+}
+export function ensureHTMLElementOrNull(element) {
+    if (!isHTMLElement(element)) {
+        return null;
+    }
+    return element;
+}
+export function ensureHTMLElementOrUndefined(element) {
+    if (!isHTMLElement(element)) {
+        return undefined;
+    }
+    return element;
+}
+export function ensureHTMLElementThrowOrNull(element, message) {
+    if (element == null) {
+        return null;
+    }
+    if (!isHTMLElement(element)) {
+        throw Error(message ?? 'Element not a HTMLElement!');
+    }
+    return element;
+}
+export function ensureHTMLElementThrowOrUndefined(element, message) {
+    return ensureHTMLElementThrowOrNull(element, message) ?? undefined;
+}
+export function isSameElementOrChild(parentElement, testElement) {
+    if (parentElement == null || testElement == null || !isHTMLElement(parentElement) || !isHTMLElement(testElement)) {
+        return false;
+    }
+    return parentElement == testElement || parentElement.contains(testElement);
 }
