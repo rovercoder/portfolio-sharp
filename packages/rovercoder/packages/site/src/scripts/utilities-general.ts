@@ -121,6 +121,10 @@ export function initCssVariableElementWatcher(args: { element: HTMLElement, elem
         }
         const cssVariableElementDimensionsWatcherPreviousEntryIndex = cssVariableElementDimensionsWatcher[cssVariableName].findIndex(x => x.elementToAttachVariableTo === elementToAttachVariableTo);
         if (cssVariableElementDimensionsWatcherPreviousEntryIndex > -1) {
+            const observerDisposeFn = cssVariableElementDimensionsWatcher[cssVariableName][cssVariableElementDimensionsWatcherPreviousEntryIndex].observerDisposeFn;
+            if (observerDisposeFn != null && typeof observerDisposeFn === 'function') {
+                observerDisposeFn();
+            }
             cssVariableElementDimensionsWatcher[cssVariableName].splice(cssVariableElementDimensionsWatcherPreviousEntryIndex, 1);
         }
         cssVariableElementDimensionsWatcher[cssVariableName].push({ 
@@ -200,8 +204,22 @@ function observeElementResizing(args: { element: HTMLElement, elementToAttachVar
         }
     });
 
-    onDimensionChanged({ element, elementToAttachVariableTo, newDimension: element.offsetHeight, oldDimension: undefined, cssVariableName, propertyType: elementPropertyWatched });
-    lastDimension = element.offsetHeight;
+    let newDimension: number | undefined;
+    switch (elementPropertyWatched?.toLowerCase()) {
+        case 'width': 
+            newDimension = element.offsetWidth;
+            break;
+        case 'height': 
+            newDimension = element.offsetHeight;
+            break;
+        default:
+            console.error(`elementPropertyWatched invalid: ${elementPropertyWatched}`);
+            return;
+    }
+    if (newDimension != null) {
+        onDimensionChanged({ element, elementToAttachVariableTo, newDimension, oldDimension: undefined, cssVariableName, propertyType: elementPropertyWatched });
+    }
+    lastDimension = newDimension;
     
     observer.observe(element);
 
@@ -210,7 +228,7 @@ function observeElementResizing(args: { element: HTMLElement, elementToAttachVar
         elementToAttachVariableTo,
         cssVariableName,
         propertyWatched: elementPropertyWatched,
-        observerDisposeFn: () => observer.unobserve(element)
+        observerDisposeFn: () => observer.disconnect()
     };
 }
 

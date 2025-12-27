@@ -1,8 +1,8 @@
 ---
-import Card from '../../../components/molecules/Card.astro';
+import Card from '../../../components/organisms/Card.astro';
 import type { ImageProps } from '../../../components/molecules/CardHeaderDefault.types';
 import RoverCoderText from '../atoms/RoverCoderText.astro';
-import RoverCoderCardHeader from './RoverCoderCardHeader.astro';
+import RoverCoderCardHeader from '../molecules/RoverCoderCardHeader.astro';
 
 interface Props {
     image?: ImageProps | ImageProps[];
@@ -57,7 +57,7 @@ const cardBoxShadow = '0px 0px 9px black';
     cardTextAlign={cardTextAlign}
     cardBoxShadow={cardBoxShadow}
 >
-    <RoverCoderCardHeader slot="header" image={image} imageIsIcon={imageIsIcon} info={hint} type={type} />
+    <RoverCoderCardHeader slot="header" image={image} imageIsIcon={imageIsIcon} info={hint} />
     <div class="card-body-inner" slot="body">
         { title != null && <div class="title"><RoverCoderText slot="title" type="card-title" content={title} color={textColor} gap={cardBodyElementsTextGap} /></div> }
         { description != null && <div class="description"><RoverCoderText slot="description" type="card-description" content={description} color={textColor} isParagraph gap={cardBodyElementsTextGap} /></div> }

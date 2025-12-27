@@ -1,12 +1,12 @@
 ---
-import Image from "../../../components/atoms/Image.astro";
-import type { ImageProps } from "../../../components/molecules/CardHeaderDefault.types";
-import ImageBrowserOverlay from "../../../components/molecules/ImageBrowserOverlay.astro";
-import { imageBrowserStatusBarHeightCssVariableName } from "../../../components/molecules/ImageBrowserOverlay.consts";
-import type { ImageBrowserOverlayImageFnType, ImageBrowserOverlayTextFnType } from "../../../components/molecules/ImageBrowserOverlay.types";
-import { overlayHeightCssVariableName } from "../../../components/molecules/Overlay.consts";
-import RoverCoderImageBrowserOverlayActionButton from "../atoms/RoverCoderImageBrowserOverlayActionButton.astro";
-import RoverCoderText from "../atoms/RoverCoderText.astro";
+import Image from "../../../../components/atoms/Image.astro";
+import type { ImageProps } from "../../../../components/molecules/CardHeaderDefault.types";
+import ImageBrowserOverlay from "../../../../components/molecules/overlays/ImageBrowserOverlay.astro";
+import { imageBrowserStatusBarHeightCssVariableName } from "../../../../components/molecules/overlays/ImageBrowserOverlay.consts";
+import type { ImageBrowserOverlayImageFnType, ImageBrowserOverlayTextFnType } from "../../../../components/molecules/overlays/ImageBrowserOverlay.types";
+import { overlayHeightCssVariableName } from "../../../../components/molecules/overlays/Overlay.consts";
+import RoverCoderImageBrowserOverlayActionButton from "../../atoms/RoverCoderImageBrowserOverlayActionButton.astro";
+import RoverCoderText from "../../atoms/RoverCoderText.astro";
 import RoverCoderImageBrowserOverlayStatusBar from "./RoverCoderImageBrowserOverlayStatusBar.astro";
 interface Props {
     images?: ImageProps | ImageProps[]

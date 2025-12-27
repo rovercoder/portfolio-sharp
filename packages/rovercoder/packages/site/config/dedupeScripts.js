@@ -1,5 +1,7 @@
 import * as parse5 from 'parse5';
 
+const dataScriptDeduplicationKeepAttribute = 'data-script-deduplication-keep';
+
 /**
  * Astro plugin to remove duplicate <script> tags by parsing HTML (no regex).
  * @param {string} html
@@ -47,14 +49,33 @@ export function dedupeScripts(html) {
         const children = parent.childNodes.slice();
         for (let i = 0; i < children.length; i++) {
             const node = children[i];
-            if ('tagName' in node && node.tagName === 'script') {
+            if ('tagName' in node && node.tagName === 'script' && 'attrs' in node && typeof node.attrs === 'object' && Array.isArray(node.attrs) && node.attrs.some(x => x.name.toLowerCase() === dataScriptDeduplicationKeepAttribute.toLowerCase())) {
                 const key = scriptKey(node);
                 const allKeys = Object.keys(seen);
 
-                const fn = () => {
-                    // remove node from parent's childNodes
-                    const idx = parent.childNodes.indexOf(node);
-                    if (idx !== -1) parent.childNodes.splice(idx, 1);
+                const fn = (currentFnIndex, totalFns) => {
+                    const removeNodeFn = () => {
+                        // remove node from parent's childNodes
+                        const idx = parent.childNodes.indexOf(node);
+                        if (idx !== -1) parent.childNodes.splice(idx, 1);
+                    };
+                    
+                    let keepFirstOnlyNotLast = null;
+                    const dataScriptDeduplicationKeepAttributeIndex = node.attrs.findIndex(x => x.name.toLowerCase() == dataScriptDeduplicationKeepAttribute.toLowerCase());
+                    if (dataScriptDeduplicationKeepAttributeIndex > -1) {
+                        if (['first'].includes(node.attrs[dataScriptDeduplicationKeepAttributeIndex].value?.toString().trim().toLowerCase())) {
+                            keepFirstOnlyNotLast = true;
+                        }
+                        if (['last'].includes(node.attrs[dataScriptDeduplicationKeepAttributeIndex].value?.toString().trim().toLowerCase())) {
+                            keepFirstOnlyNotLast = false;
+                        }
+                        node.attrs.splice(dataScriptDeduplicationKeepAttributeIndex, 1);
+                    }
+                    if (keepFirstOnlyNotLast === true && currentFnIndex > 0) {
+                        removeNodeFn();
+                    } else if (keepFirstOnlyNotLast === false && currentFnIndex < totalFns - 1) {
+                        removeNodeFn();
+                    }
                 };
                 if (allKeys.includes(key)) {
                     seen[key].push(fn);
@@ -70,13 +91,12 @@ export function dedupeScripts(html) {
     walkAndAddDedupeFunction(document);
 
     // Execute dedupe functions for keys with multiple entries
-    // Leave the last occurrence only
+    // Leave the first or last occurrence only
     for (const key in seen) {
         const fns = seen[key];
         if (fns.length > 1) {
-            // keep last, remove the rest
-            for (let i = 0; i < fns.length - 1; i++) {
-                fns[i]();
+            for (let i = 0; i < fns.length; i++) {
+                fns[i](i, fns.length);
             }
         }
     }

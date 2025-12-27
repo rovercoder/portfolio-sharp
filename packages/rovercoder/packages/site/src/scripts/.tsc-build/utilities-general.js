@@ -95,6 +95,10 @@ export function initCssVariableElementWatcher(args) {
         }
         const cssVariableElementDimensionsWatcherPreviousEntryIndex = cssVariableElementDimensionsWatcher[cssVariableName].findIndex(x => x.elementToAttachVariableTo === elementToAttachVariableTo);
         if (cssVariableElementDimensionsWatcherPreviousEntryIndex > -1) {
+            const observerDisposeFn = cssVariableElementDimensionsWatcher[cssVariableName][cssVariableElementDimensionsWatcherPreviousEntryIndex].observerDisposeFn;
+            if (observerDisposeFn != null && typeof observerDisposeFn === 'function') {
+                observerDisposeFn();
+            }
             cssVariableElementDimensionsWatcher[cssVariableName].splice(cssVariableElementDimensionsWatcherPreviousEntryIndex, 1);
         }
         cssVariableElementDimensionsWatcher[cssVariableName].push({
@@ -161,15 +165,29 @@ function observeElementResizing(args) {
             lastDimension = newDimension;
         }
     });
-    onDimensionChanged({ element, elementToAttachVariableTo, newDimension: element.offsetHeight, oldDimension: undefined, cssVariableName, propertyType: elementPropertyWatched });
-    lastDimension = element.offsetHeight;
+    let newDimension;
+    switch (elementPropertyWatched?.toLowerCase()) {
+        case 'width':
+            newDimension = element.offsetWidth;
+            break;
+        case 'height':
+            newDimension = element.offsetHeight;
+            break;
+        default:
+            console.error(`elementPropertyWatched invalid: ${elementPropertyWatched}`);
+            return;
+    }
+    if (newDimension != null) {
+        onDimensionChanged({ element, elementToAttachVariableTo, newDimension, oldDimension: undefined, cssVariableName, propertyType: elementPropertyWatched });
+    }
+    lastDimension = newDimension;
     observer.observe(element);
     return {
         element,
         elementToAttachVariableTo,
         cssVariableName,
         propertyWatched: elementPropertyWatched,
-        observerDisposeFn: () => observer.unobserve(element)
+        observerDisposeFn: () => observer.disconnect()
     };
 }
 export function replaceHTMLElementText(element, newText, currentText) {

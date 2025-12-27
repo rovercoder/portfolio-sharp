@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const pageTitle = 'Interactive Experience';
+---
+
+<BaseLayout pageTitle={pageTitle}>
+    <div class="overlay overlay-experience-interactive" aria-hidden="true">
+        
+    </div>
+</BaseLayout>
+
+<style>
+    .overlay:not(.shown) {
+        display: none;
+    }
+</style>

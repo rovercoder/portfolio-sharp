@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@portfoliosharp/shared": "*",
-    "astro": "^5.16.4"
+    "astro": "^5.16.6"
   },
   "devDependencies": {
-    "sass": "^1.94.2",
+    "sass": "^1.97.1",
     "uglify-js": "^3.19.3"
   }
 }

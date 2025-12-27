@@ -31,7 +31,7 @@ const {
 <script>
     import "/src/scripts/menu.ts";
 </script>
-<script is:inline set:html={await prepareInlineScript("/src/scripts/.tsc-build/header.js")} />
+<script is:inline set:html={await prepareInlineScript("/src/scripts/.tsc-build/header.js")} data-script-deduplication-keep="first" />
 
 <style lang="scss" define:vars={{ headerBackgroundColor }}>
     @use '/src/styles/variables.scss' as *;
