@@ -1,6 +1,12 @@
-import { getCodeBundler, getCodeMinifier, getCodeTransformer, type SiteData, type SiteDataOptions, type Replace, type SiteDataOptionsFunctionsDeclarations, type CustomFunction, createModule, type SiteDataOptionsFunction, fieldsNonOptional, fields } from "@portfoliosharp/shared";
+import { type CustomFunction, type SiteData, type SiteDataOptions, type SiteDataOptionsFunction, type SiteDataOptionsFunctionsDeclarations } from "@portfoliosharp/shared/data/latest";
+
 import { handleSiteDataOptionsFunctionsByKey } from "./bykey/site.data.options.functions.bykey.js";
 import { handleSiteDataOptionsFunctionsUtilities } from "./utilities/site.data.options.functions.utilities.js";
+import { getCodeMinifier } from "@portfoliosharp/shared/code/minifier";
+import { getCodeBundler } from "@portfoliosharp/shared/code/bundler";
+import { getCodeTransformer } from "@portfoliosharp/shared/code/transformer";
+import { fields, fieldsNonOptional, type Replace } from "@portfoliosharp/shared/helpers/general";
+import { createModule } from "@portfoliosharp/shared/helpers/modules";
 
 export const handleSiteDataOptionsFunctions = async function (data: SiteData, options: SiteDataOptions): Promise<SiteData> {
     if (data === undefined || data === null) {

@@ -1,5 +1,5 @@
+import type { SiteDataOptions, SiteData } from "@portfoliosharp/shared/data/latest";
 import { handleSiteDataOptions } from "./options/site.data.options.js";
-import { type SiteData, type SiteDataOptions } from "@portfoliosharp/shared";
 
 export const getSiteData = async function (options: SiteDataOptions): Promise<SiteData> {
     return await handleSiteDataOptions({

@@ -1,6 +1,6 @@
 export interface SiteData {
     name: string;
-    version: string;
+    version: '1.0.0';
     lastUpdated?: string; //Is automatically filled in on generation by comparing previously generated JSON file and seeing if there are differences, ignoring the lastUpdated property of course.
     description: string;
     author: string;
@@ -454,7 +454,7 @@ export interface Image {
 export interface InfoCard {
     imageUrl: string;
     title: string;
-    hint: null | string;
+    hint: string | null;
     textLines: string[];
 }
 

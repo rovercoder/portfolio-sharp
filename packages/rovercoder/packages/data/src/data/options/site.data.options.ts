@@ -1,5 +1,5 @@
+import type { SiteData, SiteDataOptions } from '@portfoliosharp/shared/data/latest';
 import { handleSiteDataOptionsFunctions } from './functions/site.data.options.functions.js';
-import type { SiteData, SiteDataOptions } from '@portfoliosharp/shared';
 
 export const siteDataOptions: SiteDataOptions = {};
 

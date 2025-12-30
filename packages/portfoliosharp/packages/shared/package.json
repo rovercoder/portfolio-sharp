@@ -14,13 +14,14 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/jscodeshift": "^17.3.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.3",
     "@types/uglify-js": "^3.17.5",
     "jscodeshift": "^17.3.0",
-    "rollup": "^4.53.3",
+    "rollup": "^4.54.0",
     "terser": "^5.44.1",
     "typescript": "^5.9.3",
-    "uglify-js": "^3.19.3"
+    "uglify-js": "^3.19.3",
+    "zod": "^4.2.1"
   },
   "exports": {
     ".": {
@@ -43,9 +44,21 @@
       "import": "./dist/abstractions/code/transformer/site.abstractions.code.transformer.js",
       "types": "./dist/abstractions/code/transformer/site.abstractions.code.transformer.d.ts"
     },
-    "./data": {
-      "import": "./dist/data/index.js",
-      "types": "./dist/data/index.d.ts"
+    "./data/latest": {
+      "import": "./dist/data/index.latest.js",
+      "types": "./dist/data/index.latest.d.ts"
+    },
+    "./data/latest/validation": {
+      "import": "./dist/data/index.validation.latest.js",
+      "types": "./dist/data/index.validation.latest.d.ts"
+    },
+    "./data/v1_0_0": {
+      "import": "./dist/data/index.v1_0_0.js",
+      "types": "./dist/data/index.v1_0_0.d.ts"
+    },
+    "./data/v1_0_0/validation": {
+      "import": "./dist/data/index.validation.v1_0_0.js",
+      "types": "./dist/data/index.validation.v1_0_0.d.ts"
     },
     "./helpers": {
       "import": "./dist/helpers/index.js",

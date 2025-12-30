@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { getSiteData } from "../data/site.data.js";
-import type { SiteData } from "@portfoliosharp/shared";
+import { type SiteData } from "@portfoliosharp/shared/data/latest";
 import { siteDataOptions } from "../data/options/site.data.options.js";
 
 const outputJsonFilePath: string = './assets/data/site.data.json';

@@ -1,6 +1,6 @@
 import { TZDate } from "@date-fns/tz";
 import type { SiteDataOptionsFunctionsUtilitiesForFunctions } from "../utilities/site.data.options.functions.utilities.types.js";
-import { type SiteDataOptionsFunctionsByKey, type Experience, type HolidaysRestAndLeaveEntry } from "@portfoliosharp/shared/data";
+import { type Experience, type HolidaysRestAndLeaveEntry, type SiteDataOptionsFunctionsByKey } from "@portfoliosharp/shared/data/latest";
 import { fields } from '@portfoliosharp/shared/helpers/general';
 
 export const siteDataOptionsFunctionsByKey: SiteDataOptionsFunctionsByKey = [

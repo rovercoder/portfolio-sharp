@@ -1,6 +1,7 @@
-import { type SiteData, type SiteDataOptions, nameOf, type CustomFunction } from "@portfoliosharp/shared";
 import { transformIntoSeparateFunctionsAndContext } from "../site.data.options.functions.js";
 import { __siteDataOptionsFunctionsByKeyFilePath, siteDataOptionsFunctionsByKey } from "./site.data.options.functions.bykey.functions.js";
+import { type CustomFunction, type SiteData, type SiteDataOptions } from "@portfoliosharp/shared/data/latest";
+import { nameOf } from "@portfoliosharp/shared/helpers/general";
 
 export const handleSiteDataOptionsFunctionsByKey = async function (data: SiteData, options: SiteDataOptions): Promise<SiteData> {
     if (data === undefined || data === null) {
